@@ -1,0 +1,16 @@
+{
+  "name": "shopledger",
+  "version": "0.1.0",
+  "description": "Internal wholesale & retail billing, inventory, and khata ledger for Corner Shop",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Rohit <rohit@shopledger.invalid>",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1"
+  }
+}
