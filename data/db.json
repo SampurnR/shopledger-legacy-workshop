@@ -1,0 +1,514 @@
+{
+  "nextOrderId": 1009,
+  "nextSettlementId": 505,
+  "products": [
+    {
+      "id": 1,
+      "sku": "GRN-001",
+      "name": "Indrayani Basmati Rice 5kg",
+      "category": "Staples & Grains",
+      "unit": "bag",
+      "hsn": "1006",
+      "price": 640,
+      "stock": 18,
+      "reserved": 2,
+      "reorderLevel": 10
+    },
+    {
+      "id": 2,
+      "sku": "GRN-002",
+      "name": "Unpolished Toor Dal 1kg",
+      "category": "Staples & Grains",
+      "unit": "pkt",
+      "hsn": "0713",
+      "price": 165,
+      "stock": 28,
+      "reserved": 0,
+      "reorderLevel": 15
+    },
+    {
+      "id": 3,
+      "sku": "GRN-003",
+      "name": "Kolhapuri Thick Poha 500g",
+      "category": "Staples & Grains",
+      "unit": "pkt",
+      "hsn": "1104",
+      "price": 48,
+      "stock": 35,
+      "reserved": 0,
+      "reorderLevel": 20
+    },
+    {
+      "id": 4,
+      "sku": "OIL-001",
+      "name": "Cold-Pressed Sunflower Oil 1L",
+      "category": "Oils & Spices",
+      "unit": "btl",
+      "hsn": "1512",
+      "price": 190,
+      "stock": 22,
+      "reserved": 4,
+      "reorderLevel": 12
+    },
+    {
+      "id": 5,
+      "sku": "OIL-002",
+      "name": "Cold-Pressed Groundnut Oil 5L",
+      "category": "Oils & Spices",
+      "unit": "jar",
+      "hsn": "1508",
+      "price": 1120,
+      "stock": 9,
+      "reserved": 1,
+      "reorderLevel": 8
+    },
+    {
+      "id": 6,
+      "sku": "DRY-001",
+      "name": "A2 Gir Cow Ghee 500ml",
+      "category": "Dairy & Ghee",
+      "unit": "jar",
+      "hsn": "0405",
+      "price": 450,
+      "stock": 1,
+      "reserved": 0,
+      "reorderLevel": 5
+    },
+    {
+      "id": 7,
+      "sku": "DRY-002",
+      "name": "Pasteurized Table Butter 500g",
+      "category": "Dairy & Ghee",
+      "unit": "box",
+      "hsn": "0405",
+      "price": 260,
+      "stock": 24,
+      "reserved": 0,
+      "reorderLevel": 10
+    },
+    {
+      "id": 8,
+      "sku": "BEV-001",
+      "name": "Assam CTC Masala Chai 250g",
+      "category": "Beverages & Packaged",
+      "unit": "pkt",
+      "hsn": "0902",
+      "price": 140,
+      "stock": 42,
+      "reserved": 0,
+      "reorderLevel": 15
+    },
+    {
+      "id": 9,
+      "sku": "BEV-002",
+      "name": "Filter Coffee Decoction Blend 500g",
+      "category": "Beverages & Packaged",
+      "unit": "pkt",
+      "hsn": "0901",
+      "price": 310,
+      "stock": 15,
+      "reserved": 0,
+      "reorderLevel": 8
+    },
+    {
+      "id": 10,
+      "sku": "GRN-004",
+      "name": "Organic Kolhapuri Jaggery 1kg",
+      "category": "Staples & Grains",
+      "unit": "block",
+      "hsn": "1701",
+      "price": 85,
+      "stock": 0,
+      "reserved": 0,
+      "reorderLevel": 15
+    },
+    {
+      "id": 11,
+      "sku": "SPC-001",
+      "name": "Byadgi Kashmiri Chilli Powder 500g",
+      "category": "Oils & Spices",
+      "unit": "pkt",
+      "hsn": "0904",
+      "price": 220,
+      "stock": 4,
+      "reserved": 3,
+      "reorderLevel": 10
+    },
+    {
+      "id": 12,
+      "sku": "BEV-003",
+      "name": "Kokum Sherbet Concentrate 750ml",
+      "category": "Beverages & Packaged",
+      "unit": "btl",
+      "hsn": "2106",
+      "price": 180,
+      "stock": 14,
+      "reserved": 0,
+      "reorderLevel": 6
+    }
+  ],
+  "customers": [
+    {
+      "id": 1,
+      "name": "Meera Joshi",
+      "phone": "98230 11420",
+      "type": "Retail",
+      "gstin": "",
+      "creditLimit": 5000,
+      "openingBalance": 450,
+      "totalBilled": 1982.01,
+      "totalSettled": 1200,
+      "balance": 1232.01
+    },
+    {
+      "id": 2,
+      "name": "Anil Kulkarni",
+      "phone": "98901 44210",
+      "type": "Retail",
+      "gstin": "",
+      "creditLimit": 4000,
+      "openingBalance": 320,
+      "totalBilled": 0,
+      "totalSettled": 200,
+      "balance": 120
+    },
+    {
+      "id": 3,
+      "name": "Priya Nair",
+      "phone": "97654 88312",
+      "type": "Retail",
+      "gstin": "",
+      "creditLimit": 5000,
+      "openingBalance": 0,
+      "totalBilled": 0,
+      "totalSettled": 0,
+      "balance": 0
+    },
+    {
+      "id": 4,
+      "name": "Suresh Deshmukh",
+      "phone": "94220 77819",
+      "type": "Wholesale",
+      "gstin": "27AAJFD4412N1Z2",
+      "creditLimit": 15000,
+      "openingBalance": 1200,
+      "totalBilled": 1407,
+      "totalSettled": 1000,
+      "balance": 1607
+    },
+    {
+      "id": 5,
+      "name": "Kalyani Foods (Wholesale)",
+      "phone": "020 2445 9921",
+      "type": "Wholesale",
+      "gstin": "27AABCK8821M1Z9",
+      "creditLimit": 25000,
+      "openingBalance": 2500,
+      "totalBilled": 2194.5,
+      "totalSettled": 2500,
+      "balance": 2194.5
+    }
+  ],
+  "orders": [
+    {
+      "id": 1001,
+      "date": "28/12/2021",
+      "customer": "Meera Joshi",
+      "customerId": 1,
+      "paymentMode": "khata",
+      "status": "completed",
+      "items": [
+        {
+          "id": 8,
+          "sku": "BEV-001",
+          "name": "Assam CTC Masala Chai 250g",
+          "hsn": "0902",
+          "price": 140,
+          "qty": 2
+        },
+        {
+          "id": 2,
+          "sku": "GRN-002",
+          "name": "Unpolished Toor Dal 1kg",
+          "hsn": "0713",
+          "price": 165,
+          "qty": 2
+        }
+      ],
+      "coupon": "",
+      "subtotal": 610,
+      "discount": 0,
+      "tax": 66.9,
+      "total": 676.9
+    },
+    {
+      "id": 1002,
+      "date": "05/01/2022",
+      "customer": "Anil Kulkarni",
+      "customerId": 2,
+      "paymentMode": "upi",
+      "status": "completed",
+      "items": [
+        {
+          "id": 1,
+          "sku": "GRN-001",
+          "name": "Indrayani Basmati Rice 5kg",
+          "hsn": "1006",
+          "price": 640,
+          "qty": 1
+        },
+        {
+          "id": 4,
+          "sku": "OIL-001",
+          "name": "Cold-Pressed Sunflower Oil 1L",
+          "hsn": "1512",
+          "price": 190,
+          "qty": 2
+        }
+      ],
+      "coupon": "SAVE10",
+      "subtotal": 1020,
+      "discount": 102,
+      "tax": 45.9,
+      "total": 963.9
+    },
+    {
+      "id": 1003,
+      "date": "14/01/2022",
+      "customer": "Walk-in",
+      "customerId": null,
+      "paymentMode": "cash",
+      "status": "completed",
+      "items": [
+        {
+          "id": 7,
+          "sku": "DRY-002",
+          "name": "Pasteurized Table Butter 500g",
+          "hsn": "0405",
+          "price": 260,
+          "qty": 1
+        },
+        {
+          "id": 8,
+          "sku": "BEV-001",
+          "name": "Assam CTC Masala Chai 250g",
+          "hsn": "0902",
+          "price": 140,
+          "qty": 1
+        }
+      ],
+      "coupon": "FLAT50",
+      "subtotal": 400,
+      "discount": 50,
+      "tax": 49.35,
+      "total": 399.35
+    },
+    {
+      "id": 1004,
+      "date": "30/01/2022",
+      "customer": "Kalyani Foods (Wholesale)",
+      "customerId": 5,
+      "paymentMode": "khata",
+      "status": "completed",
+      "items": [
+        {
+          "id": 5,
+          "sku": "OIL-002",
+          "name": "Cold-Pressed Groundnut Oil 5L",
+          "hsn": "1508",
+          "price": 1120,
+          "qty": 2
+        }
+      ],
+      "coupon": "SAVE10",
+      "subtotal": 2240,
+      "discount": 150,
+      "tax": 104.5,
+      "total": 2194.5
+    },
+    {
+      "id": 1005,
+      "date": "02/02/2022",
+      "customer": "Priya Nair",
+      "customerId": 3,
+      "paymentMode": "upi",
+      "status": "completed",
+      "items": [
+        {
+          "id": 1,
+          "sku": "GRN-001",
+          "name": "Indrayani Basmati Rice 5kg",
+          "hsn": "1006",
+          "price": 640,
+          "qty": 1
+        },
+        {
+          "id": 12,
+          "sku": "BEV-003",
+          "name": "Kokum Sherbet Concentrate 750ml",
+          "hsn": "2106",
+          "price": 180,
+          "qty": 2
+        }
+      ],
+      "coupon": "FLAT50",
+      "subtotal": 1000,
+      "discount": 50,
+      "tax": 91.96,
+      "total": 1041.96
+    },
+    {
+      "id": 1006,
+      "date": "18/02/2022",
+      "customer": "Meera Joshi",
+      "customerId": 1,
+      "paymentMode": "khata",
+      "status": "completed",
+      "items": [
+        {
+          "id": 6,
+          "sku": "DRY-001",
+          "name": "A2 Gir Cow Ghee 500ml",
+          "hsn": "0405",
+          "price": 450,
+          "qty": 2
+        },
+        {
+          "id": 9,
+          "sku": "BEV-002",
+          "name": "Filter Coffee Decoction Blend 500g",
+          "hsn": "0901",
+          "price": 310,
+          "qty": 1
+        }
+      ],
+      "coupon": "WELCOME",
+      "subtotal": 1210,
+      "discount": 60.5,
+      "tax": 155.61,
+      "total": 1305.11
+    },
+    {
+      "id": 1007,
+      "date": "04/03/2022",
+      "customer": "Suresh Deshmukh",
+      "customerId": 4,
+      "paymentMode": "khata",
+      "status": "pending",
+      "items": [
+        {
+          "id": 6,
+          "sku": "DRY-001",
+          "name": "A2 Gir Cow Ghee 500ml",
+          "hsn": "0405",
+          "price": 450,
+          "qty": 2
+        },
+        {
+          "id": 4,
+          "sku": "OIL-001",
+          "name": "Cold-Pressed Sunflower Oil 1L",
+          "hsn": "1512",
+          "price": 190,
+          "qty": 2
+        }
+      ],
+      "coupon": "",
+      "subtotal": 1280,
+      "discount": 0,
+      "tax": 127,
+      "total": 1407
+    },
+    {
+      "id": 1008,
+      "date": "15/03/2022",
+      "customer": "Walk-in",
+      "customerId": null,
+      "paymentMode": "cash",
+      "status": "completed",
+      "items": [
+        {
+          "id": 8,
+          "sku": "BEV-001",
+          "name": "Assam CTC Masala Chai 250g",
+          "hsn": "0902",
+          "price": 140,
+          "qty": 1
+        },
+        {
+          "id": 12,
+          "sku": "BEV-003",
+          "name": "Kokum Sherbet Concentrate 750ml",
+          "hsn": "2106",
+          "price": 180,
+          "qty": 2
+        }
+      ],
+      "coupon": "",
+      "subtotal": 500,
+      "discount": 0,
+      "tax": 90,
+      "total": 590
+    }
+  ],
+  "settlements": [
+    {
+      "id": 501,
+      "customerId": 1,
+      "customerName": "Meera Joshi",
+      "date": "10/01/2022",
+      "amount": 700,
+      "mode": "upi",
+      "note": "GPay settlement for Dec dues"
+    },
+    {
+      "id": 502,
+      "customerId": 5,
+      "customerName": "Kalyani Foods (Wholesale)",
+      "date": "05/02/2022",
+      "amount": 2500,
+      "mode": "neft",
+      "note": "NEFT Ref #HDFC22020591"
+    },
+    {
+      "id": 503,
+      "customerId": 1,
+      "customerName": "Meera Joshi",
+      "date": "22/02/2022",
+      "amount": 500,
+      "mode": "cash",
+      "note": "Part payment at counter"
+    },
+    {
+      "id": 504,
+      "customerId": 4,
+      "customerName": "Suresh Deshmukh",
+      "date": "01/03/2022",
+      "amount": 1000,
+      "mode": "upi",
+      "note": "Opening balance part settlement"
+    }
+  ],
+  "auditLog": [
+    {
+      "ts": "2022-03-15T14:22:10.000Z",
+      "action": "ORDER_CREATED",
+      "details": "Order #1008 (Walk-in) ₹590.00"
+    },
+    {
+      "ts": "2022-03-04T11:10:05.000Z",
+      "action": "ORDER_CREATED",
+      "details": "Order #1007 (Suresh Deshmukh) ₹1407.00"
+    },
+    {
+      "ts": "2022-03-01T16:45:00.000Z",
+      "action": "KHATA_SETTLEMENT",
+      "details": "Suresh Deshmukh settled ₹1000 via UPI"
+    },
+    {
+      "ts": "2022-02-22T18:05:12.000Z",
+      "action": "KHATA_SETTLEMENT",
+      "details": "Meera Joshi settled ₹500 via CASH"
+    }
+  ]
+}
