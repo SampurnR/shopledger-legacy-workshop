@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ShopLedger — Billing, Inventory &amp; Khata ERP</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="brand-logo">SL</div>
+        <div>
+          <div class="brand-title">
+            ShopLedger <span class="version-pill">v0.8.4</span>
+          </div>
+          <div class="brand-sub" id="shop-subtitle">Corner Shop Kirana &amp; Wholesale &middot; Sadashiv Peth, Pune</div>
+        </div>
+      </div>
+      <div class="topbar-meta">
+        <span class="meta-chip" id="shop-gstin">GSTIN: 27AAAAA0000A1Z5</span>
+        <button class="alert-chip" id="recon-alert-btn" title="View Accountant Invoice Reconciliation">
+          <span class="dot"></span>
+          <span id="recon-alert-text">Checking GST Reconciliation...</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- KPI Summary Row -->
+    <section class="kpi-grid" id="kpi-strip">
+      <div class="kpi-card">
+        <div class="kpi-label">Gross Order Revenue</div>
+        <div class="kpi-value" id="kpi-revenue">₹0.00</div>
+        <div class="kpi-foot" id="kpi-tax">GST Collected: ₹0.00 &middot; Discounts: ₹0.00</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Orders Desk</div>
+        <div class="kpi-value" id="kpi-orders">0</div>
+        <div class="kpi-foot" id="kpi-orders-sub">0 active &middot; 0 pending &middot; 0 cancelled</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Khata Receivables (Credit Due)</div>
+        <div class="kpi-value" id="kpi-khata">₹0.00</div>
+        <div class="kpi-foot">Across registered retail &amp; wholesale accounts</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Stock &amp; Invoice Audit</div>
+        <div class="kpi-value" id="kpi-stock">0 SKUs</div>
+        <div class="kpi-foot" id="kpi-stock-sub">0 out of stock &middot; 0 low stock</div>
+      </div>
+    </section>
+
+    <!-- Navigation Tabs -->
+    <nav class="tabs-bar" id="tabs">
+      <a href="#new" id="tab-new" class="tab-link active">
+        New Order (POS)
+      </a>
+      <a href="#orders" id="tab-orders" class="tab-link">
+        Order History <span class="tab-badge" id="badge-orders">0</span>
+      </a>
+      <a href="#khata" id="tab-khata" class="tab-link">
+        Customer Khata (Credit)
+      </a>
+      <a href="#audit" id="tab-audit" class="tab-link">
+        Inventory &amp; GST Audit <span class="tab-badge warn" id="badge-audit">!</span>
+      </a>
+    </nav>
+
+    <!-- TAB 1: NEW ORDER (POS) -->
+    <section id="view-new" class="tab-view">
+      <div class="pos-layout">
+        <!-- Left: Product Catalog -->
+        <div class="panel">
+          <div class="panel-header">
+            <div>
+              <h2 class="panel-title">Product Catalog &amp; Stock</h2>
+              <p class="panel-desc">Select quantities to add items to the current bill. GST is calculated per HSN slab.</p>
+            </div>
+            <div class="search-box">
+              <input type="text" id="pos-search" placeholder="Search item, SKU, or HSN...">
+            </div>
+          </div>
+
+          <div class="category-pills" id="pos-categories">
+            <button type="button" class="cat-pill active" data-cat="all">All Items</button>
+            <button type="button" class="cat-pill" data-cat="Staples & Grains">Staples &amp; Grains</button>
+            <button type="button" class="cat-pill" data-cat="Oils & Spices">Oils &amp; Spices</button>
+            <button type="button" class="cat-pill" data-cat="Dairy & Ghee">Dairy &amp; Ghee</button>
+            <button type="button" class="cat-pill" data-cat="Beverages & Packaged">Beverages &amp; Packaged</button>
+          </div>
+
+          <div class="table-wrap">
+            <table id="products" class="data-table">
+              <thead>
+                <tr>
+                  <th>SKU / Product</th>
+                  <th>HSN &amp; GST</th>
+                  <th class="r">Rate</th>
+                  <th class="r">Sellable Stock</th>
+                  <th class="c" style="width:120px">Order Qty</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Right: Billing Drawer -->
+        <aside class="panel pos-drawer">
+          <div class="panel-header">
+            <div>
+              <h2 class="panel-title">Current Bill Desk</h2>
+              <p class="panel-desc">Configure customer, promo code, and payment mode</p>
+            </div>
+            <button type="button" class="btn btn-ghost btn-sm" id="clear-cart">Clear</button>
+          </div>
+
+          <div class="drawer-body">
+            <div class="form-group">
+              <label for="customer-select">Customer Account (Khata Directory)</label>
+              <select id="customer-select">
+                <option value="">-- Walk-in / Custom Name --</option>
+              </select>
+            </div>
+
+            <div class="form-group" id="walkin-name-group">
+              <label for="customer">Customer Name</label>
+              <input id="customer" type="text" placeholder="Walk-in Customer">
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="payment-mode">Payment Mode</label>
+                <select id="payment-mode">
+                  <option value="cash">Cash Counter</option>
+                  <option value="upi">UPI / QR Scan</option>
+                  <option value="khata">Khata (Customer Credit)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="order-status">Fulfillment Status</label>
+                <select id="order-status">
+                  <option value="completed">Completed (Immediate)</option>
+                  <option value="pending">Pending Dispatch</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="coupon">Promo / Coupon Code</label>
+              <div class="coupon-input-row">
+                <input id="coupon" type="text" placeholder="e.g. SAVE10, FLAT50">
+              </div>
+              <div class="promo-chips" id="promo-chips">
+                <span class="promo-chip" data-code="SAVE10" title="10% off above ₹500 (max ₹150)">SAVE10</span>
+                <span class="promo-chip" data-code="FLAT50" title="Flat ₹50 off above ₹300">FLAT50</span>
+                <span class="promo-chip" data-code="WELCOME" title="5% off welcome promo">WELCOME</span>
+                <span class="promo-chip" data-code="WHOLESALE15" title="15% off above ₹2000 (max ₹400)">WHOLESALE15</span>
+              </div>
+              <div id="coupon-feedback" class="field-hint"></div>
+            </div>
+
+            <div class="cart-preview-box">
+              <div class="cart-preview-title">Selected Line Items (<span id="cart-count">0</span>)</div>
+              <div id="cart-items-list" class="cart-items-empty">No items selected yet. Adjust quantities in the catalog table.</div>
+
+              <div class="cart-totals">
+                <div class="cart-row">
+                  <span>Gross Subtotal</span>
+                  <span id="preview-subtotal">₹0.00</span>
+                </div>
+                <div class="cart-row discount-row">
+                  <span>Coupon Discount</span>
+                  <span id="preview-discount">-₹0.00</span>
+                </div>
+                <div class="cart-row">
+                  <span>GST (CGST + SGST)</span>
+                  <span id="preview-tax">₹0.00</span>
+                </div>
+                <div class="cart-row grand-row">
+                  <span>Net Payable Total</span>
+                  <span id="preview-total">₹0.00</span>
+                </div>
+              </div>
+            </div>
+
+            <button id="place" type="button" class="btn btn-primary btn-block">
+              Place Order &amp; Commit Stock
+            </button>
+
+            <div id="msg"></div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- TAB 2: ORDER HISTORY -->
+    <section id="view-orders" class="tab-view" style="display:none">
+      <div class="panel">
+        <div class="panel-header">
+          <div>
+            <h2 class="panel-title">Order History &amp; Dispatch Register</h2>
+            <p class="panel-desc">Sorted newest first. Click "Invoice" to open the accountant's printable GST tax invoice.</p>
+          </div>
+        </div>
+
+        <div class="filter-bar">
+          <div class="filter-item">
+            <label for="orders-search">Search</label>
+            <input type="text" id="orders-search" placeholder="Order #, customer, coupon...">
+          </div>
+          <div class="filter-item">
+            <label for="orders-status">Status</label>
+            <select id="orders-status">
+              <option value="all">All Statuses</option>
+              <option value="completed">Completed</option>
+              <option value="pending">Pending</option>
+              <option value="cancelled">Cancelled</option>
+            </select>
+          </div>
+          <div class="filter-item">
+            <label for="orders-from">From Date</label>
+            <input type="date" id="orders-from">
+          </div>
+          <div class="filter-item">
+            <label for="orders-to">To Date</label>
+            <input type="date" id="orders-to">
+          </div>
+          <div class="filter-actions">
+            <button type="button" class="btn btn-secondary" id="btn-filter-orders">Apply Filter</button>
+            <button type="button" class="btn btn-ghost" id="btn-reset-orders">Reset</button>
+          </div>
+        </div>
+
+        <div id="orders-action-msg"></div>
+
+        <div class="table-wrap">
+          <table id="orders" class="data-table">
+            <thead>
+              <tr>
+                <th>Order #</th>
+                <th>Date</th>
+                <th>Customer</th>
+                <th>Items</th>
+                <th>Mode</th>
+                <th>Coupon</th>
+                <th class="r">Subtotal</th>
+                <th class="r">Discount</th>
+                <th class="r">GST</th>
+                <th class="r">Ledger Total</th>
+                <th>Status</th>
+                <th class="r">Actions</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: CUSTOMER KHATA -->
+    <section id="view-khata" class="tab-view" style="display:none">
+      <div class="khata-layout">
+        <div class="panel">
+          <div class="panel-header">
+            <div>
+              <h2 class="panel-title">Customer Khata (Credit Accounts)</h2>
+              <p class="panel-desc">Track wholesale and retail credit limits, cumulative billing, and payment settlements.</p>
+            </div>
+          </div>
+
+          <div id="khata-msg"></div>
+
+          <div class="table-wrap">
+            <table id="customers-table" class="data-table">
+              <thead>
+                <tr>
+                  <th>Account</th>
+                  <th>Type / GSTIN</th>
+                  <th class="r">Credit Limit</th>
+                  <th class="r">Opening Bal</th>
+                  <th class="r">Total Billed</th>
+                  <th class="r">Total Settled</th>
+                  <th class="r">Balance Due</th>
+                  <th class="r">Action</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+
+        <aside class="panel">
+          <div class="panel-header">
+            <div>
+              <h2 class="panel-title">Record Khata Settlement</h2>
+              <p class="panel-desc">Log a customer payment received via Cash, UPI, or NEFT</p>
+            </div>
+          </div>
+
+          <div class="drawer-body">
+            <div class="form-group">
+              <label for="settle-customer">Customer Account</label>
+              <select id="settle-customer"></select>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="settle-amount">Amount Received (₹)</label>
+                <input type="number" id="settle-amount" min="1" step="0.01" placeholder="e.g. 500">
+              </div>
+              <div class="form-group">
+                <label for="settle-mode">Payment Channel</label>
+                <select id="settle-mode">
+                  <option value="upi">UPI / GPay</option>
+                  <option value="cash">Cash</option>
+                  <option value="neft">NEFT / Bank Transfer</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="settle-note">Reference / Note</label>
+              <input type="text" id="settle-note" placeholder="e.g. Part payment against Feb bills">
+            </div>
+            <button type="button" class="btn btn-primary btn-block" id="btn-record-settlement">
+              Record Payment Settlement
+            </button>
+
+            <hr class="divider">
+
+            <h3 class="sub-heading">Recent Settlement Receipts</h3>
+            <div id="settlements-list" class="settlements-feed"></div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- TAB 4: INVENTORY & GST AUDIT -->
+    <section id="view-audit" class="tab-view" style="display:none">
+      <div class="panel" style="margin-bottom: 20px;">
+        <div class="panel-header">
+          <div>
+            <h2 class="panel-title">Accountant Invoice vs. Order Ledger Reconciliation</h2>
+            <p class="panel-desc">Compares stored Order Ledger totals (<code>lib/pricing.js</code>) against the Accountant Tax Invoice renderer (<code>lib/invoice.js</code>).</p>
+          </div>
+          <div id="recon-summary-pill" class="status-pill cancelled">Checking...</div>
+        </div>
+
+        <div class="table-wrap">
+          <table id="recon-table" class="data-table">
+            <thead>
+              <tr>
+                <th>Order #</th>
+                <th>Date</th>
+                <th>Customer</th>
+                <th>Promo</th>
+                <th class="r">Subtotal</th>
+                <th class="r">Ledger Disc</th>
+                <th class="r">Ledger GST</th>
+                <th class="r">Ledger Total</th>
+                <th class="r">Invoice Disc</th>
+                <th class="r">Invoice GST</th>
+                <th class="r">Invoice Total</th>
+                <th class="r">Variance (Δ)</th>
+                <th>Audit Status</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <div>
+            <h2 class="panel-title">Warehouse Stock &amp; Wholesale Reservation Matrix</h2>
+            <p class="panel-desc">Physical stock on shelves versus units held in wholesale reservations and net sellable units.</p>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table id="inventory-audit-table" class="data-table">
+            <thead>
+              <tr>
+                <th>SKU</th>
+                <th>Product Name</th>
+                <th>Category</th>
+                <th>HSN</th>
+                <th class="r">GST Slab</th>
+                <th class="r">Unit Price</th>
+                <th class="r">Physical Stock</th>
+                <th class="r">Reserved Hold</th>
+                <th class="r">Net Sellable</th>
+                <th>Stock Health</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
