@@ -1,6 +1,6 @@
 {
   "name": "shopledger",
-  "version": "0.1.0",
+  "version": "0.8.4",
   "description": "Internal wholesale & retail billing, inventory, and khata ledger for Corner Shop",
   "main": "server.js",
   "scripts": {
