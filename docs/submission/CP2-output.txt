@@ -1,0 +1,10 @@
+CP2 Diagram - shopledger
+
+Created docs/architecture.svg as one architecture picture showing the browser UI, server.js, all four routers, all ten lib modules, config.js and data/db.json. Numbered arrows trace placing an order. Labels refer only to existing components.
+
+Diagram: https://github.com/harshawardhanchitnis/shopledger-legacy-workshop/blob/fix/order-history-khata/docs/architecture.svg
+Screenshot: https://github.com/harshawardhanchitnis/shopledger-legacy-workshop/blob/fix/order-history-khata/docs/evidence/cp2-architecture.jpg
+
+Created AGENTS.md before CP3 with the verified stack, module map, commands, tests-first rule, no real-data tests, no added dependencies and the user-authorized Ticket 3 module scope.
+AGENTS source: https://github.com/harshawardhanchitnis/shopledger-legacy-workshop/blob/fix/order-history-khata/AGENTS.md
+AGENTS form-compatible PDF: https://github.com/harshawardhanchitnis/shopledger-legacy-workshop/blob/fix/order-history-khata/docs/submission/AGENTS.pdf

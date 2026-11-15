@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1100" viewBox="0 0 1440 1100" role="img" aria-labelledby="title desc">
+<title id="title">ShopLedger architecture and order flow</title>
+<desc id="desc">The browser calls four API routers mounted in server.js. Ten library modules handle business logic, configuration and the JSON store. Numbered arrows describe placing an order.</desc>
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0 0L8 3L0 6" fill="none" stroke="#54677a" stroke-width="1.6"/></marker><style>text{font-family:Arial,sans-serif;fill:#182b3b} .title{font-size:32px;font-weight:700}.sub{font-size:17px;fill:#54677a}.label{font-size:19px;font-weight:700}.body{font-size:16px}.box{fill:#fff;stroke:#b7c6d2;stroke-width:1.5;rx:12}.line{fill:none;stroke:#54677a;stroke-width:2;marker-end:url(#arrow)}</style></defs>
+<rect width="1440" height="1100" fill="#f4f7fa"/>
+<text x="50" y="58" class="title">ShopLedger architecture</text><text x="50" y="88" class="sub">Existing components and the flow of placing an order</text>
+<rect x="50" y="120" width="1340" height="88" class="box"/><text x="75" y="153" class="label">Browser UI - public/index.html, public/js/app.js, public/css/style.css</text><text x="75" y="183" class="body">POS and cart | Order History | Customer Khata | Inventory and GST Audit</text>
+<path d="M720 208V245" class="line"/><text x="740" y="234" class="body">1. POST /api/orders (product IDs, quantities, coupon, customer)</text>
+<rect x="50" y="252" width="1340" height="86" class="box"/><text x="75" y="285" class="label">server.js - Express, body-parser, static UI</text><text x="75" y="315" class="body">Mounts four routers under /api; GET /orders/:id/invoice calls store, orders and invoice</text>
+<path d="M720 338V375" class="line"/>
+<rect x="50" y="382" width="305" height="94" class="box"/><text x="70" y="416" class="label">routes/products.js</text><text x="70" y="447" class="body">Catalog and coupons</text>
+<rect x="380" y="382" width="350" height="94" class="box"/><text x="400" y="416" class="label">routes/orders.js</text><text x="400" y="447" class="body">2. Resolve, validate, orchestrate</text>
+<rect x="755" y="382" width="305" height="94" class="box"/><text x="775" y="416" class="label">routes/customers.js</text><text x="775" y="447" class="body">Accounts and settlements</text>
+<rect x="1085" y="382" width="305" height="94" class="box"/><text x="1105" y="416" class="label">routes/reports.js</text><text x="1105" y="447" class="body">Reports, preview, export</text>
+<path d="M555 476V515" class="line"/>
+<rect x="50" y="522" width="640" height="214" class="box"/><text x="75" y="557" class="label">Order and credit logic</text><text x="75" y="594" class="body">lib/inventory.js - 3. check sellable stock; 6. deduct units</text><text x="75" y="630" class="body">lib/ledger.js - 5. credit-limit check and Khata charge</text><text x="75" y="666" class="body">lib/orders.js - 6. create order; listing and cancellation</text><text x="75" y="702" class="body">lib/dates.js - order dates, comparison keys, fiscal years</text>
+<rect x="720" y="522" width="670" height="214" class="box"/><text x="745" y="557" class="label">Pricing and accounting logic</text><text x="745" y="594" class="body">lib/coupons.js - 4. validate coupon and determine discount</text><text x="745" y="630" class="body">lib/pricing.js - 4. calculate checkout and preview totals</text><text x="745" y="666" class="body">lib/tax.js - 4. resolve HSN slabs and split CGST/SGST</text><text x="745" y="702" class="body">lib/invoice.js - compute and render printable invoice</text>
+<path d="M690 608H718" class="line"/>
+<rect x="50" y="770" width="405" height="94" class="box"/><text x="75" y="804" class="label">lib/reports.js</text><text x="75" y="835" class="body">Dashboard and invoice reconciliation</text>
+<rect x="485" y="770" width="440" height="94" class="box"/><text x="510" y="804" class="label">lib/store.js</text><text x="510" y="835" class="body">7. append audit event; read/write JSON</text>
+<rect x="955" y="770" width="435" height="94" class="box"/><text x="980" y="804" class="label">config.js</text><text x="980" y="835" class="body">Port, shop, tax, coupons, inventory</text>
+<path d="M555 736V764" class="line"/><path d="M1170 770V740" class="line"/><path d="M455 817H482" class="line"/>
+<path d="M705 864V910" class="line"/>
+<rect x="485" y="918" width="440" height="94" class="box"/><text x="510" y="952" class="label">data/db.json</text><text x="510" y="983" class="body">Products, orders, customers, settlements, audit</text>
+<text x="50" y="1060" class="sub">8. The API returns the created order; the browser refreshes its views. Tests use independent in-memory data.</text>
+</svg>

@@ -1,0 +1,29 @@
+{
+  "phase": "before fix",
+  "sourceCommit": "68c85a9e1cb97c470b4bfd9d1a3f99488cec8639",
+  "orderIds": [
+    1004,
+    1001,
+    1006,
+    1008,
+    1003,
+    1002,
+    1007,
+    1005
+  ],
+  "januaryIds": [
+    1004,
+    1001,
+    1006,
+    1008,
+    1003,
+    1002,
+    1007,
+    1005
+  ],
+  "meeraAfter500": {
+    "name": "Meera Joshi",
+    "totalSettled": "1200500",
+    "balance": -1198067.99
+  }
+}

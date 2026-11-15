@@ -1,0 +1,543 @@
+Checkpoint 4 RED | shopledger
+Command: node --test --test-reporter=spec
+Files: test/dates.test.js, test/orders.test.js, test/ledger.test.js
+Phase: correct expectations, original production code; failures are intentional
+
+✖ ISO date retains a chronological comparison key (1.3707ms)
+✖ stored day-first date becomes the equivalent chronological key (0.2293ms)
+✖ comparison keys trim input and pad single-digit date components (0.1492ms)
+✔ unsupported comparison input is preserved (0.1253ms)
+✔ empty comparison inputs return an empty key (0.1015ms)
+✔ today retains the DD/MM/YYYY display format (0.982ms)
+✔ fiscal year preserves the March/April boundary for both date formats (0.173ms)
+✔ missing or unsupported fiscal-year input retains the fallback (0.1387ms)
+✖ a browser string settlement updates numeric totals without concatenation (3.0168ms)
+✖ numeric strings in existing settled totals remain numeric after payment (0.2499ms)
+✖ settlement arithmetic and stored payments are rounded to currency precision (0.1933ms)
+✖ successive string payments increase totals and allocate unique settlement IDs (0.2296ms)
+✔ invalid settlement is rejected without mutation: NaN (0.6326ms)
+✖ invalid settlement is rejected without mutation: infinity (0.2079ms)
+✔ invalid settlement is rejected without mutation: negative infinity (0.1417ms)
+✖ invalid settlement is rejected without mutation: nonnumeric string (0.1778ms)
+✔ invalid settlement is rejected without mutation: whitespace (0.2793ms)
+✖ invalid settlement is rejected without mutation: infinity string (0.3419ms)
+✖ invalid settlement is rejected without mutation: boolean true (0.236ms)
+✔ invalid settlement is rejected without mutation: boolean false (0.0932ms)
+✔ invalid settlement is rejected without mutation: array (0.0787ms)
+✖ invalid settlement is rejected without mutation: numeric array (0.2284ms)
+✖ invalid settlement is rejected without mutation: object (0.1216ms)
+✖ invalid settlement is rejected without mutation: sub-cent amount rounded to zero (0.0936ms)
+✔ a numeric settlement updates balance and records the payment (0.1016ms)
+✔ zero, negative and absent settlements do not mutate the ledger (0.218ms)
+✔ unknown customer does not mutate the ledger (0.0984ms)
+✔ settlements are prepended and retain default metadata (0.2025ms)
+✔ customer list reports the opening plus billed minus settled balance (0.1363ms)
+✔ credit limit rejection leaves the customer unchanged (0.3625ms)
+✖ history sorts all eight orders newest first across months and years (2.3564ms)
+✖ January ISO range includes only the three January orders (0.3198ms)
+✖ from-only range excludes earlier months (0.2401ms)
+✖ to-only range includes older years and excludes later months (0.1798ms)
+✔ day-first date filters include both boundaries (0.1469ms)
+✔ same-day range includes its exact order date (0.1523ms)
+✔ date, status and search filters can be combined (0.1456ms)
+✖ same-date orders keep their input order (0.3343ms)
+✖ history compares ISO and day-first stored dates consistently (0.3503ms)
+✔ a reversed date range returns no orders (0.3152ms)
+✔ listing does not mutate the source order array (0.3026ms)
+✔ status filtering retains the pending order (0.1022ms)
+✔ coupon search is case-insensitive and trims whitespace (0.0853ms)
+✔ customer search and order ID search retain matching records (0.0898ms)
+✔ empty history and unmatched filters return an empty array (0.1144ms)
+✔ order lookup supports route string IDs and missing IDs (0.1029ms)
+ℹ tests 46
+ℹ suites 0
+ℹ pass 26
+ℹ fail 20
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1479.274
+
+✖ failing tests:
+
+test at test\dates.test.js:7:1
+✖ ISO date retains a chronological comparison key (1.3707ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + '05/01/2022'
+  - '2022-01-05'
+  
+      at TestContext.<anonymous> (D:\Projects\GeeksForGeeks X Codex Project\Project Phase 1\shopledger\test\dates.test.js:8:10)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.start (node:internal/test_runner/test:944:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '05/01/2022',
+    expected: '2022-01-05',
+    operator: 'strictEqual'
+  }
+
+test at test\dates.test.js:11:1
+✖ stored day-first date becomes the equivalent chronological key (0.2293ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + '05/01/2022'
+  - '2022-01-05'
+  
+      at TestContext.<anonymous> (D:\Projects\GeeksForGeeks X Codex Project\Project Phase 1\shopledger\test\dates.test.js:12:10)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '05/01/2022',
+    expected: '2022-01-05',
+    operator: 'strictEqual'
+  }
+
+test at test\dates.test.js:15:1
+✖ comparison keys trim input and pad single-digit date components (0.1492ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + '5/1/2022'
+  - '2022-01-05'
+  
+      at TestContext.<anonymous> (D:\Projects\GeeksForGeeks X Codex Project\Project Phase 1\shopledger\test\dates.test.js:16:10)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '5/1/2022',
+    expected: '2022-01-05',
+    operator: 'strictEqual'
+  }
+
+test at test\ledger.test.js:8:1
+✖ a browser string settlement updates numeric totals without concatenation (3.0168ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  '1200500' !== 1700
+  
+      at TestContext.<anonymous> (D:\Projects\GeeksForGeeks X Codex Project\Project Phase 1\shopledger\test\ledger.test.js:12:10)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.start (node:internal/test_runner/test:944:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '1200500',
+    expected: 1700,
+    operator: 'strictEqual'
+  }
+
+test at test\ledger.test.js:17:1
+✖ numeric strings in existing settled totals remain numeric after payment (0.2499ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  '1200500' !== 1700
+  
+      at TestContext.<anonymous> (D:\Projects\GeeksForGeeks X Codex Project\Project Phase 1\shopledger\test\ledger.test.js:20:10)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '1200500',
+    expected: 1700,
+    operator: 'strictEqual'
+  }
+
+test at test\ledger.test.js:23:1
+✖ settlement arithmetic and stored payments are rounded to currency precision (0.1933ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  '0.10.2' !== 0.3
+  
+      at TestContext.<anonymous> (D:\Projects\GeeksForGeeks X Codex Project\Project Phase 1\shopledger\test\ledger.test.js:27:10)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '0.10.2',
+    expected: 0.3,
+    operator: 'strictEqual'
+  }
+
+test at test\ledger.test.js:34:1
+✖ successive string payments increase totals and allocate unique settlement IDs (0.2296ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + '1200500100'
+  - 1800
+  
+      at TestContext.<anonymous> (D:\Projects\GeeksForGeeks X Codex Project\Project Phase 1\shopledger\test\ledger.test.js:38:10)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '1200500100',
+    expected: 1800,
+    operator: 'strictEqual'
+  }
+
+test at test\ledger.test.js:50:3
+✖ invalid settlement is rejected without mutation: infinity (0.2079ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  true !== false
+  
+      at TestContext.<anonymous> (D:\Projects\GeeksForGeeks X Codex Project\Project Phase 1\shopledger\test\ledger.test.js:53:12)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual'
+  }
+
+test at test\ledger.test.js:50:3
+✖ invalid settlement is rejected without mutation: nonnumeric string (0.1778ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  true !== false
+  
+      at TestContext.<anonymous> (D:\Projects\GeeksForGeeks X Codex Project\Project Phase 1\shopledger\test\ledger.test.js:53:12)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual'
+  }
+
+test at test\ledger.test.js:50:3
+✖ invalid settlement is rejected without mutation: infinity string (0.3419ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  true !== false
+  
+      at TestContext.<anonymous> (D:\Projects\GeeksForGeeks X Codex Project\Project Phase 1\shopledger\test\ledger.test.js:53:12)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual'
+  }
+
+test at test\ledger.test.js:50:3
+✖ invalid settlement is rejected without mutation: boolean true (0.236ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  true !== false
+  
+      at TestContext.<anonymous> (D:\Projects\GeeksForGeeks X Codex Project\Project Phase 1\shopledger\test\ledger.test.js:53:12)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual'
+  }
+
+test at test\ledger.test.js:50:3
+✖ invalid settlement is rejected without mutation: numeric array (0.2284ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  true !== false
+  
+      at TestContext.<anonymous> (D:\Projects\GeeksForGeeks X Codex Project\Project Phase 1\shopledger\test\ledger.test.js:53:12)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual'
+  }
+
+test at test\ledger.test.js:50:3
+✖ invalid settlement is rejected without mutation: object (0.1216ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  true !== false
+  
+      at TestContext.<anonymous> (D:\Projects\GeeksForGeeks X Codex Project\Project Phase 1\shopledger\test\ledger.test.js:53:12)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual'
+  }
+
+test at test\ledger.test.js:50:3
+✖ invalid settlement is rejected without mutation: sub-cent amount rounded to zero (0.0936ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  true !== false
+  
+      at TestContext.<anonymous> (D:\Projects\GeeksForGeeks X Codex Project\Project Phase 1\shopledger\test\ledger.test.js:53:12)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual'
+  }
+
+test at test\orders.test.js:10:1
+✖ history sorts all eight orders newest first across months and years (2.3564ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+  +   1004,
+  +   1001,
+  +   1006,
+      1008,
+  +   1003,
+  +   1002,
+      1007,
+  -   1006,
+      1005,
+  -   1004,
+  -   1003,
+  -   1002,
+  -   1001
+    ]
+  
+      at TestContext.<anonymous> (D:\Projects\GeeksForGeeks X Codex Project\Project Phase 1\shopledger\test\orders.test.js:11:10)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.start (node:internal/test_runner/test:944:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [
+      1004, 1001, 1006,
+      1008, 1003, 1002,
+      1007, 1005
+    ],
+    expected: [
+      1008, 1007, 1006,
+      1005, 1004, 1003,
+      1002, 1001
+    ],
+    operator: 'deepStrictEqual'
+  }
+
+test at test\orders.test.js:14:1
+✖ January ISO range includes only the three January orders (0.3198ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+      1004,
+  +   1001,
+  +   1006,
+  +   1008,
+      1003,
+      1002,
+  +   1007,
+  +   1005
+    ]
+  
+      at TestContext.<anonymous> (D:\Projects\GeeksForGeeks X Codex Project\Project Phase 1\shopledger\test\orders.test.js:15:10)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [
+      1004, 1001, 1006,
+      1008, 1003, 1002,
+      1007, 1005
+    ],
+    expected: [ 1004, 1003, 1002 ],
+    operator: 'deepStrictEqual'
+  }
+
+test at test\orders.test.js:18:1
+✖ from-only range excludes earlier months (0.2401ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+  +   1004,
+  +   1001,
+  +   1006,
+      1008,
+  +   1003,
+  +   1002,
+      1007,
+  -   1006,
+      1005
+    ]
+  
+      at TestContext.<anonymous> (D:\Projects\GeeksForGeeks X Codex Project\Project Phase 1\shopledger\test\orders.test.js:19:10)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [
+      1004, 1001, 1006,
+      1008, 1003, 1002,
+      1007, 1005
+    ],
+    expected: [ 1008, 1007, 1006, 1005 ],
+    operator: 'deepStrictEqual'
+  }
+
+test at test\orders.test.js:22:1
+✖ to-only range includes older years and excludes later months (0.1798ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+      1004,
+  +   1001,
+  +   1006,
+  +   1008,
+      1003,
+      1002,
+  +   1007,
+  +   1005
+  -   1001
+    ]
+  
+      at TestContext.<anonymous> (D:\Projects\GeeksForGeeks X Codex Project\Project Phase 1\shopledger\test\orders.test.js:23:10)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [
+      1004, 1001, 1006,
+      1008, 1003, 1002,
+      1007, 1005
+    ],
+    expected: [ 1004, 1003, 1002, 1001 ],
+    operator: 'deepStrictEqual'
+  }
+
+test at test\orders.test.js:38:1
+✖ same-date orders keep their input order (0.3343ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+  +   2,
+      1,
+  -   2
+    ]
+  
+      at TestContext.<anonymous> (D:\Projects\GeeksForGeeks X Codex Project\Project Phase 1\shopledger\test\orders.test.js:39:10)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 2, 1 ],
+    expected: [ 1, 2 ],
+    operator: 'deepStrictEqual'
+  }
+
+test at test\orders.test.js:42:1
+✖ history compares ISO and day-first stored dates consistently (0.3503ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+  +   1,
+  +   2,
+      3,
+  -   2,
+  -   1
+    ]
+  
+      at TestContext.<anonymous> (D:\Projects\GeeksForGeeks X Codex Project\Project Phase 1\shopledger\test\orders.test.js:44:10)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 1, 2, 3 ],
+    expected: [ 3, 2, 1 ],
+    operator: 'deepStrictEqual'
+  }
+Exit code: 1

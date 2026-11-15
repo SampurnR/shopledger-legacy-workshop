@@ -1,0 +1,12 @@
+CP3 Characterization tests - shopledger
+
+Before any production fix, wrote 21 node:test characterization tests across test/dates.test.js, test/orders.test.js and test/ledger.test.js. All passed. Fixtures are independently constructed in memory in test-support/fixtures.js; tests never read or write data/db.json.
+
+Known wrong behavior was explicitly named CURRENT BEHAVIOUR: ISO/day-first comparison keys, nonchronological sorting, January including all eight orders, and string settlement concatenation.
+
+Command: node --test --test-reporter=spec
+Result: 21 tests, 21 passed, 0 failed.
+Characterization commit: 23c8691
+Original tests: https://github.com/harshawardhanchitnis/shopledger-legacy-workshop/tree/23c8691/test
+Raw output: https://github.com/harshawardhanchitnis/shopledger-legacy-workshop/blob/fix/order-history-khata/docs/evidence/cp3-characterization.txt
+Screenshot: https://github.com/harshawardhanchitnis/shopledger-legacy-workshop/blob/fix/order-history-khata/docs/evidence/cp3-characterization.jpg

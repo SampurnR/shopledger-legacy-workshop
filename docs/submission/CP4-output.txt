@@ -1,0 +1,19 @@
+CP4 Reproduce, test, fix and review - Ticket 3
+
+Reproduced all three defects in the running original app on a temporary project copy. History began 1004,1001,1006,1008; January filtering returned all eight orders; a browser string payment of 500 changed Meera's totalSettled to 1200500 and balance to -1198067.99.
+
+Before changing production code, updated the five known-wrong characterization expectations and added regression cases. The correct-behavior suite showed 20 failures out of 46 tests (commit ed0238d). Added one further review regression for an extreme finite amount overflowing currency rounding, showed it failing, then refined validation.
+
+Production fix only: lib/dates.js, lib/orders.js and lib/ledger.js. Dates use padded year-first comparison keys; history sorts those keys and preserves equal-date order; settlements validate/round numeric amounts before ledger mutation. Fiscal-year behavior remains covered.
+
+Final command: node --test --test-reporter=spec
+Final result: 47 passed, 0 failed.
+Browser/API verification: history 1008 through 1001; January only 1004,1003,1002; Meera settled total 1700 and balance 732.01 after payment 500. Invalid HTTP payment returns 400 without mutation.
+
+Original data/db.json unchanged. SHA256: 378042ACAEF84300A04A1B6EA043A3E279ED0969D76DC1F9DEFFD91D095CEB49.
+No dependencies added. Completed a manual diff review; no remaining actionable Ticket 3 findings. The five intentionally updated characterization tests are listed in docs/review.md.
+
+Red output: https://github.com/harshawardhanchitnis/shopledger-legacy-workshop/blob/fix/order-history-khata/docs/evidence/cp4-regression-red.txt
+Green output: https://github.com/harshawardhanchitnis/shopledger-legacy-workshop/blob/fix/order-history-khata/docs/evidence/cp4-regression-green.txt
+Review: https://github.com/harshawardhanchitnis/shopledger-legacy-workshop/blob/fix/order-history-khata/docs/review.md
+Before/after screenshots: https://github.com/harshawardhanchitnis/shopledger-legacy-workshop/blob/fix/order-history-khata/docs/evidence/README.md

@@ -1,0 +1,35 @@
+<!doctype html><html><head><meta charset="utf-8"><title>CP3 passing characterization tests</title><style>body{margin:0;background:#f3f5f7;color:#172534;font:17px/1.45 Arial,sans-serif}main{max-width:1450px;margin:24px auto;padding:24px 34px;background:white}h1{font-size:28px;margin:0 0 6px}h2{font-size:19px}p{margin:8px 0}.meta{color:#44566a;font-size:15px}pre{white-space:pre-wrap;overflow-wrap:anywhere;font:14px/1.35 Consolas,monospace;background:#f6f7f9;padding:16px}.columns{display:grid;grid-template-columns:1fr 1fr;gap:24px}.red{border-top:5px solid #c73339}.green{border-top:5px solid #237a4c}img.diagram{display:block;max-height:710px;max-width:100%;margin:auto}.label{font-size:13px;letter-spacing:.04em;color:#44566a}a{color:#1b55a0}</style></head><body><main><h1>CP3 - Passing tests before the fix</h1><p class="meta">shopledger | Original production code | Characterization commit: 23c8691</p><p class="label">Authentic saved node:test output - rendered copy</p><pre>Checkpoint 3 | shopledger
+Command: node --test --test-reporter=spec
+Files: test/dates.test.js, test/orders.test.js, test/ledger.test.js
+Phase: original production code; in-memory fixtures only
+
+✔ CURRENT BEHAVIOUR: ISO date becomes a day-first comparison key (0.7485ms)
+✔ CURRENT BEHAVIOUR: stored day-first date remains a day-first comparison key (0.1069ms)
+✔ empty comparison inputs return an empty key (0.1349ms)
+✔ today retains the DD/MM/YYYY display format (0.9103ms)
+✔ fiscal year preserves the March/April boundary for both date formats (0.1875ms)
+✔ missing or unsupported fiscal-year input retains the fallback (0.0947ms)
+✔ CURRENT BEHAVIOUR: a string settlement concatenates and corrupts the balance (1.5121ms)
+✔ a numeric settlement updates balance and records the payment (0.1377ms)
+✔ zero, negative and absent settlements do not mutate the ledger (0.7786ms)
+✔ unknown customer does not mutate the ledger (0.7671ms)
+✔ settlements are prepended and retain default metadata (0.2336ms)
+✔ customer list reports the opening plus billed minus settled balance (0.1784ms)
+✔ credit limit rejection leaves the customer unchanged (0.1674ms)
+✔ CURRENT BEHAVIOUR: history sorts by day text instead of chronology (1.7064ms)
+✔ CURRENT BEHAVIOUR: January range incorrectly includes all eight orders (0.2391ms)
+✔ listing does not mutate the source order array (0.2545ms)
+✔ status filtering retains the pending order (0.1231ms)
+✔ coupon search is case-insensitive and trims whitespace (0.1558ms)
+✔ customer search and order ID search retain matching records (0.1864ms)
+✔ empty history and unmatched filters return an empty array (0.1425ms)
+✔ order lookup supports route string IDs and missing IDs (0.1304ms)
+ℹ tests 21
+ℹ suites 0
+ℹ pass 21
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1486.9352
+</pre></main></body></html>
