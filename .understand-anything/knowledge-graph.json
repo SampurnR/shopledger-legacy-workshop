@@ -1,0 +1,2828 @@
+{
+  "version": "1.0.0",
+  "project": {
+    "name": "shopledger",
+    "languages": [
+      "css",
+      "html",
+      "javascript",
+      "json",
+      "unknown"
+    ],
+    "frameworks": [
+      "Express"
+    ],
+    "description": "Internal wholesale and retail billing, inventory, and khata ledger for Corner Shop.",
+    "analyzedAt": "2026-11-15T07:06:03.279Z",
+    "gitCommitHash": "68c85a9e1cb97c470b4bfd9d1a3f99488cec8639"
+  },
+  "nodes": [
+    {
+      "id": "file:config.js",
+      "type": "file",
+      "name": "config.js",
+      "filePath": "config.js",
+      "summary": "Exports runtime port, shop identity, HSN-to-GST slabs, inventory defaults, and coupon definitions shared by the server and billing modules.",
+      "tags": [
+        "configuration",
+        "gst",
+        "coupons"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/coupons.js",
+      "type": "file",
+      "name": "coupons.js",
+      "filePath": "lib/coupons.js",
+      "summary": "Normalizes promotion codes, validates activation and minimum order amounts, and computes capped percentage or flat discounts. Exposes active promotions for the catalog API.",
+      "tags": [
+        "billing",
+        "coupons",
+        "validation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/invoice.js",
+      "type": "file",
+      "name": "invoice.js",
+      "filePath": "lib/invoice.js",
+      "summary": "Computes accountant invoice figures and renders printable HTML invoices with a ledger mismatch notice. Its independent tax and coupon calculation differs from the order pricing pipeline.",
+      "tags": [
+        "billing",
+        "invoice",
+        "html-rendering",
+        "reconciliation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/pricing.js",
+      "type": "file",
+      "name": "pricing.js",
+      "filePath": "lib/pricing.js",
+      "summary": "Computes order and cart-preview totals by apportioning coupon discounts over line items, applying item-specific GST, and splitting tax into CGST and SGST. Returns detailed line breakdowns with rounded currency amounts.",
+      "tags": [
+        "billing",
+        "pricing",
+        "gst",
+        "rounding"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/tax.js",
+      "type": "file",
+      "name": "tax.js",
+      "filePath": "lib/tax.js",
+      "summary": "Resolves item GST rates from explicit overrides, HSN slabs, or the default rate, and splits GST into CGST and SGST. Provides slab-percentage and currency-rounding helpers.",
+      "tags": [
+        "billing",
+        "gst",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:routes/reports.js",
+      "type": "file",
+      "name": "reports.js",
+      "filePath": "routes/reports.js",
+      "summary": "Defines dashboard and GST reconciliation APIs, server-side cart pricing previews, and keyed JSON export. Reads persisted product data before validating coupons and calculating preview totals.",
+      "tags": [
+        "api-handler",
+        "reporting",
+        "pricing",
+        "export"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:lib/pricing.js:round2",
+      "type": "function",
+      "name": "round2",
+      "filePath": "lib/pricing.js",
+      "lineRange": [
+        4,
+        6
+      ],
+      "summary": "Converts a value to a number and rounds to two decimal places with a small epsilon adjustment for currency calculations.",
+      "tags": [
+        "utility",
+        "currency",
+        "rounding"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/tax.js:round2",
+      "type": "function",
+      "name": "round2",
+      "filePath": "lib/tax.js",
+      "lineRange": [
+        3,
+        5
+      ],
+      "summary": "Converts a value to a number and rounds to two decimal places with a small epsilon adjustment for currency calculations.",
+      "tags": [
+        "utility",
+        "currency",
+        "rounding"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/coupons.js:normalizeCode",
+      "type": "function",
+      "name": "normalizeCode",
+      "filePath": "lib/coupons.js",
+      "lineRange": [
+        7,
+        10
+      ],
+      "summary": "Trims a promotion code and converts it to uppercase, returning an empty string for missing input.",
+      "tags": [
+        "coupons",
+        "normalization",
+        "utility"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Source-verified CommonJS export enrichment; the bundled parser omitted this assigned function expression."
+    },
+    {
+      "id": "function:lib/coupons.js:getCoupon",
+      "type": "function",
+      "name": "getCoupon",
+      "filePath": "lib/coupons.js",
+      "lineRange": [
+        12,
+        25
+      ],
+      "summary": "Looks up an active coupon and returns its normalized discount settings.",
+      "tags": [
+        "coupons",
+        "configuration",
+        "lookup"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Source-verified CommonJS export enrichment; the bundled parser omitted this assigned function expression."
+    },
+    {
+      "id": "function:lib/coupons.js:validate",
+      "type": "function",
+      "name": "validate",
+      "filePath": "lib/coupons.js",
+      "lineRange": [
+        27,
+        52
+      ],
+      "summary": "Checks coupon existence, activation, and minimum subtotal, then returns its discount or a user-facing error.",
+      "tags": [
+        "coupons",
+        "validation",
+        "billing"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Source-verified CommonJS export enrichment; the bundled parser omitted this assigned function expression."
+    },
+    {
+      "id": "function:lib/coupons.js:calculateDiscount",
+      "type": "function",
+      "name": "calculateDiscount",
+      "filePath": "lib/coupons.js",
+      "lineRange": [
+        54,
+        70
+      ],
+      "summary": "Computes a flat or percentage coupon discount with minimum-order checks and caps at configured limits and subtotal.",
+      "tags": [
+        "coupons",
+        "billing",
+        "rounding"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Source-verified CommonJS export enrichment; the bundled parser omitted this assigned function expression."
+    },
+    {
+      "id": "function:lib/coupons.js:listActive",
+      "type": "function",
+      "name": "listActive",
+      "filePath": "lib/coupons.js",
+      "lineRange": [
+        72,
+        90
+      ],
+      "summary": "Builds the public active-coupon list with discount settings and descriptions.",
+      "tags": [
+        "coupons",
+        "catalog",
+        "configuration"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Source-verified CommonJS export enrichment; the bundled parser omitted this assigned function expression."
+    },
+    {
+      "id": "function:lib/pricing.js:subtotal",
+      "type": "function",
+      "name": "subtotal",
+      "filePath": "lib/pricing.js",
+      "lineRange": [
+        10,
+        16
+      ],
+      "summary": "Sums line price times quantity and rounds the gross subtotal to two decimal places.",
+      "tags": [
+        "pricing",
+        "billing",
+        "rounding"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Source-verified CommonJS export enrichment; the bundled parser omitted this assigned function expression."
+    },
+    {
+      "id": "function:lib/pricing.js:discount",
+      "type": "function",
+      "name": "discount",
+      "filePath": "lib/pricing.js",
+      "lineRange": [
+        18,
+        20
+      ],
+      "summary": "Delegates cart-level coupon discount calculation to the coupon module.",
+      "tags": [
+        "pricing",
+        "coupons",
+        "billing"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Source-verified CommonJS export enrichment; the bundled parser omitted this assigned function expression."
+    },
+    {
+      "id": "function:lib/pricing.js:computeTotals",
+      "type": "function",
+      "name": "computeTotals",
+      "filePath": "lib/pricing.js",
+      "lineRange": [
+        25,
+        68
+      ],
+      "summary": "Allocates coupon discount proportionally across lines, applies per-item GST, and returns rounded cart totals and line breakdowns.",
+      "tags": [
+        "pricing",
+        "gst",
+        "billing"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Source-verified CommonJS export enrichment; the bundled parser omitted this assigned function expression."
+    },
+    {
+      "id": "function:lib/tax.js:getRateForItem",
+      "type": "function",
+      "name": "getRateForItem",
+      "filePath": "lib/tax.js",
+      "lineRange": [
+        10,
+        22
+      ],
+      "summary": "Resolves explicit item GST overrides, configured HSN slabs, or the fallback tax rate as a decimal.",
+      "tags": [
+        "gst",
+        "configuration",
+        "tax"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Source-verified CommonJS export enrichment; the bundled parser omitted this assigned function expression."
+    },
+    {
+      "id": "function:lib/tax.js:getSlabPercent",
+      "type": "function",
+      "name": "getSlabPercent",
+      "filePath": "lib/tax.js",
+      "lineRange": [
+        24,
+        26
+      ],
+      "summary": "Returns an item GST slab as a whole-number percentage.",
+      "tags": [
+        "gst",
+        "tax",
+        "utility"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Source-verified CommonJS export enrichment; the bundled parser omitted this assigned function expression."
+    },
+    {
+      "id": "function:lib/tax.js:splitCgstSgst",
+      "type": "function",
+      "name": "splitCgstSgst",
+      "filePath": "lib/tax.js",
+      "lineRange": [
+        29,
+        36
+      ],
+      "summary": "Splits GST into rounded CGST and SGST amounts while preserving the original tax total.",
+      "tags": [
+        "gst",
+        "tax",
+        "rounding"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Source-verified CommonJS export enrichment; the bundled parser omitted this assigned function expression."
+    },
+    {
+      "id": "function:lib/invoice.js:computeInvoiceFigures",
+      "type": "function",
+      "name": "computeInvoiceFigures",
+      "filePath": "lib/invoice.js",
+      "lineRange": [
+        15,
+        57
+      ],
+      "summary": "Recomputes invoice tax and discounts from stored order items using its own calculation rules, independent of order pricing.",
+      "tags": [
+        "invoice",
+        "billing",
+        "reconciliation"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Source-verified CommonJS export enrichment; the bundled parser omitted this assigned function expression."
+    },
+    {
+      "id": "function:lib/invoice.js:render",
+      "type": "function",
+      "name": "render",
+      "filePath": "lib/invoice.js",
+      "lineRange": [
+        59,
+        136
+      ],
+      "summary": "Renders a printable HTML tax invoice and warns when the computed invoice total differs from the stored order ledger total.",
+      "tags": [
+        "invoice",
+        "html-rendering",
+        "reconciliation"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Source-verified CommonJS export enrichment; the bundled parser omitted this assigned function expression."
+    },
+    {
+      "id": "file:lib/dates.js",
+      "type": "file",
+      "name": "dates.js",
+      "filePath": "lib/dates.js",
+      "summary": "Formats local dates as DD/MM/YYYY, converts HTML date input into that representation, and derives the April-to-March fiscal year. Date normalization preserves day-first strings rather than chronological sort keys.",
+      "tags": [
+        "utility",
+        "date-formatting",
+        "fiscal-year"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:lib/inventory.js",
+      "type": "file",
+      "name": "inventory.js",
+      "filePath": "lib/inventory.js",
+      "summary": "Calculates sellable stock after reservations, validates order quantities, deducts stock for committed orders, and summarizes stock health and valuation. Cancellation release currently looks up productId and reduces reservations rather than restoring physical stock.",
+      "tags": [
+        "inventory",
+        "stock-validation",
+        "reservation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/ledger.js",
+      "type": "file",
+      "name": "ledger.js",
+      "filePath": "lib/ledger.js",
+      "summary": "Maintains customer khata balances, enforces credit limits, reverses order debits, and records settlements. Settlement arithmetic adds the request amount before numeric coercion, so string inputs can concatenate.",
+      "tags": [
+        "khata",
+        "credit-limit",
+        "settlement"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/orders.js",
+      "type": "file",
+      "name": "orders.js",
+      "filePath": "lib/orders.js",
+      "summary": "Adds and finds orders, applies search/status/date filters, and coordinates cancellation with inventory release and credit reversal. Order dates and sorting use day-first date strings.",
+      "tags": [
+        "orders",
+        "cancellation",
+        "filtering"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/reports.js",
+      "type": "file",
+      "name": "reports.js",
+      "filePath": "lib/reports.js",
+      "summary": "Aggregates dashboard revenue, taxes, discounts, order statuses, stock health, and khata receivables. Reconciles saved order totals against independently calculated invoice figures.",
+      "tags": [
+        "reporting",
+        "dashboard",
+        "gst-reconciliation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:routes/orders.js",
+      "type": "file",
+      "name": "orders.js",
+      "filePath": "routes/orders.js",
+      "summary": "Defines order list/detail, create, and cancel API handlers mounted beneath /api. Order creation resolves catalog prices, validates stock and coupons, charges khata when selected, deducts stock, appends audit history, and saves the JSON database.",
+      "tags": [
+        "api-handler",
+        "orders",
+        "persistence"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:lib/inventory.js:find",
+      "type": "function",
+      "name": "find",
+      "filePath": "lib/inventory.js",
+      "lineRange": [
+        3,
+        8
+      ],
+      "summary": "Finds a product by loosely compared catalog ID, returning null when no product matches.",
+      "tags": [
+        "inventory",
+        "lookup",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/inventory.js:getSellableStock",
+      "type": "function",
+      "name": "getSellableStock",
+      "filePath": "lib/inventory.js",
+      "lineRange": [
+        13,
+        17
+      ],
+      "summary": "Returns physical stock less reserved wholesale units, clamped to zero.",
+      "tags": [
+        "inventory",
+        "reservation",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/ledger.js:findCustomer",
+      "type": "function",
+      "name": "findCustomer",
+      "filePath": "lib/ledger.js",
+      "lineRange": [
+        7,
+        13
+      ],
+      "summary": "Finds a registered khata customer by loosely compared ID, returning null for missing accounts.",
+      "tags": [
+        "khata",
+        "lookup",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/dates.js:today",
+      "type": "function",
+      "name": "today",
+      "filePath": "lib/dates.js",
+      "lineRange": [
+        7,
+        10
+      ],
+      "summary": "Formats the current local date as DD/MM/YYYY.",
+      "tags": [
+        "date",
+        "formatting",
+        "utility"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Source-verified CommonJS export omitted by the bundled structural extractor."
+    },
+    {
+      "id": "function:lib/dates.js:normalizeDateKey",
+      "type": "function",
+      "name": "normalizeDateKey",
+      "filePath": "lib/dates.js",
+      "lineRange": [
+        14,
+        25
+      ],
+      "summary": "Converts YYYY-MM-DD input to DD/MM/YYYY and otherwise returns trimmed input; its output is not a chronological lexical key.",
+      "tags": [
+        "date",
+        "normalization",
+        "filtering"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Source-verified CommonJS export omitted by the bundled structural extractor."
+    },
+    {
+      "id": "function:lib/dates.js:getFiscalYear",
+      "type": "function",
+      "name": "getFiscalYear",
+      "filePath": "lib/dates.js",
+      "lineRange": [
+        27,
+        37
+      ],
+      "summary": "Derives an April-to-March fiscal year label from normalized date text, with a legacy fallback for malformed input.",
+      "tags": [
+        "date",
+        "fiscal-year",
+        "utility"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Source-verified CommonJS export omitted by the bundled structural extractor."
+    },
+    {
+      "id": "function:lib/inventory.js:check",
+      "type": "function",
+      "name": "check",
+      "filePath": "lib/inventory.js",
+      "lineRange": [
+        22,
+        37
+      ],
+      "summary": "Checks each item against sellable stock, rejecting quantities greater than or equal to available units.",
+      "tags": [
+        "inventory",
+        "validation",
+        "stock"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Source-verified CommonJS export omitted by the bundled structural extractor."
+    },
+    {
+      "id": "function:lib/inventory.js:reserve",
+      "type": "function",
+      "name": "reserve",
+      "filePath": "lib/inventory.js",
+      "lineRange": [
+        40,
+        47
+      ],
+      "summary": "Deducts committed item quantities from matching products’ physical stock.",
+      "tags": [
+        "inventory",
+        "stock",
+        "mutation"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Source-verified CommonJS export omitted by the bundled structural extractor."
+    },
+    {
+      "id": "function:lib/inventory.js:release",
+      "type": "function",
+      "name": "release",
+      "filePath": "lib/inventory.js",
+      "lineRange": [
+        50,
+        56
+      ],
+      "summary": "Reduces reserved quantities for products matched by line productId; this differs from the id and stock fields used by order creation.",
+      "tags": [
+        "inventory",
+        "reservation",
+        "cancellation"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Source-verified CommonJS export omitted by the bundled structural extractor."
+    },
+    {
+      "id": "function:lib/inventory.js:summarize",
+      "type": "function",
+      "name": "summarize",
+      "filePath": "lib/inventory.js",
+      "lineRange": [
+        58,
+        83
+      ],
+      "summary": "Counts SKUs, out-of-stock and low-stock products and calculates physical stock valuation.",
+      "tags": [
+        "inventory",
+        "reporting",
+        "valuation"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Source-verified CommonJS export omitted by the bundled structural extractor."
+    },
+    {
+      "id": "function:lib/ledger.js:listCustomers",
+      "type": "function",
+      "name": "listCustomers",
+      "filePath": "lib/ledger.js",
+      "lineRange": [
+        17,
+        32
+      ],
+      "summary": "Projects customer account details with balances calculated from opening balance, billed totals, and settlements.",
+      "tags": [
+        "khata",
+        "customer",
+        "balance"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Source-verified CommonJS export omitted by the bundled structural extractor."
+    },
+    {
+      "id": "function:lib/ledger.js:chargeOrderToKhata",
+      "type": "function",
+      "name": "chargeOrderToKhata",
+      "filePath": "lib/ledger.js",
+      "lineRange": [
+        35,
+        52
+      ],
+      "summary": "Checks projected account balance against the credit limit and posts an order debit when permitted.",
+      "tags": [
+        "khata",
+        "credit-limit",
+        "billing"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Source-verified CommonJS export omitted by the bundled structural extractor."
+    },
+    {
+      "id": "function:lib/ledger.js:reverseOrderDebit",
+      "type": "function",
+      "name": "reverseOrderDebit",
+      "filePath": "lib/ledger.js",
+      "lineRange": [
+        54,
+        59
+      ],
+      "summary": "Subtracts a cancelled order total from billed credit and recomputes the account balance.",
+      "tags": [
+        "khata",
+        "cancellation",
+        "balance"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Source-verified CommonJS export omitted by the bundled structural extractor."
+    },
+    {
+      "id": "function:lib/ledger.js:recordSettlement",
+      "type": "function",
+      "name": "recordSettlement",
+      "filePath": "lib/ledger.js",
+      "lineRange": [
+        62,
+        92
+      ],
+      "summary": "Records a positive customer settlement and updates account totals; the amount is added before numeric coercion.",
+      "tags": [
+        "khata",
+        "settlement",
+        "mutation"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Source-verified CommonJS export omitted by the bundled structural extractor."
+    },
+    {
+      "id": "function:lib/orders.js:add",
+      "type": "function",
+      "name": "add",
+      "filePath": "lib/orders.js",
+      "lineRange": [
+        5,
+        23
+      ],
+      "summary": "Allocates an order ID, snapshots customer/item/totals fields, and appends the order to the in-memory database.",
+      "tags": [
+        "orders",
+        "creation",
+        "data-model"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Source-verified CommonJS export omitted by the bundled structural extractor."
+    },
+    {
+      "id": "function:lib/orders.js:get",
+      "type": "function",
+      "name": "get",
+      "filePath": "lib/orders.js",
+      "lineRange": [
+        25,
+        30
+      ],
+      "summary": "Finds an order by loosely compared ID or returns null.",
+      "tags": [
+        "orders",
+        "lookup",
+        "utility"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Source-verified CommonJS export omitted by the bundled structural extractor."
+    },
+    {
+      "id": "function:lib/orders.js:cancel",
+      "type": "function",
+      "name": "cancel",
+      "filePath": "lib/orders.js",
+      "lineRange": [
+        33,
+        53
+      ],
+      "summary": "Marks an order cancelled, invokes inventory release, and reverses khata debit for credit orders.",
+      "tags": [
+        "orders",
+        "cancellation",
+        "khata"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Source-verified CommonJS export omitted by the bundled structural extractor."
+    },
+    {
+      "id": "function:lib/orders.js:list",
+      "type": "function",
+      "name": "list",
+      "filePath": "lib/orders.js",
+      "lineRange": [
+        56,
+        94
+      ],
+      "summary": "Filters orders by status, search, and normalized date bounds, then sorts by stored date strings.",
+      "tags": [
+        "orders",
+        "filtering",
+        "date"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Source-verified CommonJS export omitted by the bundled structural extractor."
+    },
+    {
+      "id": "function:lib/reports.js:getDashboardSummary",
+      "type": "function",
+      "name": "getDashboardSummary",
+      "filePath": "lib/reports.js",
+      "lineRange": [
+        9,
+        57
+      ],
+      "summary": "Aggregates non-cancelled order amounts, account receivables, stock statistics, and invoice reconciliation results.",
+      "tags": [
+        "reporting",
+        "dashboard",
+        "aggregation"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Source-verified CommonJS export omitted by the bundled structural extractor."
+    },
+    {
+      "id": "function:lib/reports.js:getGstReconciliation",
+      "type": "function",
+      "name": "getGstReconciliation",
+      "filePath": "lib/reports.js",
+      "lineRange": [
+        60,
+        103
+      ],
+      "summary": "Compares saved ledger totals and tax against invoice calculations for non-cancelled orders and reports mismatch deltas.",
+      "tags": [
+        "reporting",
+        "gst",
+        "reconciliation"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Source-verified CommonJS export omitted by the bundled structural extractor."
+    },
+    {
+      "id": "file:lib/store.js",
+      "type": "file",
+      "name": "store.js",
+      "filePath": "lib/store.js",
+      "summary": "Reads and rewrites the JSON database synchronously, supplies missing collection/id defaults, and prepends bounded audit entries. All persistence is centralized here without transactions or an ORM.",
+      "tags": [
+        "persistence",
+        "json-storage",
+        "audit-log"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:routes/customers.js",
+      "type": "file",
+      "name": "customers.js",
+      "filePath": "routes/customers.js",
+      "summary": "Exposes customer balances and recent settlements, and records a settlement through the ledger service before appending an audit entry and persisting the database.",
+      "tags": [
+        "api-handler",
+        "customers",
+        "khata"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:routes/products.js",
+      "type": "file",
+      "name": "products.js",
+      "filePath": "routes/products.js",
+      "summary": "Lists product catalog records enriched with GST rates and sellable stock, supports category/search filters, and exposes active coupon definitions.",
+      "tags": [
+        "api-handler",
+        "catalog",
+        "inventory"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:server.js",
+      "type": "file",
+      "name": "server.js",
+      "filePath": "server.js",
+      "summary": "Bootstraps Express JSON parsing, static assets and four /api routers; renders printable order invoices and starts the listener only when executed directly. Exports the app for reuse.",
+      "tags": [
+        "entry-point",
+        "express",
+        "routing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/store.js:ensureStructure",
+      "type": "function",
+      "name": "ensureStructure",
+      "filePath": "lib/store.js",
+      "lineRange": [
+        6,
+        15
+      ],
+      "summary": "Adds absent database collections and order/settlement sequence defaults to an in-memory database object.",
+      "tags": [
+        "persistence",
+        "json-storage",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/store.js:read",
+      "type": "function",
+      "name": "read",
+      "filePath": "lib/store.js",
+      "lineRange": [
+        17,
+        21
+      ],
+      "summary": "Synchronously loads and parses data/db.json, then supplies missing structural defaults.",
+      "tags": [
+        "persistence",
+        "json-storage",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/store.js:write",
+      "type": "function",
+      "name": "write",
+      "filePath": "lib/store.js",
+      "lineRange": [
+        23,
+        26
+      ],
+      "summary": "Ensures required database structure and synchronously replaces data/db.json with formatted JSON.",
+      "tags": [
+        "persistence",
+        "json-storage",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/store.js:appendAudit",
+      "type": "function",
+      "name": "appendAudit",
+      "filePath": "lib/store.js",
+      "lineRange": [
+        28,
+        38
+      ],
+      "summary": "Prepends a timestamped audit event and retains at most 100 entries.",
+      "tags": [
+        "persistence",
+        "json-storage",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:.understand-anything/.understandignore",
+      "type": "file",
+      "name": ".understandignore",
+      "filePath": ".understand-anything/.understandignore",
+      "summary": "Generated analysis setup containing commented exclusion suggestions and documentation of built-in ignore defaults. It affects knowledge-graph scanning rather than ShopLedger runtime behavior.",
+      "tags": [
+        "analysis-tooling",
+        "ignore-rules",
+        "generated"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:.understand-anything/config.json",
+      "type": "config",
+      "name": "config.json",
+      "filePath": ".understand-anything/config.json",
+      "summary": "Generated analysis configuration selecting English for knowledge-graph textual output. This is separate from the application runtime configuration.",
+      "tags": [
+        "analysis-tooling",
+        "configuration",
+        "generated"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:data/db.json",
+      "type": "config",
+      "name": "db.json",
+      "filePath": "data/db.json",
+      "summary": "JSON database containing product stock and reservations, customer credit totals, orders, settlements, audit entries and sequence counters. The store module reads and rewrites this file as a whole.",
+      "tags": [
+        "database",
+        "json-storage",
+        "business-records"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:package.json",
+      "type": "config",
+      "name": "package.json",
+      "filePath": "package.json",
+      "summary": "Declares ShopLedger metadata, Express/body-parser runtime dependencies, the node server.js start command and a deliberately failing placeholder test command. No build or lint tooling is configured.",
+      "tags": [
+        "configuration",
+        "dependencies",
+        "npm-scripts"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:public/css/style.css",
+      "type": "file",
+      "name": "style.css",
+      "filePath": "public/css/style.css",
+      "summary": "Defines shared typography, dashboard cards, tabs, POS/khata layouts, tables, forms, badges and responsive behavior for the browser interface.",
+      "tags": [
+        "styles",
+        "responsive-layout",
+        "ui"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:public/index.html",
+      "type": "file",
+      "name": "index.html",
+      "filePath": "public/index.html",
+      "summary": "Provides the single-page POS, order register, khata settlement and audit views, with DOM hooks used by app.js and a linked shared stylesheet.",
+      "tags": [
+        "ui",
+        "entry-point",
+        "forms"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:public/js/app.js",
+      "type": "file",
+      "name": "app.js",
+      "filePath": "public/js/app.js",
+      "summary": "Owns browser state, XMLHttpRequest helpers, catalog/cart rendering, order actions, customer settlements and reconciliation dashboards. Uses direct DOM manipulation and callback-based requests without a frontend framework.",
+      "tags": [
+        "ui",
+        "event-handler",
+        "api-client"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:public/js/app.js:get",
+      "type": "function",
+      "name": "get",
+      "filePath": "public/js/app.js",
+      "lineRange": [
+        6,
+        17
+      ],
+      "summary": "Performs an asynchronous JSON GET and invokes a callback with parsed response data and HTTP status.",
+      "tags": [
+        "ui",
+        "api-client",
+        "rendering"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:public/js/app.js:post",
+      "type": "function",
+      "name": "post",
+      "filePath": "public/js/app.js",
+      "lineRange": [
+        19,
+        33
+      ],
+      "summary": "Posts a JSON payload and invokes a status-first callback with parsed JSON or a response error.",
+      "tags": [
+        "ui",
+        "api-client",
+        "rendering"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:public/js/app.js:loadDashboardSummary",
+      "type": "function",
+      "name": "loadDashboardSummary",
+      "filePath": "public/js/app.js",
+      "lineRange": [
+        40,
+        78
+      ],
+      "summary": "Fetches dashboard summary and updates revenue, orders, receivables, stock and reconciliation indicators.",
+      "tags": [
+        "ui",
+        "api-client",
+        "rendering"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:public/js/app.js:renderCatalogTable",
+      "type": "function",
+      "name": "renderCatalogTable",
+      "filePath": "public/js/app.js",
+      "lineRange": [
+        80,
+        128
+      ],
+      "summary": "Filters cached products by category/search and renders catalog rows with quantities, prices, GST and sellable-stock badges.",
+      "tags": [
+        "ui",
+        "api-client",
+        "rendering"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:public/js/app.js:getSelectedCartItems",
+      "type": "function",
+      "name": "getSelectedCartItems",
+      "filePath": "public/js/app.js",
+      "lineRange": [
+        146,
+        161
+      ],
+      "summary": "Builds selected order item records from positive cart quantities and cached product metadata.",
+      "tags": [
+        "ui",
+        "api-client",
+        "rendering"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:public/js/app.js:updateCartPreview",
+      "type": "function",
+      "name": "updateCartPreview",
+      "filePath": "public/js/app.js",
+      "lineRange": [
+        163,
+        218
+      ],
+      "summary": "Renders selected cart items, requests authoritative pricing and coupon validation, and updates totals and promo feedback.",
+      "tags": [
+        "ui",
+        "api-client",
+        "rendering"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:public/js/app.js:loadCustomersDropdown",
+      "type": "function",
+      "name": "loadCustomersDropdown",
+      "filePath": "public/js/app.js",
+      "lineRange": [
+        229,
+        251
+      ],
+      "summary": "Fetches customer/settlement data, repopulates customer selection controls and refreshes the khata table.",
+      "tags": [
+        "ui",
+        "api-client",
+        "rendering"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:public/js/app.js:loadOrders",
+      "type": "function",
+      "name": "loadOrders",
+      "filePath": "public/js/app.js",
+      "lineRange": [
+        253,
+        303
+      ],
+      "summary": "Builds query filters, fetches orders and renders register rows with invoice and cancellation actions.",
+      "tags": [
+        "ui",
+        "api-client",
+        "rendering"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:public/js/app.js:renderKhataTable",
+      "type": "function",
+      "name": "renderKhataTable",
+      "filePath": "public/js/app.js",
+      "lineRange": [
+        322,
+        350
+      ],
+      "summary": "Renders customer credit limits, billing/settlement totals and balances together with the recent-settlements feed.",
+      "tags": [
+        "ui",
+        "api-client",
+        "rendering"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:public/js/app.js:renderInventoryAuditTable",
+      "type": "function",
+      "name": "renderInventoryAuditTable",
+      "filePath": "public/js/app.js",
+      "lineRange": [
+        357,
+        385
+      ],
+      "summary": "Renders physical, reserved and sellable stock with GST metadata and reorder-health indicators.",
+      "tags": [
+        "ui",
+        "api-client",
+        "rendering"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:public/js/app.js:loadGstReconciliation",
+      "type": "function",
+      "name": "loadGstReconciliation",
+      "filePath": "public/js/app.js",
+      "lineRange": [
+        387,
+        427
+      ],
+      "summary": "Fetches ledger-versus-invoice reconciliation and displays mismatch summaries, per-order deltas and invoice links.",
+      "tags": [
+        "ui",
+        "api-client",
+        "rendering"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:public/js/app.js:showTab",
+      "type": "function",
+      "name": "showTab",
+      "filePath": "public/js/app.js",
+      "lineRange": [
+        429,
+        442
+      ],
+      "summary": "Switches the active application tab and refreshes order, customer or audit data for the selected view.",
+      "tags": [
+        "ui",
+        "api-client",
+        "rendering"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:public/js/app.js:stepQty",
+      "type": "function",
+      "name": "stepQty",
+      "filePath": "public/js/app.js",
+      "lineRange": [
+        130,
+        137
+      ],
+      "summary": "Adjusts a product quantity by a step, clamps it to zero, updates its input and refreshes cart pricing.",
+      "tags": [
+        "ui",
+        "event-handler",
+        "global-handler"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Assigned to window so inline HTML event handlers can call it; source-verified enrichment omitted by the structural parser."
+    },
+    {
+      "id": "function:public/js/app.js:onQtyInput",
+      "type": "function",
+      "name": "onQtyInput",
+      "filePath": "public/js/app.js",
+      "lineRange": [
+        139,
+        144
+      ],
+      "summary": "Normalizes a manually entered product quantity and refreshes the cart preview.",
+      "tags": [
+        "ui",
+        "event-handler",
+        "global-handler"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Assigned to window so inline HTML event handlers can call it; source-verified enrichment omitted by the structural parser."
+    },
+    {
+      "id": "function:public/js/app.js:cancelOrder",
+      "type": "function",
+      "name": "cancelOrder",
+      "filePath": "public/js/app.js",
+      "lineRange": [
+        305,
+        320
+      ],
+      "summary": "Requests order cancellation and refreshes order, product, customer and dashboard data on success.",
+      "tags": [
+        "ui",
+        "event-handler",
+        "global-handler"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Assigned to window so inline HTML event handlers can call it; source-verified enrichment omitted by the structural parser."
+    },
+    {
+      "id": "function:public/js/app.js:prefillSettlement",
+      "type": "function",
+      "name": "prefillSettlement",
+      "filePath": "public/js/app.js",
+      "lineRange": [
+        352,
+        355
+      ],
+      "summary": "Selects a customer in the settlement form and focuses the settlement amount input.",
+      "tags": [
+        "ui",
+        "event-handler",
+        "global-handler"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Assigned to window so inline HTML event handlers can call it; source-verified enrichment omitted by the structural parser."
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:lib/coupons.js",
+      "target": "file:config.js",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:lib/invoice.js",
+      "target": "file:config.js",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:lib/pricing.js",
+      "target": "file:lib/coupons.js",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:lib/pricing.js",
+      "target": "file:lib/tax.js",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:lib/tax.js",
+      "target": "file:config.js",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:routes/reports.js",
+      "target": "file:config.js",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:routes/reports.js",
+      "target": "file:lib/coupons.js",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:routes/reports.js",
+      "target": "file:lib/pricing.js",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:routes/reports.js",
+      "target": "file:lib/reports.js",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:routes/reports.js",
+      "target": "file:lib/store.js",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:lib/pricing.js",
+      "target": "function:lib/pricing.js:round2",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pricing.js",
+      "target": "function:lib/pricing.js:round2",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/tax.js",
+      "target": "function:lib/tax.js:round2",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/tax.js",
+      "target": "function:lib/tax.js:round2",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/coupons.js",
+      "target": "function:lib/coupons.js:normalizeCode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/coupons.js",
+      "target": "function:lib/coupons.js:normalizeCode",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/coupons.js",
+      "target": "function:lib/coupons.js:getCoupon",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/coupons.js",
+      "target": "function:lib/coupons.js:getCoupon",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/coupons.js",
+      "target": "function:lib/coupons.js:validate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/coupons.js",
+      "target": "function:lib/coupons.js:validate",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/coupons.js",
+      "target": "function:lib/coupons.js:calculateDiscount",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/coupons.js",
+      "target": "function:lib/coupons.js:calculateDiscount",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/coupons.js",
+      "target": "function:lib/coupons.js:listActive",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/coupons.js",
+      "target": "function:lib/coupons.js:listActive",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/pricing.js",
+      "target": "function:lib/pricing.js:subtotal",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pricing.js",
+      "target": "function:lib/pricing.js:subtotal",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/pricing.js",
+      "target": "function:lib/pricing.js:discount",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pricing.js",
+      "target": "function:lib/pricing.js:discount",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/pricing.js",
+      "target": "function:lib/pricing.js:computeTotals",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/pricing.js",
+      "target": "function:lib/pricing.js:computeTotals",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/tax.js",
+      "target": "function:lib/tax.js:getRateForItem",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/tax.js",
+      "target": "function:lib/tax.js:getRateForItem",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/tax.js",
+      "target": "function:lib/tax.js:getSlabPercent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/tax.js",
+      "target": "function:lib/tax.js:getSlabPercent",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/tax.js",
+      "target": "function:lib/tax.js:splitCgstSgst",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/tax.js",
+      "target": "function:lib/tax.js:splitCgstSgst",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/invoice.js",
+      "target": "function:lib/invoice.js:computeInvoiceFigures",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/invoice.js",
+      "target": "function:lib/invoice.js:computeInvoiceFigures",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/invoice.js",
+      "target": "function:lib/invoice.js:render",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/invoice.js",
+      "target": "function:lib/invoice.js:render",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:lib/coupons.js:getCoupon",
+      "target": "function:lib/coupons.js:normalizeCode",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:lib/coupons.js:validate",
+      "target": "function:lib/coupons.js:normalizeCode",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:lib/coupons.js:validate",
+      "target": "function:lib/coupons.js:calculateDiscount",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:lib/coupons.js:calculateDiscount",
+      "target": "function:lib/coupons.js:getCoupon",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:lib/pricing.js:discount",
+      "target": "function:lib/coupons.js:calculateDiscount",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:lib/pricing.js:subtotal",
+      "target": "function:lib/pricing.js:round2",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:lib/pricing.js:computeTotals",
+      "target": "function:lib/pricing.js:subtotal",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:lib/pricing.js:computeTotals",
+      "target": "function:lib/pricing.js:discount",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:lib/pricing.js:computeTotals",
+      "target": "function:lib/pricing.js:round2",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:lib/pricing.js:computeTotals",
+      "target": "function:lib/tax.js:getRateForItem",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:lib/pricing.js:computeTotals",
+      "target": "function:lib/tax.js:splitCgstSgst",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:lib/tax.js:getSlabPercent",
+      "target": "function:lib/tax.js:getRateForItem",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:lib/tax.js:splitCgstSgst",
+      "target": "function:lib/tax.js:round2",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:lib/invoice.js:render",
+      "target": "function:lib/invoice.js:computeInvoiceFigures",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/inventory.js",
+      "target": "file:config.js",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:lib/ledger.js",
+      "target": "file:lib/dates.js",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:lib/orders.js",
+      "target": "file:lib/dates.js",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:lib/orders.js",
+      "target": "file:lib/inventory.js",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:lib/orders.js",
+      "target": "file:lib/ledger.js",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:lib/reports.js",
+      "target": "file:lib/inventory.js",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:lib/reports.js",
+      "target": "file:lib/invoice.js",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:lib/reports.js",
+      "target": "file:lib/ledger.js",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:routes/orders.js",
+      "target": "file:lib/coupons.js",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:routes/orders.js",
+      "target": "file:lib/inventory.js",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:routes/orders.js",
+      "target": "file:lib/ledger.js",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:routes/orders.js",
+      "target": "file:lib/orders.js",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:routes/orders.js",
+      "target": "file:lib/pricing.js",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:routes/orders.js",
+      "target": "file:lib/store.js",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:lib/inventory.js",
+      "target": "function:lib/inventory.js:find",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/inventory.js",
+      "target": "function:lib/inventory.js:find",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/inventory.js",
+      "target": "function:lib/inventory.js:getSellableStock",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/inventory.js",
+      "target": "function:lib/inventory.js:getSellableStock",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/ledger.js",
+      "target": "function:lib/ledger.js:findCustomer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/ledger.js",
+      "target": "function:lib/ledger.js:findCustomer",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/dates.js",
+      "target": "function:lib/dates.js:today",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/dates.js",
+      "target": "function:lib/dates.js:today",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/dates.js",
+      "target": "function:lib/dates.js:normalizeDateKey",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/dates.js",
+      "target": "function:lib/dates.js:normalizeDateKey",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/dates.js",
+      "target": "function:lib/dates.js:getFiscalYear",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/dates.js",
+      "target": "function:lib/dates.js:getFiscalYear",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/inventory.js",
+      "target": "function:lib/inventory.js:check",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/inventory.js",
+      "target": "function:lib/inventory.js:check",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/inventory.js",
+      "target": "function:lib/inventory.js:reserve",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/inventory.js",
+      "target": "function:lib/inventory.js:reserve",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/inventory.js",
+      "target": "function:lib/inventory.js:release",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/inventory.js",
+      "target": "function:lib/inventory.js:release",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/inventory.js",
+      "target": "function:lib/inventory.js:summarize",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/inventory.js",
+      "target": "function:lib/inventory.js:summarize",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/ledger.js",
+      "target": "function:lib/ledger.js:listCustomers",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/ledger.js",
+      "target": "function:lib/ledger.js:listCustomers",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/ledger.js",
+      "target": "function:lib/ledger.js:chargeOrderToKhata",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/ledger.js",
+      "target": "function:lib/ledger.js:chargeOrderToKhata",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/ledger.js",
+      "target": "function:lib/ledger.js:reverseOrderDebit",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/ledger.js",
+      "target": "function:lib/ledger.js:reverseOrderDebit",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/ledger.js",
+      "target": "function:lib/ledger.js:recordSettlement",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/ledger.js",
+      "target": "function:lib/ledger.js:recordSettlement",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/orders.js",
+      "target": "function:lib/orders.js:add",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/orders.js",
+      "target": "function:lib/orders.js:add",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/orders.js",
+      "target": "function:lib/orders.js:get",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/orders.js",
+      "target": "function:lib/orders.js:get",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/orders.js",
+      "target": "function:lib/orders.js:cancel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/orders.js",
+      "target": "function:lib/orders.js:cancel",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/orders.js",
+      "target": "function:lib/orders.js:list",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/orders.js",
+      "target": "function:lib/orders.js:list",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/reports.js",
+      "target": "function:lib/reports.js:getDashboardSummary",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/reports.js",
+      "target": "function:lib/reports.js:getDashboardSummary",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/reports.js",
+      "target": "function:lib/reports.js:getGstReconciliation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/reports.js",
+      "target": "function:lib/reports.js:getGstReconciliation",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:lib/dates.js:getFiscalYear",
+      "target": "function:lib/dates.js:normalizeDateKey",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:lib/inventory.js:check",
+      "target": "function:lib/inventory.js:find",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:lib/inventory.js:check",
+      "target": "function:lib/inventory.js:getSellableStock",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:lib/inventory.js:reserve",
+      "target": "function:lib/inventory.js:find",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:lib/inventory.js:release",
+      "target": "function:lib/inventory.js:find",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:lib/inventory.js:summarize",
+      "target": "function:lib/inventory.js:getSellableStock",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:lib/ledger.js:chargeOrderToKhata",
+      "target": "function:lib/ledger.js:findCustomer",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:lib/ledger.js:reverseOrderDebit",
+      "target": "function:lib/ledger.js:findCustomer",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:lib/ledger.js:recordSettlement",
+      "target": "function:lib/ledger.js:findCustomer",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:lib/ledger.js:recordSettlement",
+      "target": "function:lib/dates.js:today",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:lib/orders.js:add",
+      "target": "function:lib/dates.js:today",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:lib/orders.js:cancel",
+      "target": "function:lib/orders.js:get",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:lib/orders.js:cancel",
+      "target": "function:lib/dates.js:today",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:lib/orders.js:cancel",
+      "target": "function:lib/inventory.js:release",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:lib/orders.js:cancel",
+      "target": "function:lib/ledger.js:reverseOrderDebit",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:lib/orders.js:list",
+      "target": "function:lib/dates.js:normalizeDateKey",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:lib/reports.js:getDashboardSummary",
+      "target": "function:lib/ledger.js:listCustomers",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:lib/reports.js:getDashboardSummary",
+      "target": "function:lib/inventory.js:summarize",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:lib/reports.js:getDashboardSummary",
+      "target": "function:lib/reports.js:getGstReconciliation",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:lib/reports.js:getGstReconciliation",
+      "target": "function:lib/invoice.js:computeInvoiceFigures",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:routes/customers.js",
+      "target": "file:lib/ledger.js",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:routes/customers.js",
+      "target": "file:lib/store.js",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:routes/products.js",
+      "target": "file:lib/coupons.js",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:routes/products.js",
+      "target": "file:lib/inventory.js",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:routes/products.js",
+      "target": "file:lib/store.js",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:routes/products.js",
+      "target": "file:lib/tax.js",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:server.js",
+      "target": "file:config.js",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:server.js",
+      "target": "file:lib/invoice.js",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:server.js",
+      "target": "file:lib/orders.js",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:server.js",
+      "target": "file:lib/store.js",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:server.js",
+      "target": "file:routes/customers.js",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:server.js",
+      "target": "file:routes/orders.js",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:server.js",
+      "target": "file:routes/products.js",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:server.js",
+      "target": "file:routes/reports.js",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:lib/store.js",
+      "target": "function:lib/store.js:ensureStructure",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/store.js",
+      "target": "function:lib/store.js:read",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/store.js",
+      "target": "function:lib/store.js:read",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/store.js",
+      "target": "function:lib/store.js:write",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/store.js",
+      "target": "function:lib/store.js:write",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/store.js",
+      "target": "function:lib/store.js:appendAudit",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:lib/store.js",
+      "target": "function:lib/store.js:appendAudit",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/store.js",
+      "target": "config:data/db.json",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "function:lib/store.js:read",
+      "target": "function:lib/store.js:ensureStructure",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:lib/store.js:write",
+      "target": "function:lib/store.js:ensureStructure",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:server.js",
+      "target": "file:public/index.html",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:public/js/app.js",
+      "target": "function:public/js/app.js:get",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:public/js/app.js",
+      "target": "function:public/js/app.js:post",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:public/js/app.js",
+      "target": "function:public/js/app.js:loadDashboardSummary",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:public/js/app.js",
+      "target": "function:public/js/app.js:renderCatalogTable",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:public/js/app.js",
+      "target": "function:public/js/app.js:getSelectedCartItems",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:public/js/app.js",
+      "target": "function:public/js/app.js:updateCartPreview",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:public/js/app.js",
+      "target": "function:public/js/app.js:loadCustomersDropdown",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:public/js/app.js",
+      "target": "function:public/js/app.js:loadOrders",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:public/js/app.js",
+      "target": "function:public/js/app.js:renderKhataTable",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:public/js/app.js",
+      "target": "function:public/js/app.js:renderInventoryAuditTable",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:public/js/app.js",
+      "target": "function:public/js/app.js:loadGstReconciliation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:public/js/app.js",
+      "target": "function:public/js/app.js:showTab",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "config:package.json",
+      "target": "file:server.js",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:.understand-anything/config.json",
+      "target": "file:.understand-anything/.understandignore",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:public/index.html",
+      "target": "file:public/css/style.css",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:public/index.html",
+      "target": "file:public/js/app.js",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:public/js/app.js",
+      "target": "file:routes/products.js",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:public/js/app.js",
+      "target": "file:routes/customers.js",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:public/js/app.js",
+      "target": "file:routes/orders.js",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:public/js/app.js",
+      "target": "file:routes/reports.js",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:public/js/app.js",
+      "target": "file:server.js",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "function:public/js/app.js:loadDashboardSummary",
+      "target": "function:public/js/app.js:get",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:public/js/app.js:updateCartPreview",
+      "target": "function:public/js/app.js:getSelectedCartItems",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:public/js/app.js:updateCartPreview",
+      "target": "function:public/js/app.js:post",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:public/js/app.js:loadCustomersDropdown",
+      "target": "function:public/js/app.js:get",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:public/js/app.js:loadCustomersDropdown",
+      "target": "function:public/js/app.js:renderKhataTable",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:public/js/app.js:loadOrders",
+      "target": "function:public/js/app.js:get",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:public/js/app.js:loadGstReconciliation",
+      "target": "function:public/js/app.js:get",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:public/js/app.js:showTab",
+      "target": "function:public/js/app.js:loadOrders",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:public/js/app.js:showTab",
+      "target": "function:public/js/app.js:loadCustomersDropdown",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:public/js/app.js:showTab",
+      "target": "function:public/js/app.js:loadGstReconciliation",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:public/js/app.js:showTab",
+      "target": "function:public/js/app.js:renderInventoryAuditTable",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:public/js/app.js",
+      "target": "function:public/js/app.js:stepQty",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:public/js/app.js",
+      "target": "function:public/js/app.js:stepQty",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:public/js/app.js",
+      "target": "function:public/js/app.js:onQtyInput",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:public/js/app.js",
+      "target": "function:public/js/app.js:onQtyInput",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:public/js/app.js",
+      "target": "function:public/js/app.js:cancelOrder",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:public/js/app.js",
+      "target": "function:public/js/app.js:cancelOrder",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:public/js/app.js",
+      "target": "function:public/js/app.js:prefillSettlement",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:public/js/app.js",
+      "target": "function:public/js/app.js:prefillSettlement",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:public/js/app.js:stepQty",
+      "target": "function:public/js/app.js:updateCartPreview",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:public/js/app.js:onQtyInput",
+      "target": "function:public/js/app.js:updateCartPreview",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:public/js/app.js:cancelOrder",
+      "target": "function:public/js/app.js:post",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:public/js/app.js:cancelOrder",
+      "target": "function:public/js/app.js:loadOrders",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:public/js/app.js:cancelOrder",
+      "target": "function:public/js/app.js:loadCustomersDropdown",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:public/js/app.js:cancelOrder",
+      "target": "function:public/js/app.js:loadDashboardSummary",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ],
+  "layers": [
+    {
+      "id": "layer:config",
+      "name": "Application Setup",
+      "description": "Bootstraps the Express server and defines ShopLedger runtime settings, shop metadata, GST slabs, coupons, and npm commands.",
+      "nodeIds": [
+        "file:config.js",
+        "file:server.js",
+        "config:package.json"
+      ]
+    },
+    {
+      "id": "layer:ui",
+      "name": "Browser Interface",
+      "description": "Provides the static POS, order register, khata, and audit interface with direct DOM rendering, XMLHttpRequest calls, and responsive styling.",
+      "nodeIds": [
+        "file:public/css/style.css",
+        "file:public/index.html",
+        "file:public/js/app.js"
+      ]
+    },
+    {
+      "id": "layer:api",
+      "name": "API Layer",
+      "description": "Maps product, order, customer settlement, pricing preview, report, and export HTTP requests to domain operations and persistence.",
+      "nodeIds": [
+        "file:routes/reports.js",
+        "file:routes/orders.js",
+        "file:routes/customers.js",
+        "file:routes/products.js"
+      ]
+    },
+    {
+      "id": "layer:service",
+      "name": "Business Services",
+      "description": "Implements order lifecycle, stock checks, khata accounting, coupon and GST calculations, invoice rendering, reports, and shared date helpers.",
+      "nodeIds": [
+        "file:lib/coupons.js",
+        "file:lib/invoice.js",
+        "file:lib/pricing.js",
+        "file:lib/tax.js",
+        "file:lib/dates.js",
+        "file:lib/inventory.js",
+        "file:lib/ledger.js",
+        "file:lib/orders.js",
+        "file:lib/reports.js"
+      ]
+    },
+    {
+      "id": "layer:data",
+      "name": "JSON Persistence",
+      "description": "Reads and rewrites the single JSON database containing products, orders, customer accounts, settlements, IDs, and audit history.",
+      "nodeIds": [
+        "file:lib/store.js",
+        "config:data/db.json"
+      ]
+    },
+    {
+      "id": "layer:analysis",
+      "name": "Analysis Setup",
+      "description": "Stores the generated Understand Anything ignore rules and English output preference, separate from ShopLedger application behavior.",
+      "nodeIds": [
+        "file:.understand-anything/.understandignore",
+        "config:.understand-anything/config.json"
+      ]
+    }
+  ],
+  "tour": [
+    {
+      "order": 1,
+      "title": "Application Entry Point",
+      "description": "Start at server.js to see how ShopLedger serves its retail and wholesale billing interface, mounts four Express API routers, and renders printable invoices. The server exports its app independently of listening, while config.js supplies the port, shop identity, GST slabs, and coupon definitions used throughout the tour.",
+      "nodeIds": [
+        "file:server.js",
+        "file:config.js"
+      ],
+      "languageLesson": "CommonJS require() loads local modules, and require.main === module distinguishes running the server directly from importing its Express app."
+    },
+    {
+      "order": 2,
+      "title": "Browser Billing Workflow",
+      "description": "Follow the static interface served by the entry point into the POS, order register, khata, and audit tabs. app.js keeps cart state, renders the DOM, and calls the API through callback-based XMLHttpRequest helpers; index.html and the stylesheet provide its shared visual structure.",
+      "nodeIds": [
+        "file:public/index.html",
+        "file:public/js/app.js",
+        "file:public/css/style.css"
+      ]
+    },
+    {
+      "order": 3,
+      "title": "Order Request Lifecycle",
+      "description": "Trace a browser order submission into the order router, which resolves authoritative catalog prices before validating stock and coupons, computing totals, and coordinating customer credit. The order service handles creation, filtering, and cancellation, while the product router supplies catalog records enriched with tax and sellable-stock information.",
+      "nodeIds": [
+        "file:routes/orders.js",
+        "file:lib/orders.js",
+        "file:routes/products.js"
+      ]
+    },
+    {
+      "order": 4,
+      "title": "Reusable Billing Rules",
+      "description": "The order flow and live preview share pricing.js, which distributes coupon discounts across lines and applies each item’s GST rate before rounding totals. Coupon eligibility and caps belong in coupons.js, and HSN slabs plus CGST/SGST splitting belong in tax.js; extend these reusable rules when changing billing behavior.",
+      "nodeIds": [
+        "file:lib/pricing.js",
+        "file:lib/coupons.js",
+        "file:lib/tax.js",
+        "file:routes/reports.js"
+      ]
+    },
+    {
+      "order": 5,
+      "title": "Stock and Customer Credit",
+      "description": "After pricing, inventory.js checks sellable stock and deducts committed quantities, while ledger.js applies khata charges, credit limits, reversals, and settlements. Cancellation and customer payments cross these boundaries, so inspect the current inventory-release mismatch and string settlement arithmetic before extending those workflows.",
+      "nodeIds": [
+        "file:lib/inventory.js",
+        "file:lib/ledger.js",
+        "file:routes/customers.js"
+      ]
+    },
+    {
+      "order": 6,
+      "title": "Invoices and Reconciliation",
+      "description": "Printable invoices run a separate calculation path in invoice.js, which can disagree with the order totals computed earlier. reports.js exposes these discrepancies alongside revenue, stock, and receivable summaries, making reconciliation a useful place to inspect the impact of pricing changes.",
+      "nodeIds": [
+        "file:lib/invoice.js",
+        "file:lib/reports.js",
+        "file:routes/reports.js"
+      ]
+    },
+    {
+      "order": 7,
+      "title": "Persistence and Validation",
+      "description": "All order, stock, and customer changes ultimately pass through store.js, which synchronously reads and rewrites the entire JSON database and maintains audit history without transactions. Inspect db.json for the persisted collections and dates.js for day-first date handling, then use package.json to run npm start; npm test is a deliberately failing placeholder, and no build or lint scripts are configured.",
+      "nodeIds": [
+        "file:lib/store.js",
+        "config:data/db.json",
+        "file:lib/dates.js",
+        "config:package.json"
+      ]
+    }
+  ]
+}
