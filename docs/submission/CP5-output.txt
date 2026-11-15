@@ -1,0 +1,13 @@
+CP5 Pull request - Ticket 3
+
+Public fork: https://github.com/harshawardhanchitnis/shopledger-legacy-workshop
+Fixed branch: https://github.com/harshawardhanchitnis/shopledger-legacy-workshop/tree/fix/order-history-khata
+Branch name: fix/order-history-khata
+Pull request: https://github.com/SampurnR/shopledger-legacy-workshop/pull/93
+Base: SampurnR/shopledger-legacy-workshop, main
+Head: harshawardhanchitnis:fix/order-history-khata
+
+PR body begins with Fixes #3 and documents the tests added first, root causes, scoped fixes and test results. PR is not merged.
+CP3 commit 23c8691 preserves passing original-behavior tests; ed0238d preserves failing correct-behavior regressions before the fix.
+
+Screenshot: https://github.com/harshawardhanchitnis/shopledger-legacy-workshop/blob/fix/order-history-khata/docs/evidence/cp5-pull-request.jpg

@@ -1,0 +1,13 @@
+<!doctype html><html><head><meta charset="utf-8"><title>CP1 Codex explanation</title><style>body{margin:0;background:#f3f5f7;color:#172534;font:17px/1.45 Arial,sans-serif}main{max-width:1450px;margin:24px auto;padding:24px 34px;background:white}h1{font-size:28px;margin:0 0 6px}h2{font-size:19px}p{margin:8px 0}.meta{color:#44566a;font-size:15px}pre{white-space:pre-wrap;overflow-wrap:anywhere;font:14px/1.35 Consolas,monospace;background:#f6f7f9;padding:16px}.columns{display:grid;grid-template-columns:1fr 1fr;gap:24px}.red{border-top:5px solid #c73339}.green{border-top:5px solid #237a4c}img.diagram{display:block;max-height:710px;max-width:100%;margin:auto}.label{font-size:13px;letter-spacing:.04em;color:#44566a}a{color:#1b55a0}</style></head><body><main><h1>CP1 - Codex explanation</h1><p class="meta">Repository folder: <strong>shopledger</strong> | Phase: <strong>read-only</strong> | Source: 68c85a9</p><p class="label">Rendered copy of the explanation produced in this Codex session</p><pre>Verified: CommonJS Node.js / Express 4 / body-parser; plain browser UI; synchronous JSON persistence.
+
+Purpose: POS orders, stock and reservations, HSN GST/coupons, printable invoices, customer Khata, settlements and audit reports.
+
+Order flow: browser POST -&gt; resolve products -&gt; check sellable stock -&gt; validate coupon -&gt; compute totals -&gt; optional Khata charge -&gt; deduct stock -&gt; add order -&gt; audit/write JSON -&gt; response.
+
+Modules: server.js; routes/{products,orders,customers,reports}.js; lib/{orders,inventory,pricing,coupons,tax,invoice,ledger,dates,reports,store}.js; config.js; data/db.json; public/.
+
+Confirmed Ticket 3 causes: day-first string sorting; day-first range comparisons; string settlement concatenation. Fiscal-year calculation shares the date helper.
+
+Confirmed risks: synchronous whole-file writes, embedded admin key, duplicate invoice logic, and no original tests. Suspected additional robustness/security issues were not audited and remain outside scope.
+
+Read-only boundary: no application edits, installation, or server startup during CP1. Setup cloning preceded the checkpoint. Documentation was saved after inspection.</pre><p>Full explanation: docs/checkpoint-1-explanation.md</p></main></body></html>
