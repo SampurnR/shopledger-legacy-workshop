@@ -31,6 +31,20 @@ router.post('/orders', function (req, res) {
   var body = req.body || {};
   var items = [];
 
+  var status = body.status === undefined ? 'completed' : body.status;
+  if (status !== 'completed' && status !== 'pending') {
+    return res.status(400).json({ error: 'Order status must be completed or pending' });
+  }
+
+  var paymentMode = body.paymentMode === undefined ? 'cash' : body.paymentMode;
+  if (typeof paymentMode !== 'string') {
+    return res.status(400).json({ error: 'Payment mode must be cash, upi or khata' });
+  }
+  paymentMode = paymentMode.toLowerCase();
+  if (['cash', 'upi', 'khata'].indexOf(paymentMode) === -1) {
+    return res.status(400).json({ error: 'Payment mode must be cash, upi or khata' });
+  }
+
   if (!body.items || !body.items.length) {
     return res.status(400).json({ error: 'Pick at least one item to place an order' });
   }
@@ -69,7 +83,6 @@ router.post('/orders', function (req, res) {
   }
 
   var totals = pricing.computeTotals(items, rawCoupon);
-  var paymentMode = (body.paymentMode || 'cash').toLowerCase();
   var customerName = (body.customer || '').trim() || 'Walk-in';
   var customerId = body.customerId ? Number(body.customerId) : null;
 
@@ -96,7 +109,7 @@ router.post('/orders', function (req, res) {
     customer: customerName,
     customerId: customerId,
     paymentMode: paymentMode,
-    status: body.status || 'completed',
+    status: status,
     items: items,
     coupon: rawCoupon,
     subtotal: totals.subtotal,

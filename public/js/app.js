@@ -1,5 +1,6 @@
 var allProducts = [];
 var cartQuantities = {}; // productId -> qty
+var pricingPreviewSequence = 0;
 var activeCategory = 'all';
 var customersList = [];
 
@@ -161,6 +162,8 @@ function getSelectedCartItems() {
 }
 
 function updateCartPreview() {
+  // Invalidate older responses even when an empty cart sends no request.
+  var requestSequence = ++pricingPreviewSequence;
   var items = getSelectedCartItems();
   var countEl = document.getElementById('cart-count');
   var listEl = document.getElementById('cart-items-list');
@@ -196,6 +199,7 @@ function updateCartPreview() {
   listEl.innerHTML = miniHtml;
 
   post('/api/pricing/preview', { items: items, coupon: couponCode }, function (status, res) {
+    if (requestSequence !== pricingPreviewSequence) return;
     if (!res || !res.totals) return;
     var t = res.totals;
     document.getElementById('preview-subtotal').textContent = fmtMoney(t.subtotal);
