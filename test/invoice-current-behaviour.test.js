@@ -71,9 +71,10 @@ test('CURRENT BEHAVIOUR: rendered invoice shows computed figures and a ledger mi
   var billed = order(1004, [item('Groundnut oil', '1508', 1120, 2)], 'SAVE10');
   var html = invoice.render(billed);
 
-  assert.match(html, /GST %<\\/th>/);
+  assert.match(html, /GST %<\/th>/);
   assert.match(html, /18%/);
-  assert.match(html, /2378\\.88/);
+  assert.match(html, /2378\.88/);
   assert.match(html, /Accountant Reconciliation Notice/);
   assert.match(html, /differs from Order Ledger recorded total/);
 });
+
