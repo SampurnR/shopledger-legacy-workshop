@@ -65,12 +65,12 @@ function loadDashboardSummary() {
 
     if (s.reconciliationMismatchCount > 0) {
       alertBtn.className = 'alert-chip';
-      alertText.textContent = s.reconciliationMismatchCount + ' Invoice GST Mismatches (Δ ' + fmtMoney(s.reconciliationTotalDelta) + ')';
+      alertText.textContent = s.reconciliationMismatchCount + ' GST Reconciliation Differences (Δ ' + fmtMoney(s.reconciliationTotalDelta) + ')';
       badgeAudit.className = 'tab-badge warn';
       badgeAudit.textContent = s.reconciliationMismatchCount;
     } else {
       alertBtn.className = 'alert-chip ok';
-      alertText.textContent = 'Invoices & Ledger Balanced';
+      alertText.textContent = 'GST Reconciliation Balanced';
       badgeAudit.className = 'tab-badge ok';
       badgeAudit.textContent = 'OK';
     }
@@ -393,7 +393,7 @@ function loadGstReconciliation() {
       pill.textContent = data.mismatchCount + ' of ' + data.totalChecked + ' Orders Mismatched (Δ ' + fmtMoney(data.totalDelta) + ')';
     } else {
       pill.className = 'status-pill completed';
-      pill.textContent = 'All ' + data.totalChecked + ' Active Invoices Balanced';
+      pill.textContent = 'All ' + data.totalChecked + ' Checked Orders Matched';
     }
 
     var html = '';
