@@ -1,0 +1,82 @@
+TAP version 13
+# Subtest: 18% items without a coupon match checkout totals
+ok 1 - 18% items without a coupon match checkout totals
+  ---
+  duration_ms: 4.6373
+  type: 'test'
+  ...
+# Subtest: 5% and 12% HSN invoice lines match checkout slabs
+ok 2 - 5% and 12% HSN invoice lines match checkout slabs
+  ---
+  duration_ms: 0.377
+  type: 'test'
+  ...
+# Subtest: SAVE10 discounts the subtotal before calculating GST
+ok 3 - SAVE10 discounts the subtotal before calculating GST
+  ---
+  duration_ms: 0.3897
+  type: 'test'
+  ...
+# Subtest: SAVE10 respects its 150 discount cap
+ok 4 - SAVE10 respects its 150 discount cap
+  ---
+  duration_ms: 0.2526
+  type: 'test'
+  ...
+# Subtest: invoice ignores SAVE10 below its minimum spend
+ok 5 - invoice ignores SAVE10 below its minimum spend
+  ---
+  duration_ms: 0.2755
+  type: 'test'
+  ...
+# Subtest: invoice ignores the inactive DIWALI20 coupon
+ok 6 - invoice ignores the inactive DIWALI20 coupon
+  ---
+  duration_ms: 0.1855
+  type: 'test'
+  ...
+# Subtest: flat coupon reduces the taxable value before GST
+ok 7 - flat coupon reduces the taxable value before GST
+  ---
+  duration_ms: 0.2206
+  type: 'test'
+  ...
+# Subtest: printed invoice displays separate CGST and SGST amounts
+ok 8 - printed invoice displays separate CGST and SGST amounts
+  ---
+  duration_ms: 0.8811
+  type: 'test'
+  ...
+# Subtest: regression: 5% HSN invoice with SAVE10 agrees with the billed amount
+ok 9 - regression: 5% HSN invoice with SAVE10 agrees with the billed amount
+  ---
+  duration_ms: 5.8146
+  type: 'test'
+  ...
+# Subtest: regression: mixed slabs and proportional discounts retain checkout rounding without mutating inputs
+ok 10 - regression: mixed slabs and proportional discounts retain checkout rounding without mutating inputs
+  ---
+  duration_ms: 1.4299
+  type: 'test'
+  ...
+# Subtest: regression: unknown coupon is ignored and an unknown HSN uses the configured fallback
+ok 11 - regression: unknown coupon is ignored and an unknown HSN uses the configured fallback
+  ---
+  duration_ms: 0.3335
+  type: 'test'
+  ...
+# Subtest: regression: empty invoice and odd-paise GST split remain finite and balanced
+ok 12 - regression: empty invoice and odd-paise GST split remain finite and balanced
+  ---
+  duration_ms: 0.3782
+  type: 'test'
+  ...
+1..12
+# tests 12
+# suites 0
+# pass 12
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 337.2654
