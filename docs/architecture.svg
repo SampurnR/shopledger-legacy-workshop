@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="1120" viewBox="0 0 1500 1120" role="img" aria-labelledby="title desc">
+<title id="title">ShopLedger: source architecture and inventory lifecycle</title>
+<desc id="desc">Browser requests enter server.js and four routers. Business modules share config and synchronous JSON persistence. Order creation deducts physical stock; cancellation calls inventory release.</desc>
+<defs><marker id="arrow" markerWidth="9" markerHeight="9" refX="8" refY="4" orient="auto"><path d="M0 0L8 4L0 8" fill="#2563eb"/></marker><style>text{font-family:Segoe UI,Arial,sans-serif;fill:#172b4d;font-size:17px}.heading{font-size:28px;font-weight:700}.label{font-weight:700}.small{font-size:15px}.box{fill:white;stroke:#a9bad0;stroke-width:1.5}.flow{fill:none;stroke:#2563eb;stroke-width:2;marker-end:url(#arrow)}.data{fill:none;stroke:#07866e;stroke-width:2;stroke-dasharray:7 5}.group{fill:#eef4fb;stroke:#d0deed}</style></defs>
+<rect width="1500" height="1120" fill="#f8fafc"/>
+<text x="40" y="45" class="heading">ShopLedger · legacy application architecture</text>
+<text x="40" y="75">CommonJS JavaScript · Express 4 · body-parser · browser XMLHttpRequest · local JSON file</text>
+<rect class="box" x="40" y="100" width="620" height="85" rx="10"/><text x="60" y="130" class="label">Frontend: public/index.html + css/style.css + js/app.js</text><text x="60" y="158">POS · Order History · Customer Khata · GST / stock audit</text>
+<path class="flow" d="M660 143H770"/><text x="675" y="125" class="small">HTTP</text>
+<rect class="box" x="780" y="100" width="680" height="85" rx="10"/><text x="800" y="130" class="label">server.js · app.listen(config.port) · default :3000</text><text x="800" y="158">JSON parser · static public/ · /api routers · /orders/:id/invoice</text>
+<path class="flow" d="M1110 185V217H750V245"/>
+<rect class="group" x="30" y="225" width="1440" height="155" rx="12"/><text x="50" y="253" class="label">routes/ — request handlers (all read store; mutation handlers also write)</text>
+<rect class="box" x="50" y="270" width="325" height="90" rx="8"/><text x="65" y="298" class="label">products.js</text><text x="65" y="324" class="small">GET products / coupons</text><text x="65" y="346" class="small">inventory · tax · coupons</text>
+<rect class="box" x="390" y="270" width="325" height="90" rx="8"/><text x="405" y="298" class="label">orders.js</text><text x="405" y="324" class="small">GET / POST orders · POST cancel</text><text x="405" y="346" class="small">inventory · pricing · coupons · orders · ledger</text>
+<rect class="box" x="730" y="270" width="325" height="90" rx="8"/><text x="745" y="298" class="label">customers.js</text><text x="745" y="324" class="small">GET customers · POST settle</text><text x="745" y="346" class="small">ledger</text>
+<rect class="box" x="1070" y="270" width="380" height="90" rx="8"/><text x="1085" y="298" class="label">reports.js</text><text x="1085" y="324" class="small">dashboard · GST · preview · admin/export</text><text x="1085" y="346" class="small">reports · pricing · coupons · config</text>
+<path class="flow" d="M750 380V410"/>
+<rect class="group" x="30" y="410" width="1440" height="310" rx="12"/><text x="50" y="440" class="label">lib/ — business modules and their direct dependencies</text>
+<rect class="box" x="50" y="460" width="440" height="70" rx="8"/><text x="65" y="488" class="label">inventory.js → config</text><text x="65" y="513" class="small">find · getSellableStock · check · reserve · release · summarize</text>
+<rect class="box" x="510" y="460" width="440" height="70" rx="8"/><text x="525" y="488" class="label">orders.js → dates · inventory · ledger</text><text x="525" y="513" class="small">add · get · cancel · list</text>
+<rect class="box" x="970" y="460" width="480" height="70" rx="8"/><text x="985" y="488" class="label">ledger.js → dates</text><text x="985" y="513" class="small">chargeOrderToKhata · reverseOrderDebit · recordSettlement</text>
+<rect class="box" x="50" y="550" width="440" height="70" rx="8"/><text x="65" y="578" class="label">pricing.js → tax · coupons</text><text x="65" y="603" class="small">subtotal · discount · computeTotals</text>
+<rect class="box" x="510" y="550" width="440" height="70" rx="8"/><text x="525" y="578" class="label">tax.js → config     coupons.js → config</text><text x="525" y="603" class="small">HSN rates / CGST-SGST · validate / discount</text>
+<rect class="box" x="970" y="550" width="480" height="70" rx="8"/><text x="985" y="578" class="label">reports.js → inventory · ledger · invoice</text><text x="985" y="603" class="small">getDashboardSummary · getGstReconciliation</text>
+<rect class="box" x="50" y="640" width="900" height="60" rx="8"/><text x="65" y="668" class="label">invoice.js → config: computeInvoiceFigures · render (also used directly by server)</text><text x="65" y="690" class="small">dates.js: today · normalizeDateKey · getFiscalYear (no internal dependencies)</text>
+<rect class="box" x="970" y="640" width="480" height="60" rx="8"/><text x="985" y="668" class="label">config.js</text><text x="985" y="690" class="small">port · shop · tax · inventory · coupons · export access</text>
+<path class="data" d="M30 300H15V764H50"/>
+<rect class="box" x="50" y="740" width="650" height="75" rx="8"/><text x="65" y="770" class="label">lib/store.js · read / write / appendAudit</text><text x="65" y="797" class="small">fs + path · synchronous parse / serialize · structure defaults</text>
+<path class="data" d="M700 778H790"/>
+<rect class="box" x="790" y="740" width="660" height="75" rx="8"/><text x="805" y="770" class="label">data/db.json</text><text x="805" y="797" class="small">products · orders · customers · settlements · auditLog · ID counters</text>
+<rect class="group" x="30" y="840" width="1440" height="245" rx="12"/>
+<text x="50" y="872" class="label">Order placement · POST /api/orders → routes/orders.js</text>
+<text x="50" y="901">store.read → resolve products + normalize qty → inventory.check → coupon validation → pricing.computeTotals</text>
+<text x="50" y="930">→ optional ledger.chargeOrderToKhata → inventory.reserve (stock − qty) → orders.add → appendAudit → store.write → 201</text>
+<text x="50" y="965" class="label">Cancellation · POST /api/orders/:id/cancel → orders.cancel</text>
+<text x="50" y="994">Reject missing / already cancelled → mark cancelled → inventory.release → optional reverseOrderDebit → audit → write</text>
+<text x="50" y="1023">Baseline Ticket #2 defects: check rejects exact sellable stock; release uses productId instead of id and adjusts the wrong stock field.</text>
+<path class="flow" d="M50 1054H105"/><text x="120" y="1060" class="small">Request / operation flow</text><path class="data" d="M390 1054H445"/><text x="460" y="1060" class="small">Data access</text><text x="720" y="1060" class="small">“→” in module boxes denotes a direct require dependency.</text>
+</svg>
