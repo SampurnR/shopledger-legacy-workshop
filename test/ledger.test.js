@@ -5,13 +5,54 @@ var assert = require('node:assert/strict');
 var ledger = require('../lib/ledger');
 var fixtures = require('../test-support/fixtures');
 
-test('CURRENT BEHAVIOUR: a string settlement concatenates and corrupts the balance', function () {
+test('a browser string settlement updates numeric totals without concatenation', function () {
   var db = fixtures.ledgerDb();
   var result = ledger.recordSettlement(db, 1, '500', 'upi', 'Ticket 3');
   assert.equal(result.ok, true);
-  assert.equal(result.customer.totalSettled, '1200500');
-  assert.equal(result.customer.balance, -1198067.99);
+  assert.equal(result.customer.totalSettled, 1700);
+  assert.equal(result.customer.balance, 732.01);
   assert.equal(result.settlement.amount, 500);
+});
+
+test('numeric strings in existing settled totals remain numeric after payment', function () {
+  var db = fixtures.ledgerDb();
+  db.customers[0].totalSettled = '1200';
+  assert.equal(ledger.recordSettlement(db, 1, '500').customer.totalSettled, 1700);
+});
+
+test('settlement arithmetic and stored payments are rounded to currency precision', function () {
+  var db = fixtures.ledgerDb();
+  db.customers[0].totalSettled = 0.1;
+  var result = ledger.recordSettlement(db, 1, '0.2');
+  assert.equal(result.customer.totalSettled, 0.3);
+  assert.equal(result.customer.balance, 2431.71);
+  var rounded = ledger.recordSettlement(db, 1, 1.005);
+  assert.equal(rounded.settlement.amount, 1.01);
+  assert.equal(rounded.customer.totalSettled, 1.31);
+});
+
+test('successive string payments increase totals and allocate unique settlement IDs', function () {
+  var db = fixtures.ledgerDb();
+  ledger.recordSettlement(db, 1, '500');
+  var result = ledger.recordSettlement(db, 1, '100');
+  assert.equal(result.customer.totalSettled, 1800);
+  assert.equal(result.customer.balance, 632.01);
+  assert.deepEqual(db.settlements.map(function (entry) { return entry.id; }), [502, 501]);
+  assert.equal(db.nextSettlementId, 503);
+});
+
+[
+  ['NaN', NaN], ['infinity', Infinity], ['negative infinity', -Infinity],
+  ['nonnumeric string', 'abc'], ['whitespace', '  '], ['infinity string', 'Infinity'],
+  ['boolean true', true], ['boolean false', false], ['array', []], ['numeric array', [500]],
+  ['object', {}], ['sub-cent amount rounded to zero', 0.001]
+].forEach(function (entry) {
+  test('invalid settlement is rejected without mutation: ' + entry[0], function () {
+    var db = fixtures.ledgerDb();
+    var before = structuredClone(db);
+    assert.equal(ledger.recordSettlement(db, 1, entry[1]).ok, false);
+    assert.deepEqual(db, before);
+  });
 });
 
 test('a numeric settlement updates balance and records the payment', function () {

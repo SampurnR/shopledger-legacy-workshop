@@ -4,12 +4,21 @@ var test = require('node:test');
 var assert = require('node:assert/strict');
 var dates = require('../lib/dates');
 
-test('CURRENT BEHAVIOUR: ISO date becomes a day-first comparison key', function () {
-  assert.equal(dates.normalizeDateKey('2022-01-05'), '05/01/2022');
+test('ISO date retains a chronological comparison key', function () {
+  assert.equal(dates.normalizeDateKey('2022-01-05'), '2022-01-05');
 });
 
-test('CURRENT BEHAVIOUR: stored day-first date remains a day-first comparison key', function () {
-  assert.equal(dates.normalizeDateKey('05/01/2022'), '05/01/2022');
+test('stored day-first date becomes the equivalent chronological key', function () {
+  assert.equal(dates.normalizeDateKey('05/01/2022'), '2022-01-05');
+});
+
+test('comparison keys trim input and pad single-digit date components', function () {
+  assert.equal(dates.normalizeDateKey(' 5/1/2022 '), '2022-01-05');
+  assert.equal(dates.normalizeDateKey(' 2022-1-5 '), '2022-01-05');
+});
+
+test('unsupported comparison input is preserved', function () {
+  assert.equal(dates.normalizeDateKey('unknown'), 'unknown');
 });
 
 test('empty comparison inputs return an empty key', function () {
