@@ -20,7 +20,7 @@
       </div>
       <div class="topbar-meta">
         <span class="meta-chip" id="shop-gstin">GSTIN: 27AAAAA0000A1Z5</span>
-        <button class="alert-chip" id="recon-alert-btn" title="View Accountant Invoice Reconciliation">
+        <button class="alert-chip" id="recon-alert-btn" title="View GST reconciliation">
           <span class="dot"></span>
           <span id="recon-alert-text">Checking GST Reconciliation...</span>
         </button>
@@ -342,8 +342,8 @@
       <div class="panel" style="margin-bottom: 20px;">
         <div class="panel-header">
           <div>
-            <h2 class="panel-title">Accountant Invoice vs. Order Ledger Reconciliation</h2>
-            <p class="panel-desc">Compares stored Order Ledger totals (<code>lib/pricing.js</code>) against the Accountant Tax Invoice renderer (<code>lib/invoice.js</code>).</p>
+            <h2 class="panel-title">GST Reconciliation</h2>
+            <p class="panel-desc">Compares amounts recorded at checkout with amounts recalculated using current pricing rules.</p>
           </div>
           <div id="recon-summary-pill" class="status-pill cancelled">Checking...</div>
         </div>
@@ -360,9 +360,9 @@
                 <th class="r">Ledger Disc</th>
                 <th class="r">Ledger GST</th>
                 <th class="r">Ledger Total</th>
-                <th class="r">Invoice Disc</th>
-                <th class="r">Invoice GST</th>
-                <th class="r">Invoice Total</th>
+                <th class="r">Recalculated Discount</th>
+                <th class="r">Recalculated GST</th>
+                <th class="r">Recalculated Total</th>
                 <th class="r">Variance (Δ)</th>
                 <th>Audit Status</th>
               </tr>
