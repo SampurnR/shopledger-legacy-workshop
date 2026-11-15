@@ -1,0 +1,6 @@
+SHOPLEDGER WORKSHOP - TICKET 2
+Copy the answers below into the matching form fields.
+
+CHECKPOINT 1 CODEX SCREENSHOT: upload CP1-Codex-Output.png. This is a rendering of the recorded Codex explanation, not a capture of the Codex app interface. Capture the conversation itself if the organizer specifically requires that interface.
+
+AGENTS.md FILE: upload AGENTS.pdf. The Markdown original remains in the repository.

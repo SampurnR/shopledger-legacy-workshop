@@ -1,0 +1,66 @@
+{
+  "environment": "Isolated before/after project copies; original database untouched",
+  "lastUnitBefore": {
+    "httpStatus": 409,
+    "error": "A2 Gir Cow Ghee 500ml is out of stock (1 sellable available)"
+  },
+  "lastUnitAfter": {
+    "httpStatus": 201,
+    "orderId": 1009,
+    "stock": 0
+  },
+  "reservedUnitAfter": {
+    "httpStatus": 201,
+    "orderId": 1010,
+    "product": {
+      "id": 11,
+      "sku": "SPC-001",
+      "name": "Byadgi Kashmiri Chilli Powder 500g",
+      "category": "Oils & Spices",
+      "unit": "pkt",
+      "hsn": "0904",
+      "price": 220,
+      "stock": 3,
+      "reserved": 3,
+      "reorderLevel": 10
+    }
+  },
+  "cancellationBefore": {
+    "orderStatus": "cancelled",
+    "products": [
+      {
+        "id": 6,
+        "stockBefore": 1,
+        "stockAfter": 1,
+        "reservedAfter": 0
+      },
+      {
+        "id": 4,
+        "stockBefore": 22,
+        "stockAfter": 22,
+        "reservedAfter": 4
+      }
+    ]
+  },
+  "cancellationAfter": {
+    "httpStatus": 200,
+    "orderStatus": "cancelled",
+    "products": [
+      {
+        "id": 6,
+        "stockBefore": 1,
+        "stockAfter": 3,
+        "reservedBefore": 0,
+        "reservedAfter": 0
+      },
+      {
+        "id": 4,
+        "stockBefore": 22,
+        "stockAfter": 24,
+        "reservedBefore": 4,
+        "reservedAfter": 4
+      }
+    ]
+  },
+  "databaseSha256": "378042acaef84300a04a1b6ea043a3e279ed0969d76dc1f9deffd91d095ceb49"
+}

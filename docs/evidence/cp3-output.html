@@ -1,0 +1,30 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><title>CP3 - passing characterization tests</title><style>*{box-sizing:border-box}body{margin:0;background:#eef2f6;color:#152b40;font:17px/1.52 "Segoe UI",Arial,sans-serif}main{max-width:1360px;margin:32px auto;padding:38px 48px;background:#fff;border:1px solid #ccd7df}h1{font-size:33px;line-height:1.2;margin:0 0 18px}h2{font-size:23px;margin:25px 0 10px}h3{font-size:19px}p{margin:10px 0}.meta{font-size:15px;color:#52677b;margin-bottom:24px}.bullet{padding-left:18px;border-left:2px solid #cedae5}table{width:100%;border-collapse:collapse;font-size:16px}td,th{padding:9px 12px;text-align:left;border-bottom:1px solid #dce4eb;vertical-align:top}th{background:#eaf0f6}code{font-family:Consolas,monospace;font-size:.93em}pre{white-space:pre-wrap;overflow-wrap:anywhere;font:15px/1.6 Consolas,monospace;padding:20px;background:#f3f6f9;border:1px solid #dce4eb}.green{color:#166534}.red{color:#b42318}a{color:#1d4ed8}.two{display:grid;grid-template-columns:1fr 1fr;gap:24px}figure{margin:16px 0}img{width:100%;border:1px solid #cfd9e2}figcaption{font-size:16px;color:#3f556a}footer{margin-top:22px;padding-top:14px;border-top:1px solid #dce4eb;color:#52677b;font-size:14px}</style><main><h1>CP3: Characterization tests before the fix</h1><p class="meta">shopledger-legacy-workshop | Historical commit 162dc3f | Application source unchanged</p><p>Files: <code>test/inventory.characterization.test.js</code> and <code>test/orders.cancellation.test.js</code></p><p>Command: <code>node --test</code> | In-memory fixtures only | No new dependencies</p><pre class="green">✔ find resolves numeric and string IDs to the original product (1.9269ms)
+✔ sellable stock subtracts wholesale holds without mutating the product (1.9579ms)
+✔ sellable stock defaults missing holds to zero and handles numeric strings (0.1078ms)
+✔ sellable stock clamps exhausted and over-reserved products to zero (0.0917ms)
+✔ stock check accepts a quantity below sellable stock without mutation (0.2623ms)
+✔ stock check rejects quantities above sellable stock (0.1242ms)
+✔ stock check rejects unknown products and accepts an empty cart (0.1004ms)
+✔ CURRENT BEHAVIOUR: stock check rejects the exact remaining sellable quantity (0.1963ms)
+✔ CURRENT BEHAVIOUR: stock check rejects the last unreserved unit (0.1235ms)
+✔ reserve deducts physical stock and preserves wholesale reserved holds (0.1636ms)
+✔ reserve handles numeric quantity strings and ignores missing products (0.0957ms)
+✔ CURRENT BEHAVIOUR: release ignores order lines identified by id (0.0923ms)
+✔ release skips unknown product IDs without changing known products (0.0851ms)
+✔ summary counts out-of-stock and low-stock SKUs and values physical units (0.141ms)
+✔ summary of an empty inventory is zero (0.0619ms)
+✔ cancellation updates status, reason, and date and returns the same order (1.5179ms)
+✔ CURRENT BEHAVIOUR: cancelling a pending order does not restore physical stock (0.7054ms)
+✔ khata cancellation reverses the order debit and preserves settled payments (0.1428ms)
+✔ completed cash orders can be cancelled without changing customer credit (1.4021ms)
+✔ a second cancellation is rejected without repeating stock or ledger changes (1.7423ms)
+✔ cancelling an unknown order leaves the in-memory database unchanged (0.1512ms)
+ℹ tests 21
+ℹ suites 0
+ℹ pass 21
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 110.2838
+</pre><footer>Captured command output. Four CURRENT BEHAVIOUR tests deliberately pin the reported bugs.</footer></main></html>

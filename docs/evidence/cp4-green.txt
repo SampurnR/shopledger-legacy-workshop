@@ -1,0 +1,36 @@
+✔ find resolves numeric and string IDs to the original product (1.6844ms)
+✔ sellable stock subtracts wholesale holds without mutating the product (0.7612ms)
+✔ sellable stock defaults missing holds to zero and handles numeric strings (0.1213ms)
+✔ sellable stock clamps exhausted and over-reserved products to zero (0.1094ms)
+✔ stock check accepts a quantity below sellable stock without mutation (0.2145ms)
+✔ stock check rejects quantities above sellable stock (0.1256ms)
+✔ stock check rejects unknown products and accepts an empty cart (0.1111ms)
+✔ stock check accepts the exact remaining sellable quantity (0.1172ms)
+✔ stock check accepts the last unreserved unit (0.1279ms)
+✔ reserve deducts physical stock and preserves wholesale reserved holds (0.2029ms)
+✔ reserve handles numeric quantity strings and ignores missing products (0.1153ms)
+✔ release restores physical stock for order lines identified by id (0.1195ms)
+✔ release skips unknown product IDs without changing known products (0.1276ms)
+✔ summary counts out-of-stock and low-stock SKUs and values physical units (0.165ms)
+✔ summary of an empty inventory is zero (0.0827ms)
+✔ REGRESSION: sell the last unreserved unit and reach zero physical stock (0.85ms)
+✔ REGRESSION: sell the last sellable unit without consuming three wholesale holds (0.2021ms)
+✔ REGRESSION: buying all sellable stock still rejects any quantity above it (0.1513ms)
+✔ REGRESSION: cancelling pending order restores every line once and preserves holds (1.4673ms)
+✔ REGRESSION: reserve and release round trip physical stock and wholesale holds (0.1445ms)
+✔ REGRESSION: release adds numeric quantities to physical stock, never concatenates (0.0994ms)
+✔ REGRESSION: products with no sellable stock remain unavailable (0.1183ms)
+✔ cancellation updates status, reason, and date and returns the same order (1.6637ms)
+✔ cancelling a pending order restores physical stock and preserves holds (0.7406ms)
+✔ khata cancellation reverses the order debit and preserves settled payments (0.1568ms)
+✔ completed cash orders can be cancelled without changing customer credit (0.998ms)
+✔ a second cancellation is rejected without repeating stock or ledger changes (0.2845ms)
+✔ cancelling an unknown order leaves the in-memory database unchanged (0.1437ms)
+ℹ tests 28
+ℹ suites 0
+ℹ pass 28
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 109.4313

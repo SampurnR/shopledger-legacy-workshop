@@ -1,0 +1,72 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><title>CP4 - red green and app evidence</title><style>*{box-sizing:border-box}body{margin:0;background:#eef2f6;color:#152b40;font:17px/1.52 "Segoe UI",Arial,sans-serif}main{max-width:1360px;margin:32px auto;padding:38px 48px;background:#fff;border:1px solid #ccd7df}h1{font-size:33px;line-height:1.2;margin:0 0 18px}h2{font-size:23px;margin:25px 0 10px}h3{font-size:19px}p{margin:10px 0}.meta{font-size:15px;color:#52677b;margin-bottom:24px}.bullet{padding-left:18px;border-left:2px solid #cedae5}table{width:100%;border-collapse:collapse;font-size:16px}td,th{padding:9px 12px;text-align:left;border-bottom:1px solid #dce4eb;vertical-align:top}th{background:#eaf0f6}code{font-family:Consolas,monospace;font-size:.93em}pre{white-space:pre-wrap;overflow-wrap:anywhere;font:15px/1.6 Consolas,monospace;padding:20px;background:#f3f6f9;border:1px solid #dce4eb}.green{color:#166534}.red{color:#b42318}a{color:#1d4ed8}.two{display:grid;grid-template-columns:1fr 1fr;gap:24px}figure{margin:16px 0}img{width:100%;border:1px solid #cfd9e2}figcaption{font-size:16px;color:#3f556a}footer{margin-top:22px;padding-top:14px;border-top:1px solid #dce4eb;color:#52677b;font-size:14px}</style><main><h1>CP4: Reproduce, fail, fix, verify</h1><p class="meta">Ticket 2 | shopledger-legacy-workshop | Only lib/inventory.js changes application behavior</p><div class="two"><section><h2 class="red">Before fix: 6 regressions fail</h2><p><code>node --test</code> at 84b4966; exit 1.</p><pre class="red">✔ find resolves numeric and string IDs to the original product (2.1662ms)
+✔ sellable stock subtracts wholesale holds without mutating the product (1.4407ms)
+✔ sellable stock defaults missing holds to zero and handles numeric strings (0.2693ms)
+✔ sellable stock clamps exhausted and over-reserved products to zero (0.2867ms)
+✔ stock check accepts a quantity below sellable stock without mutation (0.3647ms)
+✔ stock check rejects quantities above sellable stock (0.2946ms)
+✔ stock check rejects unknown products and accepts an empty cart (0.1656ms)
+✔ CURRENT BEHAVIOUR: stock check rejects the exact remaining sellable quantity (0.6503ms)
+✔ CURRENT BEHAVIOUR: stock check rejects the last unreserved unit (0.5984ms)
+✔ reserve deducts physical stock and preserves wholesale reserved holds (0.5064ms)
+✔ reserve handles numeric quantity strings and ignores missing products (0.3013ms)
+✔ CURRENT BEHAVIOUR: release ignores order lines identified by id (0.3762ms)
+✔ release skips unknown product IDs without changing known products (0.1488ms)
+✔ summary counts out-of-stock and low-stock SKUs and values physical units (0.1539ms)
+✔ summary of an empty inventory is zero (0.0923ms)
+✖ REGRESSION: sell the last unreserved unit and reach zero physical stock (2.6822ms)
+✖ REGRESSION: sell the last sellable unit without consuming three wholesale holds (0.2649ms)
+✖ REGRESSION: buying all sellable stock still rejects any quantity above it (0.18ms)
+✖ REGRESSION: cancelling pending order restores every line once and preserves holds (1.9299ms)
+✖ REGRESSION: reserve and release round trip physical stock and wholesale holds (0.3445ms)
+✖ REGRESSION: release adds numeric quantities to physical stock, never concatenates (0.2375ms)
+✔ REGRESSION: products with no sellable stock remain unavailable (0.2029ms)
+✔ cancellation updates status, reason, and date and returns the same order (1.5348ms)
+✔ CURRENT BEHAVIOUR: cancelling a pending order does not restore physical stock (0.9037ms)
+✔ khata cancellation reverses the order debit and preserves settled payments (0.1737ms)
+✔ completed cash orders can be cancelled without changing customer credit (0.6737ms)
+✔ a second cancellation is rejected without repeating stock or ledger changes (0.2623ms)
+✔ cancelling an unknown order leaves the in-memory database unchanged (0.1518ms)
+ℹ tests 28
+ℹ suites 0
+ℹ pass 22
+ℹ fail 6
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 110.9191</pre></section><section><h2 class="green">After fix: all 28 tests pass</h2><p><code>node --test</code>; exit 0.</p><pre class="green">✔ find resolves numeric and string IDs to the original product (1.6844ms)
+✔ sellable stock subtracts wholesale holds without mutating the product (0.7612ms)
+✔ sellable stock defaults missing holds to zero and handles numeric strings (0.1213ms)
+✔ sellable stock clamps exhausted and over-reserved products to zero (0.1094ms)
+✔ stock check accepts a quantity below sellable stock without mutation (0.2145ms)
+✔ stock check rejects quantities above sellable stock (0.1256ms)
+✔ stock check rejects unknown products and accepts an empty cart (0.1111ms)
+✔ stock check accepts the exact remaining sellable quantity (0.1172ms)
+✔ stock check accepts the last unreserved unit (0.1279ms)
+✔ reserve deducts physical stock and preserves wholesale reserved holds (0.2029ms)
+✔ reserve handles numeric quantity strings and ignores missing products (0.1153ms)
+✔ release restores physical stock for order lines identified by id (0.1195ms)
+✔ release skips unknown product IDs without changing known products (0.1276ms)
+✔ summary counts out-of-stock and low-stock SKUs and values physical units (0.165ms)
+✔ summary of an empty inventory is zero (0.0827ms)
+✔ REGRESSION: sell the last unreserved unit and reach zero physical stock (0.85ms)
+✔ REGRESSION: sell the last sellable unit without consuming three wholesale holds (0.2021ms)
+✔ REGRESSION: buying all sellable stock still rejects any quantity above it (0.1513ms)
+✔ REGRESSION: cancelling pending order restores every line once and preserves holds (1.4673ms)
+✔ REGRESSION: reserve and release round trip physical stock and wholesale holds (0.1445ms)
+✔ REGRESSION: release adds numeric quantities to physical stock, never concatenates (0.0994ms)
+✔ REGRESSION: products with no sellable stock remain unavailable (0.1183ms)
+✔ cancellation updates status, reason, and date and returns the same order (1.6637ms)
+✔ cancelling a pending order restores physical stock and preserves holds (0.7406ms)
+✔ khata cancellation reverses the order debit and preserves settled payments (0.1568ms)
+✔ completed cash orders can be cancelled without changing customer credit (0.998ms)
+✔ a second cancellation is rejected without repeating stock or ledger changes (0.2845ms)
+✔ cancelling an unknown order leaves the in-memory database unchanged (0.1437ms)
+ℹ tests 28
+ℹ suites 0
+ℹ pass 28
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 109.4313
+</pre></section></div><h2>Running app: last-unit checkout</h2><p>Fresh temporary project copies on ports 3101 (before) and 3102 (after). Original data/db.json unchanged.</p><div class="two"><figure><figcaption>BEFORE: ghee Qty 1 fails, despite 1 sellable unit (HTTP 409).</figcaption><img src="cp4-before-last-unit.png" alt="BEFORE: ghee Qty 1 fails, despite 1 sellable unit (HTTP 409)."></figure><figure><figcaption>AFTER: order #1009 succeeds (HTTP 201), ghee stock reaches 0.</figcaption><img src="cp4-after-last-unit.png" alt="AFTER: order #1009 succeeds (HTTP 201), ghee stock reaches 0."></figure></div><h2>Running app: pending order #1007 cancellation</h2><p>BEFORE: ghee remains 1 and sunflower oil remains 22. AFTER: ghee becomes 3 and oil becomes 24. Reserved oil stays 4.</p><div class="two"><figure><figcaption>BEFORE: status CANCELLED, stock not restored.</figcaption><img src="cp4-before-cancellation.png" alt="BEFORE: status CANCELLED, stock not restored."></figure><figure><figcaption>AFTER: physical stock restored; wholesale holds preserved.</figcaption><img src="cp4-after-cancellation.png" alt="AFTER: physical stock restored; wholesale holds preserved."></figure></div><footer>Manual diff and caller review found no blocking findings. SHA-256 of original database: 378042acaef84300a04a1b6ea043a3e279ed0969d76dc1f9deffd91d095ceb49. Full raw logs and browser observations are included alongside this evidence.</footer></main></html>
