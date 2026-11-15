@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="690" viewBox="0 0 1100 690" role="img" aria-labelledby="title desc">
+  <title id="title">ShopLedger architecture and order flow</title>
+  <desc id="desc">Browser UI flows through Express routes to business logic and the JSON data store.</desc>
+  <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#475569"/></marker><style>
+    text{font-family:Segoe UI,Arial,sans-serif;fill:#0f172a}.head{font-size:22px;font-weight:700}.label{font-size:15px;font-weight:700}.small{font-size:12px}.box{fill:#f8fafc;stroke:#64748b;stroke-width:1.5;rx:9}.group{fill:#eff6ff;stroke:#93c5fd;stroke-width:1.5;rx:14}.flow{stroke:#475569;stroke-width:2;fill:none;marker-end:url(#arrow)}.order{stroke:#2563eb;stroke-width:3;fill:none;marker-end:url(#arrow)}
+  </style></defs>
+  <text x="40" y="42" class="head">ShopLedger — architecture and order flow</text>
+  <rect x="40" y="78" width="210" height="95" class="box"/><text x="60" y="111" class="label">Browser UI</text><text x="60" y="137" class="small">public/index.html · app.js · style.css</text>
+  <rect x="310" y="65" width="390" height="145" class="group"/><text x="330" y="92" class="label">Express server: server.js</text>
+  <rect x="340" y="112" width="145" height="70" class="box"/><text x="357" y="140" class="label">orders</text><text x="357" y="162" class="small">routes/orders.js</text>
+  <rect x="515" y="112" width="155" height="70" class="box"/><text x="531" y="140" class="label">other routers</text><text x="531" y="162" class="small">products · customers · reports</text>
+  <rect x="755" y="78" width="300" height="95" class="box"/><text x="780" y="111" class="label">config.js</text><text x="780" y="137" class="small">shop · HSN slabs · coupons · inventory</text>
+  <path d="M250 125 H310" class="flow"/><path d="M700 125 H755" class="flow"/>
+  <rect x="40" y="275" width="660" height="345" class="group"/><text x="60" y="307" class="label">Business logic: lib/</text>
+  <rect x="65" y="333" width="185" height="75" class="box"/><text x="83" y="362" class="label">pricing.js</text><text x="83" y="386" class="small">subtotal · discounts · tax</text>
+  <rect x="275" y="333" width="180" height="75" class="box"/><text x="293" y="362" class="label">tax.js · coupons.js</text><text x="293" y="386" class="small">HSN rates · coupon rules</text>
+  <rect x="480" y="333" width="185" height="75" class="box"/><text x="498" y="362" class="label">invoice.js</text><text x="498" y="386" class="small">printable tax invoice</text>
+  <rect x="65" y="450" width="185" height="75" class="box"/><text x="83" y="479" class="label">inventory.js</text><text x="83" y="503" class="small">availability · reservations</text>
+  <rect x="275" y="450" width="180" height="75" class="box"/><text x="293" y="479" class="label">orders.js</text><text x="293" y="503" class="small">create · list · cancel</text>
+  <rect x="480" y="450" width="185" height="75" class="box"/><text x="498" y="479" class="label">ledger.js · reports.js</text><text x="498" y="503" class="small">Khata · GST reconciliation</text>
+  <text x="65" y="570" class="small">dates.js · store.js</text>
+  <rect x="755" y="275" width="300" height="125" class="box"/><text x="780" y="312" class="label">lib/store.js</text><text x="780" y="338" class="small">reads and writes application data</text><text x="780" y="362" class="small">JSON file persistence</text>
+  <rect x="755" y="455" width="300" height="105" class="box"/><text x="780" y="490" class="label">data/db.json</text><text x="780" y="517" class="small">products · orders · customers · audit</text>
+  <path d="M435 210 V250 H157 V333" class="order"/><text x="180" y="241" class="small">1 · place order: resolve products, check stock</text>
+  <path d="M250 370 H275" class="order"/><path d="M455 370 H480" class="order"/><text x="275" y="430" class="small">2 · calculate checkout totals → reserve and record order</text>
+  <path d="M665 488 H755" class="flow"/><path d="M905 400 V455" class="flow"/>
+  <path d="M570 210 V280 H572 V333" class="flow"/><text x="585" y="265" class="small">invoice + reconciliation</text>
+  <path d="M250 488 H275" class="flow"/>
+</svg>
