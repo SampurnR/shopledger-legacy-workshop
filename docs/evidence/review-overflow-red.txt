@@ -1,0 +1,29 @@
+✖ invalid settlement is rejected without mutation: finite amount overflowing currency rounding (2.3429ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 566.5244
+
+✖ failing tests:
+
+test at test\ledger.test.js:51:3
+✖ invalid settlement is rejected without mutation: finite amount overflowing currency rounding (2.3429ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  true !== false
+  
+      at TestContext.<anonymous> (D:\Projects\GeeksForGeeks X Codex Project\Project Phase 1\shopledger\test\ledger.test.js:54:12)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.start (node:internal/test_runner/test:944:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual'
+  }

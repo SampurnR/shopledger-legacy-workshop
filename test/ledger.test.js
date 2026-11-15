@@ -45,7 +45,8 @@ test('successive string payments increase totals and allocate unique settlement 
   ['NaN', NaN], ['infinity', Infinity], ['negative infinity', -Infinity],
   ['nonnumeric string', 'abc'], ['whitespace', '  '], ['infinity string', 'Infinity'],
   ['boolean true', true], ['boolean false', false], ['array', []], ['numeric array', [500]],
-  ['object', {}], ['sub-cent amount rounded to zero', 0.001]
+  ['object', {}], ['sub-cent amount rounded to zero', 0.001],
+  ['finite amount overflowing currency rounding', Number.MAX_VALUE]
 ].forEach(function (entry) {
   test('invalid settlement is rejected without mutation: ' + entry[0], function () {
     var db = fixtures.ledgerDb();

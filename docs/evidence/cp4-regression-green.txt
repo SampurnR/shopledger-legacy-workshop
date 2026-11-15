@@ -1,0 +1,60 @@
+Checkpoint 4 GREEN | shopledger
+Command: node --test --test-reporter=spec
+Files: test/dates.test.js, test/orders.test.js, test/ledger.test.js
+Phase: corrected production logic including review refinement; in-memory fixtures only
+
+✔ ISO date retains a chronological comparison key (1.324ms)
+✔ stored day-first date becomes the equivalent chronological key (0.2344ms)
+✔ comparison keys trim input and pad single-digit date components (0.2328ms)
+✔ unsupported comparison input is preserved (0.1243ms)
+✔ empty comparison inputs return an empty key (0.1478ms)
+✔ today retains the DD/MM/YYYY display format (2.2085ms)
+✔ fiscal year preserves the March/April boundary for both date formats (0.5325ms)
+✔ missing or unsupported fiscal-year input retains the fallback (0.225ms)
+✔ a browser string settlement updates numeric totals without concatenation (3.0947ms)
+✔ numeric strings in existing settled totals remain numeric after payment (0.1363ms)
+✔ settlement arithmetic and stored payments are rounded to currency precision (0.1297ms)
+✔ successive string payments increase totals and allocate unique settlement IDs (0.6036ms)
+✔ invalid settlement is rejected without mutation: NaN (0.1892ms)
+✔ invalid settlement is rejected without mutation: infinity (0.1881ms)
+✔ invalid settlement is rejected without mutation: negative infinity (0.0911ms)
+✔ invalid settlement is rejected without mutation: nonnumeric string (0.0727ms)
+✔ invalid settlement is rejected without mutation: whitespace (0.2526ms)
+✔ invalid settlement is rejected without mutation: infinity string (0.2785ms)
+✔ invalid settlement is rejected without mutation: boolean true (0.1382ms)
+✔ invalid settlement is rejected without mutation: boolean false (0.073ms)
+✔ invalid settlement is rejected without mutation: array (0.0576ms)
+✔ invalid settlement is rejected without mutation: numeric array (0.1444ms)
+✔ invalid settlement is rejected without mutation: object (0.0601ms)
+✔ invalid settlement is rejected without mutation: sub-cent amount rounded to zero (0.043ms)
+✔ invalid settlement is rejected without mutation: finite amount overflowing currency rounding (0.0426ms)
+✔ a numeric settlement updates balance and records the payment (0.1095ms)
+✔ zero, negative and absent settlements do not mutate the ledger (0.1241ms)
+✔ unknown customer does not mutate the ledger (0.1218ms)
+✔ settlements are prepended and retain default metadata (0.1876ms)
+✔ customer list reports the opening plus billed minus settled balance (0.1313ms)
+✔ credit limit rejection leaves the customer unchanged (0.1395ms)
+✔ history sorts all eight orders newest first across months and years (1.8921ms)
+✔ January ISO range includes only the three January orders (0.2089ms)
+✔ from-only range excludes earlier months (0.117ms)
+✔ to-only range includes older years and excludes later months (0.157ms)
+✔ day-first date filters include both boundaries (0.1189ms)
+✔ same-day range includes its exact order date (0.0942ms)
+✔ date, status and search filters can be combined (0.1352ms)
+✔ same-date orders keep their input order (0.0906ms)
+✔ history compares ISO and day-first stored dates consistently (0.2791ms)
+✔ a reversed date range returns no orders (0.2869ms)
+✔ listing does not mutate the source order array (0.2719ms)
+✔ status filtering retains the pending order (0.0975ms)
+✔ coupon search is case-insensitive and trims whitespace (0.0818ms)
+✔ customer search and order ID search retain matching records (0.0843ms)
+✔ empty history and unmatched filters return an empty array (0.063ms)
+✔ order lookup supports route string IDs and missing IDs (0.0955ms)
+ℹ tests 47
+ℹ suites 0
+ℹ pass 47
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1486.75
