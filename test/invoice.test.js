@@ -19,11 +19,12 @@ function amounts(result) {
 }
 
 for (const [hsn, checkoutTax] of [['1006', 5], ['0405', 12]]) {
-  test(`CURRENT BEHAVIOUR: invoice uses 18% for HSN ${hsn} instead of checkout's ${checkoutTax}%`, () => {
+  test(`invoice uses HSN ${hsn} at checkout's ${checkoutTax}% rate`, () => {
     const result = invoice.computeInvoiceFigures(order({ items: [item({ hsn })] }));
-    assert.deepEqual(amounts(result), { subtotal: 100, discount: 0, tax: 18, cgst: 9, sgst: 9, total: 118 });
-    assert.equal(result.rows[0].gstPercent, 18);
-    assert.equal(result.rows[0].lineTax, 18);
+    assert.deepEqual(amounts(result), { subtotal: 100, discount: 0, tax: checkoutTax,
+      cgst: checkoutTax / 2, sgst: checkoutTax / 2, total: 100 + checkoutTax });
+    assert.equal(result.rows[0].gstPercent, checkoutTax);
+    assert.equal(result.rows[0].lineTax, checkoutTax);
   });
 }
 
@@ -39,68 +40,68 @@ test('invoice accepts an explicit percentage GST rate and preserves line details
     price: 125, gstPercent: 12, line: 250, lineTax: 30 }]);
 });
 
-test('CURRENT BEHAVIOUR: decimal GST rate 0.05 is divided by 100 again', () => {
+test('invoice accepts decimal GST rate 0.05 as five percent', () => {
   const result = invoice.computeInvoiceFigures(order({ items: [item({ gstRate: 0.05 })] }));
-  assert.equal(result.tax, 0.05);
-  assert.equal(result.total, 100.05);
+  assert.equal(result.tax, 5);
+  assert.equal(result.total, 105);
+  assert.equal(result.rows[0].gstPercent, 5);
+});
+
+test('invoice preserves an explicit zero GST rate', () => {
+  const result = invoice.computeInvoiceFigures(order({ items: [item({ gstRate: 0 })] }));
+  assert.equal(result.tax, 0);
   assert.equal(result.rows[0].gstPercent, 0);
 });
 
-test('CURRENT BEHAVIOUR: explicit zero GST falls back to 18%', () => {
-  const result = invoice.computeInvoiceFigures(order({ items: [item({ gstRate: 0 })] }));
-  assert.equal(result.tax, 18);
-  assert.equal(result.rows[0].gstPercent, 18);
-});
-
-test('CURRENT BEHAVIOUR: SAVE10 on a 1020 subtotal gives invoice 1083.24 instead of billed 963.90', () => {
+test('SAVE10 on a 1020 subtotal gives invoice 963.90 matching the bill', () => {
   const result = invoice.computeInvoiceFigures(order({ items: [item({ price: 510, qty: 2 })],
     coupon: 'SAVE10', subtotal: 1020, discount: 102, tax: 45.9, total: 963.9 }));
-  assert.deepEqual(amounts(result), { subtotal: 1020, discount: 120.36, tax: 183.6,
-    cgst: 91.8, sgst: 91.8, total: 1083.24 });
+  assert.deepEqual(amounts(result), { subtotal: 1020, discount: 102, tax: 45.9,
+    cgst: 22.95, sgst: 22.95, total: 963.9 });
 });
 
-test('CURRENT BEHAVIOUR: SAVE10 ignores the 150 cap on a 2240 subtotal', () => {
+test('SAVE10 respects the 150 cap on a 2240 subtotal', () => {
   const result = invoice.computeInvoiceFigures(order({ items: [item({ price: 1120, qty: 2, hsn: '1508' })],
     coupon: 'SAVE10', subtotal: 2240, discount: 150, tax: 104.5, total: 2194.5 }));
-  assert.deepEqual(amounts(result), { subtotal: 2240, discount: 264.32, tax: 403.2,
-    cgst: 201.6, sgst: 201.6, total: 2378.88 });
+  assert.deepEqual(amounts(result), { subtotal: 2240, discount: 150, tax: 104.5,
+    cgst: 52.25, sgst: 52.25, total: 2194.5 });
 });
 
-test('CURRENT BEHAVIOUR: percentage coupon is applied after tax without reducing taxable GST', () => {
+test('percentage coupon reduces the taxable amount before GST', () => {
   const result = invoice.computeInvoiceFigures(order({ items: [item({ price: 1000, gstRate: 5 })], coupon: 'SAVE10' }));
-  assert.deepEqual(amounts(result), { subtotal: 1000, discount: 105, tax: 50, cgst: 25, sgst: 25, total: 945 });
+  assert.deepEqual(amounts(result), { subtotal: 1000, discount: 100, tax: 45, cgst: 22.5, sgst: 22.5, total: 945 });
 });
 
-test('CURRENT BEHAVIOUR: FLAT50 below its minimum can make an invoice total negative', () => {
+test('FLAT50 below its minimum gives no discount and a nonnegative invoice', () => {
   const result = invoice.computeInvoiceFigures(order({ items: [item({ price: 10 })], coupon: 'FLAT50' }));
-  assert.deepEqual(amounts(result), { subtotal: 10, discount: 50, tax: 1.8, cgst: 0.9, sgst: 0.9, total: -38.2 });
+  assert.deepEqual(amounts(result), { subtotal: 10, discount: 0, tax: 0.5, cgst: 0.25, sgst: 0.25, total: 10.5 });
 });
 
-test('CURRENT BEHAVIOUR: inactive DIWALI20 is still applied by the invoice', () => {
+test('inactive DIWALI20 is not applied by the invoice', () => {
   const result = invoice.computeInvoiceFigures(order({ items: [item({ price: 1000 })], coupon: 'DIWALI20' }));
-  assert.equal(result.discount, 236);
-  assert.equal(result.tax, 180);
-  assert.equal(result.total, 944);
-});
-
-test('CURRENT BEHAVIOUR: invoice coupon lookup does not normalize case or whitespace', () => {
-  const result = invoice.computeInvoiceFigures(order({ items: [item({ price: 1000 })], coupon: ' save10 ' }));
   assert.equal(result.discount, 0);
-  assert.equal(result.total, 1180);
+  assert.equal(result.tax, 50);
+  assert.equal(result.total, 1050);
 });
 
-test('CURRENT BEHAVIOUR: invoice ignores persisted monetary totals and recomputes from items', () => {
+test('invoice coupon lookup normalizes case and whitespace', () => {
+  const result = invoice.computeInvoiceFigures(order({ items: [item({ price: 1000 })], coupon: ' save10 ' }));
+  assert.equal(result.discount, 100);
+  assert.equal(result.total, 945);
+});
+
+test('invoice recomputes from items instead of trusting inconsistent persisted figures', () => {
   const result = invoice.computeInvoiceFigures(order({ subtotal: 999, discount: 99, tax: 1, total: 901 }));
-  assert.deepEqual(amounts(result), { subtotal: 100, discount: 0, tax: 18, cgst: 9, sgst: 9, total: 118 });
+  assert.deepEqual(amounts(result), { subtotal: 100, discount: 0, tax: 5, cgst: 2.5, sgst: 2.5, total: 105 });
 });
 
-test('CURRENT BEHAVIOUR: invoice rounds aggregate tax rather than summing rounded row taxes', () => {
-  const result = invoice.computeInvoiceFigures(order({ items: [item({ price: 0.03 }), item({ id: 2, price: 0.03 })] }));
+test('invoice sums rounded row taxes consistently with checkout', () => {
+  const result = invoice.computeInvoiceFigures(order({ items: [item({ price: 0.03, hsn: '0902' }), item({ id: 2, price: 0.03, hsn: '0902' })] }));
   assert.deepEqual(result.rows.map(row => row.lineTax), [0.01, 0.01]);
-  assert.equal(result.tax, 0.01);
+  assert.equal(result.tax, 0.02);
   assert.equal(result.cgst, 0.01);
-  assert.equal(result.sgst, 0);
-  assert.equal(result.total, 0.07);
+  assert.equal(result.sgst, 0.01);
+  assert.equal(result.total, 0.08);
 });
 
 test('empty invoice without a coupon returns zero totals and no rows', () => {
@@ -109,14 +110,12 @@ test('empty invoice without a coupon returns zero totals and no rows', () => {
   assert.deepEqual(result.rows, []);
 });
 
-test('CURRENT BEHAVIOUR: printed invoice exposes the wrong figures and a reconciliation notice', () => {
+test('printed SAVE10 invoice shows billed total and GST without a mismatch notice', () => {
   const html = invoice.render(order({ items: [item({ price: 510, qty: 2 })], coupon: 'SAVE10',
     subtotal: 1020, discount: 102, tax: 45.9, total: 963.9 }));
-  assert.match(html, /Invoice Total<\/td><td class="r">\u20b91083\.24/);
-  assert.match(html, /Total GST\)<\/td><td class="r">\u20b9183\.60/);
-  assert.match(html, /Accountant Reconciliation Notice:/);
-  assert.match(html, /recorded total \(\u20b9963\.90\)/);
-  assert.match(html, /by \+\u20b9119\.34/);
+  assert.match(html, /Invoice Total<\/td><td class="r">\u20b9963\.90/);
+  assert.match(html, /Total GST\)<\/td><td class="r">\u20b945\.90/);
+  assert.doesNotMatch(html, /Accountant Reconciliation Notice:/);
 });
 
 test('matching invoice has no warning and escapes customer and item text', () => {
@@ -132,4 +131,10 @@ test('invoice calculation and rendering leave the supplied order unchanged', () 
   invoice.computeInvoiceFigures(fixture);
   invoice.render(fixture);
   assert.deepEqual(fixture, before);
+});
+
+test('invoice still warns when the stored bill differs from calculated figures', () => {
+  const html = invoice.render(order({ total: 100 }));
+  assert.match(html, /Accountant Reconciliation Notice:/);
+  assert.match(html, /by \+\u20b95\.00/);
 });

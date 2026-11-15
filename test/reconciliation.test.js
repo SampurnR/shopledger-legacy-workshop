@@ -19,15 +19,15 @@ test('reconciliation reports an 18% no-coupon bill as matched', () => {
   assert.equal(result.rows[0].matched, true);
 });
 
-test('CURRENT BEHAVIOUR: reconciliation exposes SAVE10 invoice and ledger differences', () => {
+test('reconciliation matches SAVE10 invoice and ledger figures', () => {
   const result = reports.getGstReconciliation({ orders: [bill({ coupon: 'SAVE10',
     subtotal: 1020, discount: 102, tax: 45.9, total: 963.9,
     items: [{ id: 1, name: 'Fixture rice', hsn: '1006', price: 510, qty: 2 }] })] });
-  assert.equal(result.mismatchCount, 1);
-  assert.equal(result.totalDelta, 119.34);
+  assert.equal(result.mismatchCount, 0);
+  assert.equal(result.totalDelta, 0);
   assert.deepEqual(result.rows[0], { orderId: 9001, date: '15/11/2026', customer: 'Fixture customer',
     coupon: 'SAVE10', ledgerSubtotal: 1020, ledgerDiscount: 102, ledgerTax: 45.9, ledgerTotal: 963.9,
-    invoiceDiscount: 120.36, invoiceTax: 183.6, invoiceTotal: 1083.24, delta: 119.34, matched: false });
+    invoiceDiscount: 102, invoiceTax: 45.9, invoiceTotal: 963.9, delta: 0, matched: true });
 });
 
 test('reconciliation detects a tax-only mismatch even when totals agree', () => {

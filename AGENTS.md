@@ -21,7 +21,7 @@ There is no frontend build step or external database. Persistence is synchronous
 - `lib/inventory.js`: sellable stock, checks, deductions, releases, and stock summaries.
 - `lib/orders.js`: order records, cancellation, search, date filtering, and sorting.
 - `lib/ledger.js`: customer credit limits, debits, reversals, and settlements.
-- `lib/invoice.js`: independent invoice calculations and printable HTML.
+- `lib/invoice.js`: invoice figures using shared checkout pricing, plus printable HTML.
 - `lib/reports.js`: dashboard aggregation and invoice-versus-ledger reconciliation.
 - `lib/dates.js`: date formatting, date-filter keys, and fiscal years.
 - `lib/store.js`: JSON read/write and audit entries.
@@ -35,7 +35,7 @@ Run commands from the project root.
 
 - `npm install --no-package-lock`: install the existing declared dependencies without generating a lockfile.
 - `npm start`: run `node server.js`; default URL is `http://localhost:3000`. `PORT` can override the port.
-- `node --test`: run Node's built-in test runner for workshop tests. No project tests exist yet.
+- `node --test`: run Node's built-in test runner for in-memory characterization and invoice regression tests in `test/`.
 - `npm test`: currently a placeholder that prints an error and exits with status 1; it is not a working test suite.
 
 ## Workshop rules

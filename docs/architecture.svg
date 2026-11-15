@@ -107,8 +107,8 @@
 <text x="760" y="1008" class="small">No direct local imports</text>
 <rect x="1086" y="917" width="320" height="120" rx="13" fill="white" stroke="#d6dfeb"/><rect x="1086" y="930" width="5" height="94" rx="2" fill="#0f766e"/>
 <text x="1106" y="951" class="name">invoice.js</text>
-<text x="1106" y="982" class="small">Invoice totals · printable HTML</text>
-<text x="1106" y="1008" class="small">Imports: config</text>
+<text x="1106" y="982" class="small">Shared checkout totals · HTML</text>
+<text x="1106" y="1008" class="small">Imports: config · pricing</text>
 <rect x="1432" y="917" width="320" height="120" rx="13" fill="white" stroke="#d6dfeb"/><rect x="1432" y="930" width="5" height="94" rx="2" fill="#0f766e"/>
 <text x="1452" y="951" class="name">reports.js</text>
 <text x="1452" y="982" class="small">Dashboard · invoice reconciliation</text>
@@ -178,7 +178,7 @@
 <text x="1565" y="1214" class="flowbody">HTTP 201 → browser;</text>
 <text x="1565" y="1238" class="flowbody">refresh stock &amp; balances.</text>
 <text x="1565" y="1262" class="flowbody">Invoice opens separately</text>
-<text x="48" y="1344" class="body">Existing behavior: invoice.js recalculates figures independently from pricing.js; reports.js compares them.</text>
+<text x="48" y="1344" class="body">Invoice flow: invoice.js reuses pricing.js for checkout totals and GST; reports.js checks the stored ledger.</text>
 <text x="48" y="1376" class="small">* PORT can override 3000. Arrows show request routing and order sequence; cards document imports.</text>
 <text x="48" y="1409" class="small">Documentation only · no application code or database changes</text>
 <path d="M 1752 320 H 1779 V 835 H 1752" class="wire" style="marker-start:url(#arrow)"/>
