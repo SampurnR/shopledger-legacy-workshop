@@ -1,0 +1,155 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1540" viewBox="0 0 1600 1540" role="img" aria-labelledby="title desc">
+<title id="title">ShopLedger architecture and placing an order</title>
+<desc id="desc">Existing UI files, Express entry point, four routers, ten library modules, configuration, JSON persistence, and the successful order creation sequence.</desc>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path d="M0 0L8 4L0 8" fill="#31618a"/></marker></defs><style>text{font-family:Arial,sans-serif;fill:#182b3a}.title{font-size:30px;font-weight:700}.head{font-size:20px;font-weight:700}.file{font-family:Menlo,Consolas,monospace;font-size:17px;font-weight:600}.body{font-size:16px}.small{font-size:14px;fill:#455e70}.panel{fill:#f7fafc;stroke:#ccd8e2;stroke-width:1.5}.node{fill:white;stroke:#bacbd8;stroke-width:1.3}.line{fill:none;stroke:#31618a;stroke-width:2;marker-end:url(#arrow)}.step{fill:#edf5fb;stroke:#a8c5dc;stroke-width:1.3}</style>
+<rect width="1600" height="1540" fill="white"/>
+<text x="40" y="49" class="title">ShopLedger architecture</text>
+<text x="40" y="79" class="small">Existing files and dependencies • arrows show request flow or calls; “uses” lists name modules in lib/</text>
+<rect x="40" y="110" width="340" height="205" rx="10" class="panel"/>
+<text x="60" y="143" class="head">UI · public/</text>
+<text x="60" y="181" class="file">public/index.html</text>
+<text x="60" y="220" class="file">public/css/style.css</text>
+<text x="60" y="259" class="file">public/js/app.js</text>
+<text x="60" y="292" class="small">HTML + CSS + browser JavaScript</text>
+<rect x="480" y="110" width="440" height="205" rx="10" class="panel"/>
+<text x="500" y="143" class="head">server.js · Express</text>
+<text x="500" y="181" class="body">Serves public/</text>
+<text x="500" y="211" class="body">Mounts all four routers at /api</text>
+<text x="500" y="247" class="body">GET /orders/:id/invoice</text>
+<text x="500" y="277" class="body">Uses store, orders, invoice + config.js</text>
+<path d="M380 210 H480" class="line"/>
+<text x="389" y="193" class="small">HTTP</text>
+<rect x="1020" y="110" width="540" height="205" rx="10" class="panel"/>
+<text x="1040" y="143" class="head">config.js</text>
+<text x="1040" y="180" class="body">Port, shop details, tax, inventory, coupons</text>
+<text x="1040" y="213" class="body">Used by server.js and routes/reports.js</text>
+<text x="1040" y="248" class="body">lib/inventory.js · lib/tax.js</text>
+<text x="1040" y="280" class="body">lib/coupons.js · lib/invoice.js</text>
+<text x="40" y="364" class="head">routes/ · mounted by server.js at /api</text>
+<path d="M700 315 V340 H360 V380" class="line"/>
+<rect x="40" y="385" width="365" height="210" rx="10" class="panel"/>
+<text x="56" y="418" class="file">routes/products.js</text>
+<text x="56" y="451" class="small">GET /products · GET /coupons</text>
+<text x="56" y="479" class="small">Uses store, inventory, tax, coupons</text>
+<rect x="425" y="385" width="365" height="210" rx="10" class="panel"/>
+<text x="441" y="418" class="file">routes/orders.js</text>
+<text x="441" y="451" class="small">GET /orders · GET /orders/:id</text>
+<text x="441" y="479" class="small">POST /orders · POST /orders/:id/cancel</text>
+<text x="441" y="507" class="small">Uses store, inventory, pricing,</text>
+<text x="441" y="535" class="small">coupons, orders, ledger</text>
+<rect x="810" y="385" width="365" height="210" rx="10" class="panel"/>
+<text x="826" y="418" class="file">routes/customers.js</text>
+<text x="826" y="451" class="small">GET /customers</text>
+<text x="826" y="479" class="small">POST /customers/:id/settle</text>
+<text x="826" y="507" class="small">Uses store, ledger</text>
+<rect x="1195" y="385" width="365" height="210" rx="10" class="panel"/>
+<text x="1211" y="418" class="file">routes/reports.js</text>
+<text x="1211" y="451" class="small">GET /reports/dashboard</text>
+<text x="1211" y="479" class="small">GET /reports/gst-reconciliation</text>
+<text x="1211" y="507" class="small">POST /pricing/preview · GET /admin/export</text>
+<text x="1211" y="535" class="small">Uses store, reports, pricing, coupons</text>
+<text x="1211" y="563" class="small">Also imports config.js</text>
+<text x="40" y="641" class="head">lib/ · business rules and persistence</text>
+<text x="40" y="666" class="small">Router “uses” lists above refer to these modules. Dependencies below are direct local imports.</text>
+<rect x="40" y="690" width="292" height="112" rx="10" class="node"/>
+<text x="53" y="719" class="file">lib/inventory.js</text>
+<text x="53" y="747" class="small">Stock checks, deduction, release</text>
+<text x="53" y="776" class="small">Uses config.js</text>
+<rect x="347" y="690" width="292" height="112" rx="10" class="node"/>
+<text x="360" y="719" class="file">lib/pricing.js</text>
+<text x="360" y="747" class="small">Subtotal, discount, tax, totals</text>
+<text x="360" y="776" class="small">Uses tax, coupons</text>
+<rect x="654" y="690" width="292" height="112" rx="10" class="node"/>
+<text x="667" y="719" class="file">lib/coupons.js</text>
+<text x="667" y="747" class="small">Normalize, validate, calculate coupons</text>
+<text x="667" y="776" class="small">Uses config.js</text>
+<rect x="961" y="690" width="292" height="112" rx="10" class="node"/>
+<text x="974" y="719" class="file">lib/tax.js</text>
+<text x="974" y="747" class="small">Resolve rates; split CGST / SGST</text>
+<text x="974" y="776" class="small">Uses config.js</text>
+<rect x="1268" y="690" width="292" height="112" rx="10" class="node"/>
+<text x="1281" y="719" class="file">lib/orders.js</text>
+<text x="1281" y="747" class="small">Add, find, list, cancel orders</text>
+<text x="1281" y="776" class="small">Uses dates, inventory, ledger</text>
+<rect x="40" y="820" width="292" height="112" rx="10" class="node"/>
+<text x="53" y="849" class="file">lib/ledger.js</text>
+<text x="53" y="877" class="small">Credit charges, reversals, settlements</text>
+<text x="53" y="906" class="small">Uses dates</text>
+<rect x="347" y="820" width="292" height="112" rx="10" class="node"/>
+<text x="360" y="849" class="file">lib/dates.js</text>
+<text x="360" y="877" class="small">Today, date keys, fiscal year</text>
+<text x="360" y="906" class="small">No local imports</text>
+<rect x="654" y="820" width="292" height="112" rx="10" class="node"/>
+<text x="667" y="849" class="file">lib/invoice.js</text>
+<text x="667" y="877" class="small">Invoice figures and printable HTML</text>
+<text x="667" y="906" class="small">Uses config.js</text>
+<rect x="961" y="820" width="292" height="112" rx="10" class="node"/>
+<text x="974" y="849" class="file">lib/reports.js</text>
+<text x="974" y="877" class="small">Dashboard and reconciliation</text>
+<text x="974" y="906" class="small">Uses inventory, ledger, invoice</text>
+<rect x="1268" y="820" width="292" height="112" rx="10" class="node"/>
+<text x="1281" y="849" class="file">lib/store.js</text>
+<text x="1281" y="877" class="small">Read, write, append audit</text>
+<text x="1281" y="906" class="small">Uses Node fs + path</text>
+<rect x="1030" y="966" width="530" height="67" rx="10" class="panel"/>
+<text x="1050" y="994" class="file">data/db.json</text>
+<text x="1050" y="1017" class="small">Products · customers · orders · settlements · auditLog · IDs</text>
+<path d="M1414 932 V955 H1295 V966" class="line"/>
+<text x="1335" y="954" class="small">read / write</text>
+<text x="40" y="1064" class="head">Placing an order · successful request</text>
+<text x="40" y="1091" class="small">routes/orders.js coordinates this sequence. Changes are saved together by store.write(db).</text>
+<rect x="40" y="1112" width="355" height="104" rx="10" class="step"/>
+<text x="53" y="1139" class="file">1 · public/js/app.js</text>
+<text x="53" y="1166" class="body">POST /api/orders</text>
+<text x="53" y="1193" class="small">Through server.js</text>
+<rect x="425" y="1112" width="355" height="104" rx="10" class="step"/>
+<text x="438" y="1139" class="file">2 · lib/store.js</text>
+<text x="438" y="1166" class="body">read() → data/db.json</text>
+<text x="438" y="1193" class="small">Load current records</text>
+<path d="M395 1164 H425" class="line"/>
+<rect x="810" y="1112" width="355" height="104" rx="10" class="step"/>
+<text x="823" y="1139" class="file">3 · routes/orders.js</text>
+<text x="823" y="1166" class="body">inventory.find()</text>
+<text x="823" y="1193" class="small">Resolve products; normalize qty</text>
+<path d="M780 1164 H810" class="line"/>
+<rect x="1195" y="1112" width="355" height="104" rx="10" class="step"/>
+<text x="1208" y="1139" class="file">4 · lib/inventory.js</text>
+<text x="1208" y="1166" class="body">check()</text>
+<text x="1208" y="1193" class="small">Check sellable stock</text>
+<path d="M1165 1164 H1195" class="line"/>
+<path d="M1550 1164 H1576 V1229 H24 V1294 H40" class="line"/>
+<rect x="40" y="1242" width="355" height="104" rx="10" class="step"/>
+<text x="53" y="1269" class="file">5 · lib/coupons.js</text>
+<text x="53" y="1296" class="body">normalizeCode() + validate()</text>
+<text x="53" y="1323" class="small">Check coupon if supplied</text>
+<rect x="425" y="1242" width="355" height="104" rx="10" class="step"/>
+<text x="438" y="1269" class="file">6 · lib/pricing.js</text>
+<text x="438" y="1296" class="body">subtotal() + computeTotals()</text>
+<text x="438" y="1323" class="small">Uses lib/tax.js + lib/coupons.js</text>
+<path d="M395 1294 H425" class="line"/>
+<rect x="810" y="1242" width="355" height="104" rx="10" class="step"/>
+<text x="823" y="1269" class="file">7 · lib/ledger.js</text>
+<text x="823" y="1296" class="body">findCustomer()</text>
+<text x="823" y="1323" class="small">chargeOrderToKhata() if khata</text>
+<path d="M780 1294 H810" class="line"/>
+<rect x="1195" y="1242" width="355" height="104" rx="10" class="step"/>
+<text x="1208" y="1269" class="file">8 · lib/inventory.js</text>
+<text x="1208" y="1296" class="body">reserve()</text>
+<text x="1208" y="1323" class="small">Deduct physical stock</text>
+<path d="M1165 1294 H1195" class="line"/>
+<path d="M1550 1294 H1576 V1359 H24 V1424 H40" class="line"/>
+<rect x="40" y="1372" width="355" height="104" rx="10" class="step"/>
+<text x="53" y="1399" class="file">9 · lib/orders.js</text>
+<text x="53" y="1426" class="body">add()</text>
+<text x="53" y="1453" class="small">Assign ID; append order</text>
+<rect x="425" y="1372" width="355" height="104" rx="10" class="step"/>
+<text x="438" y="1399" class="file">10 · lib/store.js</text>
+<text x="438" y="1426" class="body">appendAudit() + write()</text>
+<text x="438" y="1453" class="small">Save data/db.json</text>
+<path d="M395 1424 H425" class="line"/>
+<rect x="810" y="1372" width="355" height="104" rx="10" class="step"/>
+<text x="823" y="1399" class="file">11 · routes/orders.js</text>
+<text x="823" y="1426" class="body">201 JSON order response</text>
+<text x="823" y="1453" class="small">Back to public/js/app.js</text>
+<path d="M780 1424 H810" class="line"/>
+</svg>
