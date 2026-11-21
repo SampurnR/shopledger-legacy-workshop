@@ -1,0 +1,27 @@
+CP1 — ShopLedger repository walkthrough (read-only)
+
+I inspected the shopledger folder without editing files, installing packages, or starting the server during this checkpoint.
+
+I am sure
+
+ShopLedger is a billing and inventory app for a wholesale and retail shop. Staff can place cash, UPI, and Khata credit orders, check available stock, record customer payments, print GST invoices, and compare those invoices with what customers were billed.
+
+Module map
+
+• public/ contains the browser interface. server.js serves it, mounts the API routes, and handles printable invoices.
+• routes/ has four routers for products, orders, customers, and reports.
+• lib/inventory.js, lib/orders.js, lib/ledger.js, and lib/dates.js handle stock, order records, customer credit, and dates.
+• lib/pricing.js, lib/coupons.js, and lib/tax.js calculate checkout totals. lib/invoice.js produces the printed bill. lib/reports.js compares it with the ledger.
+• config.js holds shop settings, coupon rules, and GST slabs. lib/store.js reads and writes the records in data/db.json.
+
+How an order is placed
+
+The browser sends the product IDs and quantities to POST /api/orders. The server looks up the prices, checks sellable stock after wholesale reservations, and validates the coupon. It spreads the discount across the items and calculates GST on each discounted line. For a Khata sale, it checks the customer's credit limit before recording the charge. It then deducts stock, creates the order, adds an audit entry, and saves the changes.
+
+Risks I confirmed
+
+Checkout and invoicing calculate the same bill separately, using different GST and coupon rules. The original project has no automated tests. Each save rewrites the entire JSON database, and the admin export key is stored in the source code.
+
+I suspect
+
+Changing a coupon or GST rate later could change what an old invoice shows when reprinted. Orders retain the billed totals and item details, but do not preserve every line's original discount and tax calculation. This is a possibility identified from reading the code.

@@ -11,31 +11,31 @@ const riceAndOil = {
   ]
 };
 
-test('CURRENT BEHAVIOUR: #1002 taxes gross lines and discounts the tax-inclusive subtotal', () => {
+test('#1002 discounts the subtotal and taxes each discounted line at 5%', () => {
   const bill = invoice.computeInvoiceFigures(riceAndOil);
   assert.equal(bill.subtotal, 1020);
-  assert.equal(bill.discount, 120.36);
-  assert.equal(bill.tax, 183.60);
-  assert.equal(bill.total, 1083.24);
-  assert.deepEqual(bill.rows.map(row => row.lineTax), [115.20, 68.40]);
+  assert.equal(bill.discount, 102);
+  assert.equal(bill.tax, 45.90);
+  assert.equal(bill.total, 963.90);
+  assert.deepEqual(bill.rows.map(row => row.lineTax), [28.80, 17.10]);
 });
 
-test('CURRENT BEHAVIOUR: #1004 exceeds the SAVE10 cap on a wholesale order', () => {
+test('#1004 caps SAVE10 at 150 before taxing the wholesale order', () => {
   const bill = invoice.computeInvoiceFigures({
     coupon: 'SAVE10', items: [{ hsn: '1508', price: 1120, qty: 2 }]
   });
-  assert.equal(bill.discount, 264.32);
-  assert.equal(bill.tax, 403.20);
-  assert.equal(bill.total, 2378.88);
+  assert.equal(bill.discount, 150);
+  assert.equal(bill.tax, 104.50);
+  assert.equal(bill.total, 2194.50);
 });
 
-test('CURRENT BEHAVIOUR: #1007 prints 18% on both ghee and oil without a coupon', () => {
+test('#1007 prints the 12% ghee and 5% oil rates without a coupon', () => {
   const bill = invoice.computeInvoiceFigures({
     items: [{ hsn: '0405', price: 450, qty: 2 }, { hsn: '1512', price: 190, qty: 2 }]
   });
-  assert.deepEqual(bill.rows.map(row => row.gstPercent), [18, 18]);
-  assert.deepEqual(bill.rows.map(row => row.lineTax), [162, 68.40]);
-  assert.equal(bill.total, 1510.40);
+  assert.deepEqual(bill.rows.map(row => row.gstPercent), [12, 5]);
+  assert.deepEqual(bill.rows.map(row => row.lineTax), [108, 19]);
+  assert.equal(bill.total, 1407);
 });
 
 test('#1008 already balances for tea and syrup at 18% with no coupon', () => {
