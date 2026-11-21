@@ -34,6 +34,13 @@ test('Invoice assigns the odd paisa to CGST as billed', () => {
   assert.doesNotMatch(invoice.render(order), /Accountant Reconciliation Notice/);
 });
 
+test('Printable rice invoice displays the billed GST in both the item and summary', () => {
+  const { order } = checkout([line(1, 'Rice', '1006', 640)]);
+  const html = invoice.render(order);
+  assert.match(html.match(/<tbody>(.*?)<\/tbody>/s)[1], />5%<\/td><td class="r">₹32\.00</);
+  assert.ok(html.includes('CGST + SGST (Total GST)</td><td class="r">₹32.00</td>'));
+});
+
 test('Mixed rice and butter invoice uses the billed HSN slabs', () => {
   const { bill, order, printed } = checkout([
     line(1, 'Rice', '1006', 100, 2), line(2, 'Butter', '0405', 100)
