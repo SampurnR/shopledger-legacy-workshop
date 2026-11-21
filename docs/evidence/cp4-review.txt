@@ -1,0 +1,38 @@
+CHECKPOINT 4 - MANUAL DIFF REVIEW
+Reviewed: original invoice module against final lib/invoice.js; both test files;
+in-memory fixtures; original-file SHA-256 manifest. No separate reviewer agent
+or Codex /review command was used.
+
+Cause: duplicate invoice arithmetic taxed gross lines using 18% fallback and
+applied coupons after tax without checkout eligibility or discount caps.
+Fix: delegate to pricing.computeTotals and map line outputs into existing rows.
+No new dependencies; no import cycle; printable HTML and return shape preserved.
+
+Validation:
+- CP3: 14 characterization tests passed before production edits.
+- CP4 RED: 23 regression tests, 20 failed and 3 passed on original production code.
+- CP4 GREEN: 37/37 passed, including the complete node --test discovery run.
+- Independent expected totals cover all eight ticket examples.
+- Mixed slabs, minimums, caps, inactive/unknown/normalized codes, explicit rates,
+  zero rates, fractional rounding, odd-paise splits, escaping and input purity.
+- Reconciliation retains detection of genuinely inconsistent stored tax/totals.
+- Temporary running app: 7/8 mismatches and 612.01 variance before; 0/8 and 0 after.
+- Before invoice visibly reproduced in browser. After browser check timed out;
+  after HTTP HTML and reconciliation responses were successfully captured.
+
+Changed old-behavior tests (the four CURRENT BEHAVIOUR tests now named UPDATED):
+1. Seven mismatches -> all eight match.
+2. #1002: discount 120.36/GST 183.60/total 1083.24 -> 102/45.90/963.90.
+3. #1004: discount 264.32/GST 403.20/total 2378.88 -> 150/104.50/2194.50.
+4. Non-coupon #1001/#1007 tax 109.80/230.40 -> 66.90/127.00.
+Ten unrelated characterization tests retained their assertions.
+
+Review result: no blocking defect found in the scoped change.
+Limitations: this is synthetic workshop behavior, not tax-compliance validation.
+Invoices still depend on current coupon/tax configuration; immutable historical
+pricing snapshots are a separate design change. Existing checkout rounding is
+reused, including its line-discount apportionment policy. Other tickets remain.
+Malformed inputs outside the existing order schema are not newly validated.
+
+Original database SHA-256 (unchanged):
+5eb8a81a552ca87e4d0a1a5c78ae0312af93e45cb70f490470a761460c141b09

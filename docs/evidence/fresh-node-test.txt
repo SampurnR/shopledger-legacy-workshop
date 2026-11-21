@@ -1,0 +1,45 @@
+✔ UPDATED: all eight ticket examples agree with the ledger (1.079208ms)
+✔ UPDATED: 1002 uses HSN and taxes after the eligible discount (0.103208ms)
+✔ UPDATED: 1004 respects the SAVE10 discount cap (0.042334ms)
+✔ UPDATED: non-coupon HSN items use their configured slabs (0.040333ms)
+✔ 18 percent, no-coupon control remains correct (0.040875ms)
+✔ missing items produce an empty zero invoice (0.047375ms)
+✔ invoice row contract preserves metadata, quantity, price and gross (0.039125ms)
+✔ missing SKU and HSN render as a dash; unknown HSN uses the fallback rate (0.03875ms)
+✔ explicit percentage rate is honored (0.0445ms)
+✔ CGST plus SGST preserves an odd-paise GST total (0.070916ms)
+✔ calculation and rendering do not mutate input (0.640708ms)
+✔ invoice escapes customer and line text in HTML (0.063875ms)
+✔ rendered control invoice includes printable totals and no mismatch notice (0.037709ms)
+✔ mismatch notice remains available for inconsistent recorded totals (0.028ms)
+✔ REGRESSION: invoice matches independently specified ledger figures for #1001 (0.613791ms)
+✔ REGRESSION: invoice matches independently specified ledger figures for #1002 (0.090625ms)
+✔ REGRESSION: invoice matches independently specified ledger figures for #1003 (0.068708ms)
+✔ REGRESSION: invoice matches independently specified ledger figures for #1004 (0.043167ms)
+✔ REGRESSION: invoice matches independently specified ledger figures for #1005 (0.059291ms)
+✔ REGRESSION: invoice matches independently specified ledger figures for #1006 (0.066583ms)
+✔ REGRESSION: invoice matches independently specified ledger figures for #1007 (0.035917ms)
+✔ REGRESSION: invoice matches independently specified ledger figures for #1008 (0.237209ms)
+✔ REGRESSION: reports reconcile all eight in-memory examples with zero variance (0.113458ms)
+✔ REGRESSION: mixed-slab FLAT50 taxes discounted lines independently (0.304167ms)
+✔ REGRESSION: shared coupon rules - normalized code (0.050083ms)
+✔ REGRESSION: shared coupon rules - minimum not reached (0.024833ms)
+✔ REGRESSION: shared coupon rules - minimum reached (0.018042ms)
+✔ REGRESSION: shared coupon rules - expired code (0.021625ms)
+✔ REGRESSION: shared coupon rules - unknown code (0.020959ms)
+✔ REGRESSION: shared coupon rules - flat minimum not reached (0.014208ms)
+✔ REGRESSION: shared coupon rules - welcome cap (0.015958ms)
+✔ REGRESSION: shared coupon rules - wholesale cap (0.015458ms)
+✔ REGRESSION: explicit rate 0 follows checkout precedence over HSN (0.028709ms)
+✔ REGRESSION: explicit rate 0.12 follows checkout precedence over HSN (0.013959ms)
+✔ REGRESSION: explicit rate 12 follows checkout precedence over HSN (0.010667ms)
+✔ REGRESSION: per-line rounding follows checkout for fractional amounts (0.052ms)
+✔ REGRESSION: a changed stored tax is still flagged by reconciliation (0.035708ms)
+ℹ tests 37
+ℹ suites 0
+ℹ pass 37
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 85.651667

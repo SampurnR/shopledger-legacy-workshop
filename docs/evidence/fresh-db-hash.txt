@@ -1,0 +1,9 @@
+Fresh original database integrity check
+
+SHA-256 after local test/replay verification and before any disposable-copy app
+verification: 5eb8a81a552ca87e4d0a1a5c78ae0312af93e45cb70f490470a761460c141b09
+SHA-256 on immediate recheck: 5eb8a81a552ca87e4d0a1a5c78ae0312af93e45cb70f490470a761460c141b09
+
+Matches docs/evidence/baseline-sha256.json. Application checks have not been
+run in the fresh disposable copies yet, so this is not labeled as an after-app
+verification hash.

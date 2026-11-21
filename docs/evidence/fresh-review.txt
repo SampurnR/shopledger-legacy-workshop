@@ -1,0 +1,41 @@
+CHECKPOINT 4 - FRESH SOURCE REVIEW
+
+Repository
+- Working folder: shopledger-legacy-workshop
+- Branch: fix/invoice-gst
+- Remote origin is the verified fork JayaRamSamavedam/shopledger-legacy-workshop.
+- Its parent is SampurnR/shopledger-legacy-workshop.
+
+Scoped change
+- Production diff is limited to lib/invoice.js.
+- Invoice calculations reuse pricing.computeTotals, so HSN slabs, explicit
+  rates, coupon normalization/eligibility/minimums/caps, line tax rounding,
+  CGST/SGST split, and total follow the checkout calculator.
+- The invoice function's subtotal/discount/tax/cgst/sgst/total/rows return
+  fields and row name/SKU/HSN/qty/price/GST/gross/tax metadata remain present.
+- Printable layout and reconciliation warning remain in place.
+- No import cycle: pricing.js imports tax.js and coupons.js, not invoice.js.
+- package.json is unchanged; no dependency was added or installed.
+- Tests use fixtures/invoice-orders.js and in-memory database objects. The replay
+  copies only lib, config.js, fixtures, tests, and saved source snapshots to an
+  owned temporary folder; it does not include data/db.json.
+
+Fresh verification in this checkout
+- node --test: 37 passed, 0 failed.
+- node scripts/replay-checkpoints.js exited successfully: CP3 14/14 pass;
+  CP4 RED 23 tests, 20 failures and 3 passes; CP4 GREEN 37/37 pass.
+- data/db.json SHA-256 before and after local tests/replay:
+  5eb8a81a552ca87e4d0a1a5c78ae0312af93e45cb70f490470a761460c141b09.
+  It matches docs/evidence/baseline-sha256.json.
+- The full baseline manifest differs only at lib/invoice.js, expected for the
+  selected production fix.
+- Saved application HTTP/reconciliation evidence is pre-existing. Browser app
+  verification has not been freshly completed in this checkout.
+
+Out of scope / limitations
+- Checkout discount apportionment and line rounding are reused as-is.
+- Historical invoices still recalculate against current tax/coupon config.
+- Last sellable unit rejection, cancellation stock restoration, date filtering,
+  and Khata settlement coercion are separate defects and unchanged.
+- The legacy npm test script remains a placeholder; use node --test.
+- No claim of tax-law compliance or production readiness.

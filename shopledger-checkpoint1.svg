@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="2800" viewBox="0 0 1800 2800">
+<defs><linearGradient id="bg" x2="0" y2="1"><stop stop-color="#f3f7fc"/><stop offset="1" stop-color="#e8eef7"/></linearGradient><filter id="shadow" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="5" stdDeviation="10" flood-color="#14233b" flood-opacity=".10"/></filter></defs>
+<rect width="1800" height="2800" fill="url(#bg)"/>
+<rect x="0" y="0" width="1800" height="250" fill="#11233d"/>
+<text x="90" y="88" fill="#9bc6ff" font-family="Arial,sans-serif" font-size="28" font-weight="700" letter-spacing="3">CHECKPOINT 1 — READ-ONLY</text>
+<text x="90" y="158" fill="#fff" font-family="Arial,sans-serif" font-size="58" font-weight="700">SHOPLEDGER · SOURCE MAP</text>
+<text x="90" y="210" fill="#d0d9e7" font-family="Arial,sans-serif" font-size="25">Working folder: /Users/mukunda/Developer/shopledger-legacy-workshop</text>
+<g font-family="Arial,sans-serif" fill="#17253b">
+<!-- card 1 -->
+<rect x="70" y="290" width="810" height="260" rx="22" fill="white" filter="url(#shadow)"/>
+<text x="110" y="345" font-size="34" font-weight="700" fill="#1d4ed8">WHAT IT DOES</text>
+<text x="110" y="397" font-size="25"><tspan x="110">A small-shop billing and record system: staff build orders,</tspan><tspan x="110" dy="36">apply coupons, track inventory, bill customer credit (Khata),</tspan><tspan x="110" dy="36">record settlements, review sales, and print invoices.</tspan><tspan x="110" dy="44" fill="#52627a">Browser UI · Express API · JSON-file database</tspan></text>
+<!-- card 2 -->
+<rect x="920" y="290" width="810" height="260" rx="22" fill="white" filter="url(#shadow)"/>
+<text x="960" y="345" font-size="34" font-weight="700" fill="#1d4ed8">MODULE MAP</text>
+<text x="960" y="395" font-size="23"><tspan x="960">public/ — UI (index.html, app.js, style.css)</tspan><tspan x="960" dy="34">server.js — Express/static/invoice route · config.js — settings</tspan><tspan x="960" dy="34">routes/ — orders, products, customers, reports</tspan><tspan x="960" dy="34">lib/ — orders, pricing, inventory, ledger, invoice, reports,</tspan><tspan x="960" dy="34">coupons, tax, dates, store · data/db.json — current records</tspan></text>
+<!-- flow -->
+<rect x="70" y="590" width="1660" height="390" rx="22" fill="#eaf2ff" stroke="#c6d9fb" stroke-width="2"/>
+<text x="110" y="650" font-size="34" font-weight="700" fill="#1d4ed8">ORDER PLACEMENT · BROWSER TO RESPONSE</text>
+<g font-size="23">
+<rect x="110" y="690" width="300" height="105" rx="14" fill="white"/><text x="132" y="733" font-weight="700">1 · Browser POST</text><text x="132" y="769">items, customer, coupon</text>
+<text x="421" y="757" font-size="34" fill="#5680ba">→</text>
+<rect x="465" y="690" width="350" height="105" rx="14" fill="white"/><text x="487" y="733" font-weight="700">2 · Resolve + validate</text><text x="487" y="769">IDs, qty, sellable stock</text>
+<text x="826" y="757" font-size="34" fill="#5680ba">→</text>
+<rect x="870" y="690" width="350" height="105" rx="14" fill="white"/><text x="892" y="733" font-weight="700">3 · Price the order</text><text x="892" y="769">coupon, HSN GST, totals</text>
+<text x="1230" y="757" font-size="34" fill="#5680ba">→</text>
+<rect x="1275" y="690" width="400" height="105" rx="14" fill="white"/><text x="1297" y="733" font-weight="700">4 · Khata check (if selected)</text><text x="1297" y="769">require account + credit room</text>
+<text x="110" y="850" font-size="28" fill="#5680ba">↓</text>
+<rect x="110" y="855" width="440" height="80" rx="14" fill="white"/><text x="132" y="905" font-weight="700">5 · Deduct stock + create order</text>
+<text x="573" y="907" font-size="34" fill="#5680ba">→</text>
+<rect x="625" y="855" width="440" height="80" rx="14" fill="white"/><text x="647" y="905" font-weight="700">6 · Audit entry + write db.json</text>
+<text x="1080" y="907" font-size="34" fill="#5680ba">→</text>
+<rect x="1130" y="855" width="545" height="80" rx="14" fill="white"/><text x="1152" y="905" font-weight="700">7 · HTTP 201 + created order JSON</text>
+</g>
+<!-- sure -->
+<rect x="70" y="1020" width="810" height="1190" rx="22" fill="white" filter="url(#shadow)"/>
+<rect x="70" y="1020" width="810" height="82" rx="22" fill="#e7f7ee"/>
+<text x="110" y="1075" font-size="34" font-weight="700" fill="#137547">I AM SURE · CONFIRMED</text>
+<g font-size="23"><text x="110" y="1145"><tspan font-weight="700">• Exact-stock orders rejected:</tspan><tspan x="136" dy="31">check uses qty ≥ sellable stock.</tspan><tspan x="110" dy="52" font-weight="700">• Duplicate product lines can oversell:</tspan><tspan x="136" dy="31">each line checked against same stock, then deducted.</tspan><tspan x="110" dy="52" font-weight="700">• Cancel does not restore physical stock:</tspan><tspan x="136" dy="31">order uses id; release expects productId and lowers reserved.</tspan><tspan x="110" dy="52" font-weight="700">• Invoice arithmetic still diverges:</tspan><tspan x="136" dy="31">invoice defaults to 18% GST (lines lack gstRate) and applies</tspan><tspan x="136" dy="31">percent coupon to subtotal + tax; checkout uses HSN slabs</tspan><tspan x="136" dy="31">and discounts subtotal before tax.</tspan><tspan x="110" dy="52" font-weight="700">• Date filtering is string-based DD/MM/YYYY:</tspan><tspan x="136" dy="31">lexical comparison is not chronological across dates.</tspan><tspan x="110" dy="52" font-weight="700">• Settlement amount can stay a string:</tspan><tspan x="136" dy="31">totalSettled + amount can concatenate before later math.</tspan><tspan x="110" dy="52" font-weight="700">• Hard-coded admin key gates full data export;</tspan><tspan x="136" dy="31">no route authentication middleware appears in inspected source.</tspan><tspan x="110" dy="52" font-weight="700">• Invoice text escaping exists</tspan><tspan x="136" dy="31">for &, &lt;, &gt;; this does not fix totals.</tspan></text>
+<text x="110" y="2140" font-size="19" fill="#52627a">Refs: lib/inventory.js · lib/orders.js · lib/invoice.js · lib/pricing.js</text>
+</g>
+<!-- suspect -->
+<rect x="920" y="1020" width="810" height="680" rx="22" fill="white" filter="url(#shadow)"/>
+<rect x="920" y="1020" width="810" height="82" rx="22" fill="#fff3dc"/>
+<text x="960" y="1075" font-size="34" font-weight="700" fill="#9a5b00">I SUSPECT · NEEDS CONTEXT</text>
+<g font-size="23"><text x="960" y="1145"><tspan font-weight="700">• Concurrent requests may race</tspan><tspan x="986" dy="31">and overwrite updates; depends on timing/deployment.</tspan><tspan x="960" dy="52" font-weight="700">• Browser views interpolate data into innerHTML;</tspan><tspan x="986" dy="31">could become injection if fields are attacker-controlled.</tspan><tspan x="960" dy="52" font-weight="700">• config.js mentions /api/admin/reset,</tspan><tspan x="986" dy="31">but no such route appears in these route modules;</tspan><tspan x="986" dy="31">the comment may simply be stale.</tspan></text></g>
+<rect x="920" y="1740" width="810" height="470" rx="22" fill="white" filter="url(#shadow)"/>
+<text x="960" y="1800" font-size="34" font-weight="700" fill="#1d4ed8">INVOICE FIX · CURRENT STATE</text>
+<g font-size="23"><text x="960" y="1855"><tspan x="960">Text escaping is present in the invoice renderer.</tspan><tspan x="960" dy="38">The arithmetic reconciliation defect remains in source:</tspan><tspan x="960" dy="38">invoice tax/discount can differ from checkout ledger.</tspan><tspan x="960" dy="54" font-weight="700" fill="#b42318">Do not treat the invoice totals as reconciled.</tspan></text></g>
+<!-- footer -->
+<rect x="70" y="2260" width="1660" height="390" rx="22" fill="#11233d"/>
+<text x="110" y="2325" font-size="34" font-weight="700" fill="#9bc6ff">READ-ONLY REVIEW · SAMPLE DATA STATE</text>
+<g font-size="24" fill="#fff"><text x="110" y="2385"><tspan x="110">Current db.json: 12 products · 5 customers · 8 orders (1001–1008) · 4 settlements · 4 audit entries.</tspan><tspan x="110" dy="42">This is checked-in sample data, not proof of live production activity.</tspan><tspan x="110" dy="66" font-weight="700">No files changed · Nothing installed · No tests run · No server started · Git not modified</tspan></text></g>
+<text x="110" y="2585" font-size="19" fill="#c7d2e1">Source references: routes/orders.js · lib/pricing.js · lib/ledger.js · lib/store.js · lib/reports.js · public/js/app.js</text>
+</g></svg>

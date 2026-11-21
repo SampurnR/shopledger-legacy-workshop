@@ -1,0 +1,548 @@
+Fresh output from this checkout; terminal colors and host-specific temporary paths redacted after execution.
+
+Checkpoint replay: isolated temporary folder, no data/ directory.
+
+========================================================================
+CP3 - original behavior: 14 tests should PASS
+node --test test/invoice.characterization.test.js
+✔ CURRENT BEHAVIOUR: seven ticket examples disagree with the ledger; 1008 agrees (0.78375ms)
+✔ CURRENT BEHAVIOUR: 1002 ignores HSN and discounts the tax-inclusive amount (0.059958ms)
+✔ CURRENT BEHAVIOUR: 1004 exceeds the SAVE10 discount cap (0.039875ms)
+✔ CURRENT BEHAVIOUR: non-coupon HSN items are taxed at the fallback 18 percent (0.031459ms)
+✔ 18 percent, no-coupon control remains correct (0.034375ms)
+✔ missing items produce an empty zero invoice (0.039042ms)
+✔ invoice row contract preserves metadata, quantity, price and gross (0.036583ms)
+✔ missing SKU and HSN render as a dash; unknown HSN uses the fallback rate (0.044542ms)
+✔ explicit percentage rate is honored (0.050042ms)
+✔ CGST plus SGST preserves an odd-paise GST total (0.061042ms)
+✔ calculation and rendering do not mutate input (0.1615ms)
+✔ invoice escapes customer and line text in HTML (0.079625ms)
+✔ rendered control invoice includes printable totals and no mismatch notice (0.042666ms)
+✔ mismatch notice remains available for inconsistent recorded totals (0.038333ms)
+ℹ tests 14
+ℹ suites 0
+ℹ pass 14
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 74.43425
+
+========================================================================
+CP4 RED - original invoice: 20 regression failures EXPECTED
+node --test test/invoice.regression.test.js
+✖ REGRESSION: invoice matches independently specified ledger figures for #1001 (0.623542ms)
+✖ REGRESSION: invoice matches independently specified ledger figures for #1002 (0.066708ms)
+✖ REGRESSION: invoice matches independently specified ledger figures for #1003 (0.0445ms)
+✖ REGRESSION: invoice matches independently specified ledger figures for #1004 (0.037708ms)
+✖ REGRESSION: invoice matches independently specified ledger figures for #1005 (0.039875ms)
+✖ REGRESSION: invoice matches independently specified ledger figures for #1006 (0.046833ms)
+✖ REGRESSION: invoice matches independently specified ledger figures for #1007 (0.035166ms)
+✔ REGRESSION: invoice matches independently specified ledger figures for #1008 (0.137292ms)
+✖ REGRESSION: reports reconcile all eight in-memory examples with zero variance (0.128667ms)
+✖ REGRESSION: mixed-slab FLAT50 taxes discounted lines independently (0.629209ms)
+✖ REGRESSION: shared coupon rules - normalized code (0.062167ms)
+✖ REGRESSION: shared coupon rules - minimum not reached (0.03325ms)
+✖ REGRESSION: shared coupon rules - minimum reached (0.026792ms)
+✖ REGRESSION: shared coupon rules - expired code (0.028ms)
+✖ REGRESSION: shared coupon rules - unknown code (0.030625ms)
+✖ REGRESSION: shared coupon rules - flat minimum not reached (0.02425ms)
+✖ REGRESSION: shared coupon rules - welcome cap (0.022708ms)
+✖ REGRESSION: shared coupon rules - wholesale cap (0.020583ms)
+✖ REGRESSION: explicit rate 0 follows checkout precedence over HSN (0.030833ms)
+✖ REGRESSION: explicit rate 0.12 follows checkout precedence over HSN (0.022375ms)
+✔ REGRESSION: explicit rate 12 follows checkout precedence over HSN (0.019958ms)
+✖ REGRESSION: per-line rounding follows checkout for fractional amounts (0.05125ms)
+✔ REGRESSION: a changed stored tax is still flagged by reconciliation (0.032375ms)
+ℹ tests 23
+ℹ suites 0
+ℹ pass 3
+ℹ fail 20
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 70.977791
+
+✖ failing tests:
+
+test at test/invoice.regression.test.js:11:3
+✖ REGRESSION: invoice matches independently specified ledger figures for #1001 (0.623542ms)
+  AssertionError [ERR_ASSERTION]: tax for #1001
+  
+  109.8 !== 66.9
+  
+      at TestContext.<anonymous> (<temporary-copy>/test/invoice.regression.test.js:14:14)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 109.8,
+    expected: 66.9,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/invoice.regression.test.js:11:3
+✖ REGRESSION: invoice matches independently specified ledger figures for #1002 (0.066708ms)
+  AssertionError [ERR_ASSERTION]: discount for #1002
+  
+  120.36 !== 102
+  
+      at TestContext.<anonymous> (<temporary-copy>/test/invoice.regression.test.js:14:14)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 120.36,
+    expected: 102,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/invoice.regression.test.js:11:3
+✖ REGRESSION: invoice matches independently specified ledger figures for #1003 (0.0445ms)
+  AssertionError [ERR_ASSERTION]: tax for #1003
+  
+  72 !== 49.35
+  
+      at TestContext.<anonymous> (<temporary-copy>/test/invoice.regression.test.js:14:14)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 72,
+    expected: 49.35,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/invoice.regression.test.js:11:3
+✖ REGRESSION: invoice matches independently specified ledger figures for #1004 (0.037708ms)
+  AssertionError [ERR_ASSERTION]: discount for #1004
+  
+  264.32 !== 150
+  
+      at TestContext.<anonymous> (<temporary-copy>/test/invoice.regression.test.js:14:14)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 264.32,
+    expected: 150,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/invoice.regression.test.js:11:3
+✖ REGRESSION: invoice matches independently specified ledger figures for #1005 (0.039875ms)
+  AssertionError [ERR_ASSERTION]: tax for #1005
+  
+  180 !== 91.96
+  
+      at TestContext.<anonymous> (<temporary-copy>/test/invoice.regression.test.js:14:14)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 180,
+    expected: 91.96,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/invoice.regression.test.js:11:3
+✖ REGRESSION: invoice matches independently specified ledger figures for #1006 (0.046833ms)
+  AssertionError [ERR_ASSERTION]: discount for #1006
+  
+  71.39 !== 60.5
+  
+      at TestContext.<anonymous> (<temporary-copy>/test/invoice.regression.test.js:14:14)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 71.39,
+    expected: 60.5,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/invoice.regression.test.js:11:3
+✖ REGRESSION: invoice matches independently specified ledger figures for #1007 (0.035166ms)
+  AssertionError [ERR_ASSERTION]: tax for #1007
+  
+  230.4 !== 127
+  
+      at TestContext.<anonymous> (<temporary-copy>/test/invoice.regression.test.js:14:14)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 230.4,
+    expected: 127,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/invoice.regression.test.js:22:1
+✖ REGRESSION: reports reconcile all eight in-memory examples with zero variance (0.128667ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  7 !== 0
+  
+      at TestContext.<anonymous> (<temporary-copy>/test/invoice.regression.test.js:25:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 7,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/invoice.regression.test.js:30:1
+✖ REGRESSION: mixed-slab FLAT50 taxes discounted lines independently (0.629209ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+      [
+  +     18,
+  +     46.8
+  -     12,
+  -     27.3
+      ],
+      [
+        18,
+  +     25.2
+  -     22.05
+      ]
+    ]
+  
+      at TestContext.<anonymous> (<temporary-copy>/test/invoice.regression.test.js:32:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ [ 18, 46.8 ], [ 18, 25.2 ] ],
+    expected: [ [ 12, 27.3 ], [ 18, 22.05 ] ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at test/invoice.regression.test.js:48:3
+✖ REGRESSION: shared coupon rules - normalized code (0.062167ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0 !== 100
+  
+      at TestContext.<anonymous> (<temporary-copy>/test/invoice.regression.test.js:50:12)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 100,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/invoice.regression.test.js:48:3
+✖ REGRESSION: shared coupon rules - minimum not reached (0.03325ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  58.88 !== 0
+  
+      at TestContext.<anonymous> (<temporary-copy>/test/invoice.regression.test.js:50:12)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 58.88,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/invoice.regression.test.js:48:3
+✖ REGRESSION: shared coupon rules - minimum reached (0.026792ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  59 !== 50
+  
+      at TestContext.<anonymous> (<temporary-copy>/test/invoice.regression.test.js:50:12)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 59,
+    expected: 50,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/invoice.regression.test.js:48:3
+✖ REGRESSION: shared coupon rules - expired code (0.028ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  472 !== 0
+  
+      at TestContext.<anonymous> (<temporary-copy>/test/invoice.regression.test.js:50:12)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 472,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/invoice.regression.test.js:48:3
+✖ REGRESSION: shared coupon rules - unknown code (0.030625ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  180 !== 50
+  
+      at TestContext.<anonymous> (<temporary-copy>/test/invoice.regression.test.js:51:12)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 180,
+    expected: 50,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/invoice.regression.test.js:48:3
+✖ REGRESSION: shared coupon rules - flat minimum not reached (0.02425ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  50 !== 0
+  
+      at TestContext.<anonymous> (<temporary-copy>/test/invoice.regression.test.js:50:12)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 50,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/invoice.regression.test.js:48:3
+✖ REGRESSION: shared coupon rules - welcome cap (0.022708ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  177 !== 100
+  
+      at TestContext.<anonymous> (<temporary-copy>/test/invoice.regression.test.js:50:12)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 177,
+    expected: 100,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/invoice.regression.test.js:48:3
+✖ REGRESSION: shared coupon rules - wholesale cap (0.020583ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  708 !== 400
+  
+      at TestContext.<anonymous> (<temporary-copy>/test/invoice.regression.test.js:50:12)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 708,
+    expected: 400,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/invoice.regression.test.js:57:3
+✖ REGRESSION: explicit rate 0 follows checkout precedence over HSN (0.030833ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  18 !== 0
+  
+      at TestContext.<anonymous> (<temporary-copy>/test/invoice.regression.test.js:59:12)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 18,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/invoice.regression.test.js:57:3
+✖ REGRESSION: explicit rate 0.12 follows checkout precedence over HSN (0.022375ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0.12 !== 12
+  
+      at TestContext.<anonymous> (<temporary-copy>/test/invoice.regression.test.js:59:12)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0.12,
+    expected: 12,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test/invoice.regression.test.js:64:1
+✖ REGRESSION: per-line rounding follows checkout for fractional amounts (0.05125ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0.07 !== 0.06
+  
+      at TestContext.<anonymous> (<temporary-copy>/test/invoice.regression.test.js:68:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0.07,
+    expected: 0.06,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+========================================================================
+CP4 GREEN - fixed invoice: all 37 tests should PASS
+node --test 
+✔ UPDATED: all eight ticket examples agree with the ledger (0.700791ms)
+✔ UPDATED: 1002 uses HSN and taxes after the eligible discount (0.088833ms)
+✔ UPDATED: 1004 respects the SAVE10 discount cap (0.039542ms)
+✔ UPDATED: non-coupon HSN items use their configured slabs (0.043084ms)
+✔ 18 percent, no-coupon control remains correct (0.033ms)
+✔ missing items produce an empty zero invoice (0.04525ms)
+✔ invoice row contract preserves metadata, quantity, price and gross (0.033333ms)
+✔ missing SKU and HSN render as a dash; unknown HSN uses the fallback rate (0.035292ms)
+✔ explicit percentage rate is honored (0.040208ms)
+✔ CGST plus SGST preserves an odd-paise GST total (0.067583ms)
+✔ calculation and rendering do not mutate input (0.163625ms)
+✔ invoice escapes customer and line text in HTML (0.06175ms)
+✔ rendered control invoice includes printable totals and no mismatch notice (0.253792ms)
+✔ mismatch notice remains available for inconsistent recorded totals (0.035042ms)
+✔ REGRESSION: invoice matches independently specified ledger figures for #1001 (0.544167ms)
+✔ REGRESSION: invoice matches independently specified ledger figures for #1002 (0.080792ms)
+✔ REGRESSION: invoice matches independently specified ledger figures for #1003 (0.067167ms)
+✔ REGRESSION: invoice matches independently specified ledger figures for #1004 (0.041ms)
+✔ REGRESSION: invoice matches independently specified ledger figures for #1005 (0.053667ms)
+✔ REGRESSION: invoice matches independently specified ledger figures for #1006 (0.055208ms)
+✔ REGRESSION: invoice matches independently specified ledger figures for #1007 (0.273917ms)
+✔ REGRESSION: invoice matches independently specified ledger figures for #1008 (0.065417ms)
+✔ REGRESSION: reports reconcile all eight in-memory examples with zero variance (0.173334ms)
+✔ REGRESSION: mixed-slab FLAT50 taxes discounted lines independently (0.369125ms)
+✔ REGRESSION: shared coupon rules - normalized code (0.058709ms)
+✔ REGRESSION: shared coupon rules - minimum not reached (0.032875ms)
+✔ REGRESSION: shared coupon rules - minimum reached (0.028292ms)
+✔ REGRESSION: shared coupon rules - expired code (0.032584ms)
+✔ REGRESSION: shared coupon rules - unknown code (0.032375ms)
+✔ REGRESSION: shared coupon rules - flat minimum not reached (0.043375ms)
+✔ REGRESSION: shared coupon rules - welcome cap (0.044ms)
+✔ REGRESSION: shared coupon rules - wholesale cap (0.029041ms)
+✔ REGRESSION: explicit rate 0 follows checkout precedence over HSN (0.059416ms)
+✔ REGRESSION: explicit rate 0.12 follows checkout precedence over HSN (0.029542ms)
+✔ REGRESSION: explicit rate 12 follows checkout precedence over HSN (0.014458ms)
+✔ REGRESSION: per-line rounding follows checkout for fractional amounts (0.056292ms)
+✔ REGRESSION: a changed stored tax is still flagged by reconciliation (0.031084ms)
+ℹ tests 37
+ℹ suites 0
+ℹ pass 37
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 76.586875
+
+Replay verified: characterization PASS -> regression FAIL -> fixed suite PASS.

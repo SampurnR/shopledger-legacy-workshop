@@ -1,0 +1,88 @@
+SHOPLEDGER WORKSHOP SUBMISSION GUIDE
+
+Current checkout: shopledger-legacy-workshop
+Current branch: fix/invoice-gst
+Verified destination fork: https://github.com/JayaRamSamavedam/shopledger-legacy-workshop
+Verified parent/upstream: SampurnR/shopledger-legacy-workshop
+The fork has no existing pull requests. Its issue tracker is disabled, so no
+Ticket 1 issue or Fixes # reference exists yet.
+
+EVIDENCE FRESHNESS
+- Fresh in this checkout: docs/evidence/fresh-node-test.txt,
+  docs/evidence/fresh-replay-checkpoints.txt, and
+  docs/evidence/fresh-db-hash.txt.
+- The fresh replay log has terminal color codes and its temporary-copy absolute
+  path redacted for portability; its test output and result counts are retained.
+- Pre-existing saved evidence from the prior computer: cp1-read-only.txt,
+  cp3-characterization.txt, cp4-red.txt, cp4-green.txt, cp4-review.txt,
+  cp4-before/after-invoice.html, and cp4-before/after-reconciliation.json.
+  These are saved artifacts, not fresh captures from this computer.
+- The app was not re-verified in a browser in this checkout yet. The saved
+  review says the BEFORE UI was observed, while the AFTER browser check timed
+  out; the saved HTTP HTML and reconciliation responses remain available.
+
+CHECKPOINT CAPTURE STEPS
+CP1: Capture the read-only explanation in the Codex conversation with the
+working folder visible. Identify docs/evidence/cp1-read-only.txt as a saved
+transcript if you use it; it records an earlier folder name.
+
+CP2: Open docs/architecture.png and capture the complete diagram. It is
+explicitly labeled as the pre-fix architecture baseline; the fix adds the
+invoice.js -> pricing.js dependency.
+
+AGENTS: Upload docs/AGENTS.pdf. It is a one-page A4 rendering of AGENTS.md and
+is under the 10 MB limit.
+
+CP3: Run node scripts/replay-checkpoints.js and capture the CP3 section with
+the test filename visible. Fresh terminal output is saved in
+docs/evidence/fresh-replay-checkpoints.txt; the earlier cp3-characterization.txt
+is historical evidence.
+
+CP4: Capture CP4 RED and GREEN from the same fresh replay output. For app
+screenshots, start BEFORE and AFTER only from disposable copies under
+/private/tmp, open the matching invoice and the Inventory & GST Audit tab,
+and show the address bar, order number, and reconciliation values. Never use
+the original data/db.json for reproduction. The saved before/after HTML and
+JSON files are historical artifacts, not screenshots or fresh browser checks.
+
+CP5: Open the real PR page after it is created. Capture its title, the actual
+Fixes # issue reference, fork URL, base main, and head fix/invoice-gst. At the
+time of this guide's update, the PR and issue are not yet created.
+
+FRESH TEST RESULTS
+- node --test: 37 passed, 0 failed.
+- Replay: CP3 14 passed; CP4 RED 23 tests (20 expected failures, 3 passes);
+  CP4 GREEN 37 passed. Replay exited successfully.
+- Fresh data/db.json SHA-256 matches the saved baseline:
+  5eb8a81a552ca87e4d0a1a5c78ae0312af93e45cb70f490470a761460c141b09.
+- The baseline manifest differs only at lib/invoice.js, as expected for the
+  selected fix. package-lock.json exists locally but is untracked; keep it out
+  of the submission. node_modules is ignored and must not be committed.
+- No dependencies were installed or added.
+
+PASTE-READY CP3 SUMMARY
+Added 14 node:test characterization cases using hand-authored in-memory
+fixtures. All 14 passed against the original invoice implementation. The
+replay also runs 23 regression cases against that original module: 20 fail
+and 3 pass. Test fixtures do not load or modify data/db.json.
+
+PASTE-READY CP4 SUMMARY
+The original invoice duplicated checkout pricing and disagreed on HSN GST,
+coupon eligibility/caps, and line rounding. lib/invoice.js now reuses
+pricing.computeTotals while preserving the invoice fields, row metadata, and
+print layout. The fresh suite passes 37/37 tests. The saved before/after
+reconciliation artifacts show 7/8 mismatches and 612.01 total absolute variance
+before, then 0/8 and 0 after. Fresh browser verification remains pending.
+Other inventory, date, settlement, and historical-configuration limitations
+remain outside Ticket 1. This is not a tax-compliance claim.
+
+PACKAGE LOCK
+package-lock.json is present but not tracked by Git. It was locally generated
+and is excluded from the workshop submission; it has not been deleted or
+untracked by this workflow.
+
+PR STATUS
+Target is the verified fork's main branch; do not target upstream. The issue
+tracker is disabled, so creating a real ticket requires enabling Issues first.
+Keep the PR open after creation. Merge only after the user explicitly confirms
+submission complete and asks to merge into their fork.

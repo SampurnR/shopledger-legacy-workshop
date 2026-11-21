@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1560" height="1220" viewBox="0 0 1560 1220">
+<defs><marker id="a" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8" fill="none" stroke="#38bdf8" stroke-width="1.5"/></marker></defs><rect width="1560" height="1220" fill="#0b1220"/><style>text{font-family:Arial,sans-serif;fill:#e2e8f0} .title{font-size:34px;font-weight:700}.head{font-size:21px;font-weight:700}.body{font-size:17px}.small{font-size:15px;fill:#a5b4c9}.tag{font-size:14px;fill:#38bdf8;font-weight:700}</style>
+<text x="40" y="53" class="title">ShopLedger | Architecture &amp; order flow</text>
+<text x="40" y="84" class="tag">CHECKPOINT 2  /  Source-derived baseline  /  Ticket 1: invoice reconciliation</text>
+<rect x="40" y="115" width="1480" height="100" rx="12" fill="#111e32" stroke="#334155"/>
+<text x="58" y="146" class="head">public/index.html + public/css/style.css + public/js/app.js</text>
+<text x="58" y="174" class="small">Browser UI: POS • Order History • Customer Khata • Inventory &amp; GST Audit</text>
+<text x="58" y="197" class="small">XHR JSON requests to /api/*; printable invoice link opens /orders/:id/invoice</text>
+<path d="M780 215 L780 242" stroke="#38bdf8" stroke-width="2" marker-end="url(#a)"/>
+<rect x="40" y="247" width="1480" height="90" rx="12" fill="#111e32" stroke="#334155"/>
+<text x="58" y="278" class="head">server.js</text>
+<text x="58" y="306" class="small">Express + body-parser • serves public/ • mounts all four routers at /api • GET /orders/:id/invoice → store + orders + invoice</text>
+<path d="M215 337 L215 366" stroke="#38bdf8" stroke-width="2" marker-end="url(#a)"/>
+<path d="M590 337 L590 366" stroke="#38bdf8" stroke-width="2" marker-end="url(#a)"/>
+<path d="M965 337 L965 366" stroke="#38bdf8" stroke-width="2" marker-end="url(#a)"/>
+<path d="M1340 337 L1340 366" stroke="#38bdf8" stroke-width="2" marker-end="url(#a)"/>
+<rect x="40" y="370" width="355" height="145" rx="12" fill="#111e32" stroke="#334155"/>
+<text x="58" y="401" class="head">routes/products.js</text>
+<text x="58" y="429" class="small">GET /products, /coupons</text>
+<text x="58" y="452" class="small">Uses: store, inventory,</text>
+<text x="58" y="475" class="small">tax, coupons</text>
+<rect x="415" y="370" width="355" height="145" rx="12" fill="#111e32" stroke="#334155"/>
+<text x="433" y="401" class="head">routes/orders.js</text>
+<text x="433" y="429" class="small">GET /orders, /orders/:id</text>
+<text x="433" y="452" class="small">POST /orders, /orders/:id/cancel</text>
+<text x="433" y="475" class="small">Uses: store, inventory, pricing,</text>
+<text x="433" y="498" class="small">coupons, orders, ledger</text>
+<rect x="790" y="370" width="355" height="145" rx="12" fill="#111e32" stroke="#334155"/>
+<text x="808" y="401" class="head">routes/customers.js</text>
+<text x="808" y="429" class="small">GET /customers</text>
+<text x="808" y="452" class="small">POST /customers/:id/settle</text>
+<text x="808" y="475" class="small">Uses: store, ledger</text>
+<rect x="1165" y="370" width="355" height="145" rx="12" fill="#111e32" stroke="#334155"/>
+<text x="1183" y="401" class="head">routes/reports.js</text>
+<text x="1183" y="429" class="small">GET /reports/*, /admin/export</text>
+<text x="1183" y="452" class="small">POST /pricing/preview</text>
+<text x="1183" y="475" class="small">Uses: store, reports, pricing,</text>
+<text x="1183" y="498" class="small">coupons, config</text>
+<text x="40" y="555" class="tag">lib/  |  Each box names its direct local dependencies</text>
+<rect x="40" y="575" width="355" height="100" rx="12" fill="#111e32" stroke="#334155"/>
+<text x="58" y="606" class="head">inventory.js</text>
+<text x="58" y="634" class="small">Sellable stock, deduct, release</text>
+<text x="58" y="657" class="small">→ config.js</text>
+<rect x="415" y="575" width="355" height="100" rx="12" fill="#111e32" stroke="#334155"/>
+<text x="433" y="606" class="head">pricing.js</text>
+<text x="433" y="634" class="small">Cart totals, discounted line GST</text>
+<text x="433" y="657" class="small">→ tax.js, coupons.js</text>
+<rect x="790" y="575" width="355" height="100" rx="12" fill="#111e32" stroke="#334155"/>
+<text x="808" y="606" class="head">orders.js</text>
+<text x="808" y="634" class="small">Add, list, get, cancel</text>
+<text x="808" y="657" class="small">→ dates.js, inventory.js, ledger.js</text>
+<rect x="1165" y="575" width="355" height="100" rx="12" fill="#111e32" stroke="#334155"/>
+<text x="1183" y="606" class="head">ledger.js</text>
+<text x="1183" y="634" class="small">Credit limits, debit, settlement</text>
+<text x="1183" y="657" class="small">→ dates.js</text>
+<rect x="40" y="695" width="355" height="100" rx="12" fill="#111e32" stroke="#334155"/>
+<text x="58" y="726" class="head">tax.js</text>
+<text x="58" y="754" class="small">HSN rate, CGST/SGST split</text>
+<text x="58" y="777" class="small">→ config.js</text>
+<rect x="415" y="695" width="355" height="100" rx="12" fill="#111e32" stroke="#334155"/>
+<text x="433" y="726" class="head">coupons.js</text>
+<text x="433" y="754" class="small">Normalize, validate, cap discounts</text>
+<text x="433" y="777" class="small">→ config.js</text>
+<rect x="790" y="695" width="355" height="100" rx="12" fill="#111e32" stroke="#f59e0b"/>
+<text x="808" y="726" class="head">invoice.js</text>
+<text x="808" y="754" class="small">Invoice figures + printable HTML</text>
+<text x="808" y="777" class="small">→ config.js (baseline)</text>
+<rect x="1165" y="695" width="355" height="100" rx="12" fill="#111e32" stroke="#334155"/>
+<text x="1183" y="726" class="head">reports.js</text>
+<text x="1183" y="754" class="small">Dashboard + invoice reconciliation</text>
+<text x="1183" y="777" class="small">→ inventory.js, ledger.js, invoice.js</text>
+<rect x="40" y="815" width="355" height="100" rx="12" fill="#111e32" stroke="#334155"/>
+<text x="58" y="846" class="head">dates.js</text>
+<text x="58" y="874" class="small">DD/MM/YYYY helpers</text>
+<text x="58" y="897" class="small">No local imports</text>
+<rect x="415" y="815" width="355" height="100" rx="12" fill="#111e32" stroke="#334155"/>
+<text x="433" y="846" class="head">store.js</text>
+<text x="433" y="874" class="small">Synchronous JSON read/write; audit</text>
+<text x="433" y="897" class="small">→ Node fs + path → data/db.json</text>
+<rect x="790" y="815" width="355" height="100" rx="12" fill="#111e32" stroke="#334155"/>
+<text x="808" y="846" class="head">config.js</text>
+<text x="808" y="874" class="small">Shop, port, GST slabs, coupons,</text>
+<text x="808" y="897" class="small">inventory settings, export key</text>
+<rect x="1165" y="815" width="355" height="100" rx="12" fill="#111e32" stroke="#334155"/>
+<text x="1183" y="846" class="head">data/db.json</text>
+<text x="1183" y="874" class="small">Products, orders, customers,</text>
+<text x="1183" y="897" class="small">settlements, audit, next IDs</text>
+
+<text x="40" y="963" class="tag">POST /api/orders  |  Execution sequence inside routes/orders.js</text>
+<rect x="40" y="985" width="460" height="125" rx="12" fill="#111e32" stroke="#334155"/>
+<text x="58" y="1016" class="head">1  Resolve &amp; validate</text>
+<text x="58" y="1044" class="small">store.read → inventory.find/check</text>
+<text x="58" y="1067" class="small">Resolve server prices; normalize coupon</text>
+<text x="58" y="1090" class="small">coupons.validate → pricing.computeTotals</text>
+<rect x="550" y="985" width="460" height="125" rx="12" fill="#111e32" stroke="#334155"/>
+<text x="568" y="1016" class="head">2  Apply in memory</text>
+<text x="568" y="1044" class="small">Optional ledger.chargeOrderToKhata</text>
+<text x="568" y="1067" class="small">inventory.reserve → orders.add</text>
+<text x="568" y="1090" class="small">orders.add uses dates.today</text>
+<rect x="1060" y="985" width="460" height="125" rx="12" fill="#111e32" stroke="#334155"/>
+<text x="1078" y="1016" class="head">3  Persist &amp; respond</text>
+<text x="1078" y="1044" class="small">store.appendAudit → store.write</text>
+<text x="1078" y="1067" class="small">data/db.json → HTTP 201 order JSON</text>
+<text x="1078" y="1090" class="small">UI refreshes dashboard and history</text>
+<path d="M500 1047 L546 1047" stroke="#38bdf8" stroke-width="2" marker-end="url(#a)"/>
+<path d="M1010 1047 L1056 1047" stroke="#38bdf8" stroke-width="2" marker-end="url(#a)"/>
+<text x="40" y="1160" class="body">Invoice path: server.js → store.read → orders.get → invoice.render → computeInvoiceFigures</text>
+<text x="40" y="1192" class="small">Arrows show requests and execution flow. Module cards list direct imports; shared dependencies are not duplicated as crossing arrows.</text>
+</svg>

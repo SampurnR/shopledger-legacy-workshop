@@ -1,0 +1,49 @@
+CHECKPOINT 1 - READ-ONLY BASELINE ASSESSMENT
+Folder: shopledger-legacy-workshop-main
+Recorded before creating docs, instructions, tests or fixes. No files changed,
+nothing installed and no server started during this checkpoint.
+
+I AM SURE
+ShopLedger is a CommonJS / Express billing, inventory and customer credit app.
+The browser has POS, Order History, Customer Khata, and Inventory & GST Audit.
+
+MODULE MAP
+public/: HTML, CSS and browser JavaScript.
+server.js: static UI, four /api routers, printable invoice endpoint.
+routes/products.js: products and coupons.
+routes/orders.js: order creation, history, lookup and cancellation.
+routes/customers.js: customer accounts and settlements.
+routes/reports.js: dashboards, reconciliation, pricing preview, export.
+lib/inventory.js: sellable stock, deductions and releases.
+lib/pricing.js: discounted per-line GST and checkout totals.
+lib/coupons.js: normalization, eligibility, caps and active coupons.
+lib/tax.js: HSN slabs, explicit rates, fallback and CGST/SGST split.
+lib/orders.js: order records, filtering, sorting and cancellation.
+lib/dates.js: date formatting and comparisons.
+lib/ledger.js: balances, credit limits, charges and settlements.
+lib/invoice.js: separately computed figures and printable HTML.
+lib/reports.js: summaries and invoice versus ledger reconciliation.
+lib/store.js: synchronous JSON persistence and audit log.
+config.js: shop, tax, coupons, inventory, port and export key.
+data/db.json: application state.
+
+PLACING AN ORDER
+UI POST /api/orders -> read DB -> resolve server-side product prices ->
+check sellable stock -> validate coupon -> pricing.computeTotals ->
+optional Khata credit check/debit -> deduct physical stock -> add order ->
+append audit -> write JSON -> HTTP 201 -> UI refresh.
+
+CONFIRMED RISKS / DEFECTS
+No tests; npm test is a failing placeholder. No project documentation.
+Invoice duplicates checkout rules, ignores HSN slabs, taxes before discount,
+and skips coupon eligibility/caps. Whole-file synchronous storage; hardcoded
+export key; visible stock boundary, cancellation, date and settlement defects.
+The supplied downloaded folder has no Git metadata.
+
+I SUSPECT / NOT VERIFIED
+Concurrent requests may lose writes; no concurrency experiment run.
+Dependency security and deployment suitability require separate assessment.
+Current config changes may alter recalculated historical invoices.
+
+SELECTED SCOPE
+Ticket 1: invoice/GST mismatch. Production changes limited to lib/invoice.js.

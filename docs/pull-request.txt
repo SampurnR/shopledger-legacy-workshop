@@ -1,0 +1,47 @@
+Fixes #<Ticket-1-issue-number>
+
+Title: Make printed invoice GST and totals match checkout
+Base repository: JayaRamSamavedam/shopledger-legacy-workshop (my verified fork)
+Base branch: main
+Head branch: fix/invoice-gst
+
+Problem
+Printed customer/accountant invoices can disagree with the billed checkout
+amount. The old invoice independently recomputed GST at the fallback rate and
+applied coupons to a tax-inclusive amount without checkout eligibility and cap
+rules.
+
+Tests first
+Added 14 characterization tests against the original implementation. The
+regression suite was then run against the saved original invoice module: 23
+tests, 20 expected failures and 3 passes. The replay uses hand-authored
+in-memory fixtures and no application database.
+
+Fix
+Only lib/invoice.js changes production behavior. It now calls
+pricing.computeTotals and maps the shared line tax and gross values into the
+existing invoice row fields. The printable layout and reconciliation warning
+remain compatible. No dependencies were added.
+
+Verification
+- Fresh node --test: 37 passed, 0 failed.
+- Fresh replay: CP3 14/14 pass; CP4 RED 20 failures/3 passes; CP4 GREEN 37/37
+  pass; replay exits successfully.
+- Saved app evidence from the supplied workspace: 7 mismatches across 8 sample
+  orders (612.01 absolute variance) before; zero mismatches and zero variance
+  after. This app evidence is historical; fresh disposable-copy browser
+  verification is pending.
+- data/db.json SHA-256 matches the saved baseline; no test/replay touched it.
+- The original baseline manifest differs only at lib/invoice.js, expected for
+  this ticket. package-lock.json is untracked and excluded from the PR.
+
+Out of scope
+Inventory last-unit/cancellation behavior, date filtering, settlement amount
+coercion, and immutable historical tax/coupon snapshots remain separate work.
+Checkout's existing rounding/apportionment behavior is reused as-is. This PR
+does not claim tax-law compliance or production readiness.
+
+Fresh verification evidence: docs/evidence/fresh-node-test.txt,
+docs/evidence/fresh-replay-checkpoints.txt, and
+docs/evidence/fresh-review.txt. Saved historical app responses are in
+docs/evidence/cp4-before-* and cp4-after-*.

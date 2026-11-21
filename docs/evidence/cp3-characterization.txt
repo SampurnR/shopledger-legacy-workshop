@@ -1,0 +1,25 @@
+Captured command: node --test test/invoice.characterization.test.js
+Test files: test/invoice.characterization.test.js; test/invoice.regression.test.js (CP4 only)
+
+✔ CURRENT BEHAVIOUR: seven ticket examples disagree with the ledger; 1008 agrees (1.459042ms)
+✔ CURRENT BEHAVIOUR: 1002 ignores HSN and discounts the tax-inclusive amount (0.199791ms)
+✔ CURRENT BEHAVIOUR: 1004 exceeds the SAVE10 discount cap (0.05075ms)
+✔ CURRENT BEHAVIOUR: non-coupon HSN items are taxed at the fallback 18 percent (0.040583ms)
+✔ 18 percent, no-coupon control remains correct (0.044917ms)
+✔ missing items produce an empty zero invoice (0.049917ms)
+✔ invoice row contract preserves metadata, quantity, price and gross (0.0415ms)
+✔ missing SKU and HSN render as a dash; unknown HSN uses the fallback rate (0.046792ms)
+✔ explicit percentage rate is honored (0.046ms)
+✔ CGST plus SGST preserves an odd-paise GST total (0.086ms)
+✔ calculation and rendering do not mutate input (0.494ms)
+✔ invoice escapes customer and line text in HTML (0.075041ms)
+✔ rendered control invoice includes printable totals and no mismatch notice (0.043208ms)
+✔ mismatch notice remains available for inconsistent recorded totals (0.033333ms)
+ℹ tests 14
+ℹ suites 0
+ℹ pass 14
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 72.503375
