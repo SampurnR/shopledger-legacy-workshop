@@ -1,6 +1,6 @@
 {
-  "nextOrderId": 1009,
-  "nextSettlementId": 505,
+  "nextOrderId": 1010,
+  "nextSettlementId": 506,
   "products": [
     {
       "id": 1,
@@ -46,7 +46,7 @@
       "unit": "btl",
       "hsn": "1512",
       "price": 190,
-      "stock": 22,
+      "stock": 24,
       "reserved": 4,
       "reorderLevel": 12
     },
@@ -70,7 +70,7 @@
       "unit": "jar",
       "hsn": "0405",
       "price": 450,
-      "stock": 1,
+      "stock": 2,
       "reserved": 0,
       "reorderLevel": 5
     },
@@ -157,8 +157,8 @@
       "creditLimit": 5000,
       "openingBalance": 450,
       "totalBilled": 1982.01,
-      "totalSettled": 1200,
-      "balance": 1232.01
+      "totalSettled": 1700,
+      "balance": 732.01
     },
     {
       "id": 2,
@@ -192,9 +192,9 @@
       "gstin": "27AAJFD4412N1Z2",
       "creditLimit": 15000,
       "openingBalance": 1200,
-      "totalBilled": 1407,
+      "totalBilled": 0,
       "totalSettled": 1000,
-      "balance": 1607
+      "balance": 200
     },
     {
       "id": 5,
@@ -394,7 +394,7 @@
       "customer": "Suresh Deshmukh",
       "customerId": 4,
       "paymentMode": "khata",
-      "status": "pending",
+      "status": "cancelled",
       "items": [
         {
           "id": 6,
@@ -417,7 +417,9 @@
       "subtotal": 1280,
       "discount": 0,
       "tax": 127,
-      "total": 1407
+      "total": 1407,
+      "cancelledAt": "21/11/2026",
+      "cancelReason": "Cancelled from Order Register"
     },
     {
       "id": 1008,
@@ -449,9 +451,41 @@
       "discount": 0,
       "tax": 90,
       "total": 590
+    },
+    {
+      "id": 1009,
+      "date": "21/11/2026",
+      "customer": "Walk-in",
+      "customerId": null,
+      "paymentMode": "cash",
+      "status": "completed",
+      "items": [
+        {
+          "id": 6,
+          "sku": "DRY-001",
+          "name": "A2 Gir Cow Ghee 500ml",
+          "hsn": "0405",
+          "price": 450,
+          "qty": 1
+        }
+      ],
+      "coupon": "",
+      "subtotal": 450,
+      "discount": 0,
+      "tax": 54,
+      "total": 504
     }
   ],
   "settlements": [
+    {
+      "id": 505,
+      "customerId": 1,
+      "customerName": "Meera Joshi",
+      "date": "21/11/2026",
+      "amount": 500,
+      "mode": "upi",
+      "note": "Khata settlement"
+    },
     {
       "id": 501,
       "customerId": 1,
@@ -490,6 +524,21 @@
     }
   ],
   "auditLog": [
+    {
+      "ts": "2026-11-21T07:34:03.213Z",
+      "action": "KHATA_SETTLEMENT",
+      "details": "Meera Joshi settled ₹500 via UPI"
+    },
+    {
+      "ts": "2026-11-21T07:22:15.305Z",
+      "action": "ORDER_CANCELLED",
+      "details": "Order #1007 cancelled"
+    },
+    {
+      "ts": "2026-11-21T07:21:52.938Z",
+      "action": "ORDER_CREATED",
+      "details": "Order #1009 (Walk-in) ₹504.00"
+    },
     {
       "ts": "2022-03-15T14:22:10.000Z",
       "action": "ORDER_CREATED",
