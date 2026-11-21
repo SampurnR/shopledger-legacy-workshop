@@ -32,7 +32,7 @@ router.post('/customers/:id/settle', function (req, res) {
   store.appendAudit(
     db,
     'KHATA_SETTLEMENT',
-    result.customer.name + ' settled ₹' + body.amount + ' via ' + (body.mode || 'upi').toUpperCase()
+    result.customer.name + ' settled ₹' + result.settlement.amount + ' via ' + (body.mode || 'upi').toUpperCase()
   );
   store.write(db);
 
