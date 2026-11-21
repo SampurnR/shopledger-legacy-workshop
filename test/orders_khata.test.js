@@ -126,44 +126,60 @@ function getMockDb() {
 }
 
 // ---------------------------------------------------------------------------
-// Characterization Tests: lib/dates.js & lib/orders.js (Bug 1)
+// Unit & Integration Tests: lib/dates.js & lib/orders.js (Bug 1 Fixed)
 // ---------------------------------------------------------------------------
 
-test('CURRENT BEHAVIOUR: normalizeDateKey converts YYYY-MM-DD to DD/MM/YYYY causing lexical day comparison', function () {
+test('normalizeDateKey normalizes both DD/MM/YYYY and YYYY-MM-DD to YYYY-MM-DD for chronological comparison', function () {
   var keyIso = dates.normalizeDateKey('2022-01-30');
   var keyDmy = dates.normalizeDateKey('15/03/2022');
-  // Currently, HTML5 date 2022-01-30 is converted to '30/01/2022'
-  assert.equal(keyIso, '30/01/2022');
-  assert.equal(keyDmy, '15/03/2022');
-  // Flawed lexical comparison compares the day digits first ('30' > '15')
-  assert.ok(keyIso > keyDmy);
+  assert.equal(keyIso, '2022-01-30');
+  assert.equal(keyDmy, '2022-03-15');
+  // Chronological comparison works correctly: March 2022 > January 2022
+  assert.ok(keyDmy > keyIso);
+
+  // Additional boundary formats
+  assert.equal(dates.normalizeDateKey('28/12/2021'), '2021-12-28');
+  assert.equal(dates.normalizeDateKey(''), '');
 });
 
-test('CURRENT BEHAVIOUR: Order History sorts by DD/MM/YYYY string putting #1004 and #1001 above #1008', function () {
+test('dates.getFiscalYear correctly determines fiscal year with YYYY-MM-DD and DD/MM/YYYY', function () {
+  assert.equal(dates.getFiscalYear('15/03/2022'), 'FY21-22');
+  assert.equal(dates.getFiscalYear('2022-03-15'), 'FY21-22');
+  assert.equal(dates.getFiscalYear('15/04/2022'), 'FY22-23');
+  assert.equal(dates.getFiscalYear('2022-04-15'), 'FY22-23');
+});
+
+test('Order History sorts chronologically newest first (#1008 appears above #1004 and #1001)', function () {
   var db = getMockDb();
   var result = orders.list(db);
   var ids = result.map(function (o) { return o.id; });
 
-  // Unfixed sorting: '30/01/2022' (#1004) > '28/12/2021' (#1001) > '15/03/2022' (#1008)
-  assert.equal(ids[0], 1004); // 30/01/2022 appears first
-  assert.equal(ids[1], 1001); // 28/12/2021 appears above March 2022!
-  assert.equal(ids[2], 1008); // 15/03/2022 pushed down
-  assert.deepEqual(ids, [1004, 1001, 1008, 1002, 1007]);
+  // Correct chronological order (newest first):
+  // #1008 (15/03/2022) -> #1007 (04/03/2022) -> #1004 (30/01/2022) -> #1002 (05/01/2022) -> #1001 (28/12/2021)
+  assert.equal(ids[0], 1008); // 15/03/2022 newest order is first
+  assert.equal(ids[1], 1007); // 04/03/2022
+  assert.equal(ids[2], 1004); // 30/01/2022
+  assert.equal(ids[3], 1002); // 05/01/2022
+  assert.equal(ids[4], 1001); // 28/12/2021 oldest order is last
+  assert.deepEqual(ids, [1008, 1007, 1004, 1002, 1001]);
 });
 
-test('CURRENT BEHAVIOUR: filtering by date range returns wrong results due to DD/MM/YYYY string comparisons', function () {
+test('orders.list date range filter accurately filters by date range', function () {
   var db = getMockDb();
   // Filter for January 2022: from 2022-01-01 to 2022-01-31
-  var result = orders.list(db, { from: '2022-01-01', to: '2022-01-31' });
-  var ids = result.map(function (o) { return o.id; });
+  var janOrders = orders.list(db, { from: '2022-01-01', to: '2022-01-31' });
+  var janIds = janOrders.map(function (o) { return o.id; });
 
-  // In unfixed code: '01/01/2022' <= o.date <= '31/01/2022'
-  // '28/12/2021' (day 28) and '15/03/2022' (day 15) and '04/03/2022' (day 04) all match!
-  // All 5 orders are returned instead of only January orders (#1002 and #1004)
-  assert.equal(result.length, 5);
-  assert.ok(ids.includes(1001)); // Dec 2021 wrongly included
-  assert.ok(ids.includes(1008)); // Mar 2022 wrongly included
-  assert.ok(ids.includes(1007)); // Mar 2022 wrongly included
+  assert.equal(janOrders.length, 2);
+  assert.deepEqual(janIds, [1004, 1002]); // Only Jan 30 and Jan 05 orders
+  assert.ok(!janIds.includes(1001)); // Dec 2021 correctly excluded
+  assert.ok(!janIds.includes(1008)); // Mar 2022 correctly excluded
+
+  // Filter for March 2022
+  var marOrders = orders.list(db, { from: '2022-03-01', to: '2022-03-31' });
+  var marIds = marOrders.map(function (o) { return o.id; });
+  assert.equal(marOrders.length, 2);
+  assert.deepEqual(marIds, [1008, 1007]);
 });
 
 test('orders.list filters by search query matching customer or id', function () {
@@ -184,20 +200,21 @@ test('orders.list filters by order status', function () {
 });
 
 // ---------------------------------------------------------------------------
-// Characterization Tests: lib/ledger.js (Bug 2)
+// Unit & Integration Tests: lib/ledger.js (Bug 2 Fixed)
 // ---------------------------------------------------------------------------
 
-test('CURRENT BEHAVIOUR: recording settlement with string amount corrupts totalSettled and balance', function () {
+test('recording settlement with string amount converts to Number and updates balance correctly', function () {
   var db = getMockDb();
   // Meera Joshi: openingBalance: 450, totalBilled: 1982.01, totalSettled: 1200, balance: 1232.01
   // Request payload from frontend passes amount as string "500"
   var res = ledger.recordSettlement(db, 1, '500', 'cash', 'Khata settlement');
 
   assert.equal(res.ok, true);
-  // c.totalSettled = c.totalSettled + amount -> 1200 + '500' = '1200500'
-  assert.equal(res.customer.totalSettled, '1200500');
-  // c.balance = round2((450) + (1982.01) - '1200500') = -1198067.99
-  assert.equal(res.customer.balance, -1198067.99);
+  // c.totalSettled updated cleanly as numeric sum: 1200 + 500 = 1700
+  assert.equal(typeof res.customer.totalSettled, 'number');
+  assert.equal(res.customer.totalSettled, 1700);
+  // Balance due updated accurately: 450 + 1982.01 - 1700 = 732.01
+  assert.equal(res.customer.balance, 732.01);
   assert.equal(res.settlement.amount, 500);
 });
 
@@ -217,6 +234,9 @@ test('ledger.recordSettlement rejects invalid settlement amounts', function () {
 
   var resNeg = ledger.recordSettlement(db, 1, -100, 'cash', 'test');
   assert.equal(resNeg.ok, false);
+
+  var resNan = ledger.recordSettlement(db, 1, 'not-a-number', 'cash', 'test');
+  assert.equal(resNan.ok, false);
 });
 
 test('ledger.recordSettlement returns error if customer not found', function () {
