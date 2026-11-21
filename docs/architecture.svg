@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="700" viewBox="0 0 1100 700" role="img" aria-labelledby="title desc">
+  <title id="title">ShopLedger architecture and order flow</title>
+  <desc id="desc">Browser connects to Express routes. Routes use business modules and the JSON store. Order placement checks inventory, computes pricing, records an order and updates the ledger and store.</desc>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#52627a"/></marker></defs>
+  <rect width="1100" height="700" fill="#f5f8fc"/>
+  <g font-family="Arial, sans-serif" fill="#172a42">
+    <text x="45" y="55" font-size="28" font-weight="bold">ShopLedger · architecture and order flow</text>
+    <g fill="#fff" stroke="#b4c6db" stroke-width="2">
+      <rect x="45" y="100" width="225" height="115" rx="12"/><rect x="340" y="100" width="380" height="115" rx="12"/><rect x="790" y="100" width="260" height="115" rx="12"/>
+      <rect x="45" y="280" width="1005" height="135" rx="12"/><rect x="45" y="485" width="1005" height="155" rx="12"/>
+    </g>
+    <g font-size="18" font-weight="bold"><text x="65" y="135">Browser UI</text><text x="360" y="135">Express · server.js</text><text x="810" y="135">Persistent data</text><text x="65" y="315">Business modules · lib/</text><text x="65" y="520">Placing an order · routes/orders.js</text></g>
+    <g font-size="15"><text x="65" y="165">public/index.html</text><text x="65" y="190">public/js/app.js + CSS</text><text x="360" y="165">routes/products.js · routes/orders.js</text><text x="360" y="190">routes/customers.js · routes/reports.js</text><text x="810" y="165">lib/store.js</text><text x="810" y="190">data/db.json</text>
+      <text x="65" y="350">inventory · pricing · tax · coupons · orders · ledger · dates</text><text x="65" y="382">invoice · reports · store     |     config.js supplies shop, tax and coupon configuration</text>
+      <text x="65" y="555">1. Check products and sellable stock → 2. Calculate coupon, GST and totals</text><text x="65" y="585">3. Charge Khata when selected → 4. Deduct stock and record order → 5. Write JSON data</text><text x="65" y="615">Invoice view: server.js → orders + invoice; GST audit: reports → invoice + ledger + inventory</text>
+    </g>
+  </g>
+  <g stroke="#52627a" stroke-width="3" fill="none" marker-end="url(#arrow)"><path d="M270 158 H335"/><path d="M720 158 H785"/><path d="M530 216 V275"/><path d="M530 416 V480"/></g>
+</svg>
