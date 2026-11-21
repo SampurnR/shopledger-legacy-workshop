@@ -1,0 +1,94 @@
+/*
+ * Y2K Chrome - scoped design-system tokens (Theme 24 in catalog).
+ * Iridescent metal and bubble UI. Unbounded + Work Sans.
+ */
+
+[data-ds="y2k-chrome"] {
+  --ds-color-bg-base: #e9e7f5;
+  --ds-color-bg-surface: #f4f3fb;
+  --ds-color-bg-sunken: #dcdaf0;
+  --ds-color-bg-secondary: #dcdaf0;
+  --ds-color-bg-overlay: rgba(35,35,51,0.45);
+
+  --ds-color-primary: #8f7bff;
+  --ds-color-primary-hover: #7d68f5;
+  --ds-color-primary-active: #6b54e8;
+  --ds-color-primary-fg: #232333;
+
+  --ds-color-text-primary: #232333;
+  --ds-color-text-secondary: #3f3f55;
+  --ds-color-text-tertiary: #54546b;
+  --ds-color-text-muted: #5c5c78;
+  --ds-color-text-disabled: #9c9cb8;
+  --ds-color-text-inverse: #f4f3fb;
+
+  --ds-color-border-light: #c9c9ee;
+  --ds-color-border-medium: #b8b8e4;
+  --ds-color-border-strong: #8f7bff;
+
+  --ds-color-success: #1b7441;
+  --ds-color-success-bg: #d7f2e0;
+  --ds-color-warning: #8a5700;
+  --ds-color-warning-bg: #fff0cc;
+  --ds-color-error: #c0262d;
+  --ds-color-error-bg: #fde3e4;
+  --ds-color-info: #4a3fd1;
+  --ds-color-info-bg: #e3e1fb;
+
+  --ds-font-display: "Unbounded", system-ui, sans-serif;
+  --ds-font-body: "Work Sans", system-ui, sans-serif;
+  --ds-font-label: "Work Sans", system-ui, sans-serif;
+  --ds-label-transform: none;
+  --ds-label-tracking: 0.01em;
+  --ds-label-weight: 600;
+  --ds-heading-tracking: 0;
+  --ds-heading-weight: 600;
+
+  --ds-radius-badge: 999px;
+  --ds-radius-sm: 10px;
+  --ds-radius-md: 9999px;
+  --ds-radius-lg: 24px;
+  --ds-radius-xl: 28px;
+  --ds-radius-full: 9999px;
+
+  --ds-border-width: 1px;
+
+  --ds-shadow-card: 0 18px 40px rgba(120,120,190,0.25);
+  --ds-shadow-dropdown: 0 12px 28px rgba(120,120,190,0.28);
+  --ds-shadow-modal: 0 24px 56px rgba(120,120,190,0.3);
+  --ds-shadow-focus: 0 0 0 3px #b8c0ff;
+  --ds-shadow-btn-hover: 0 8px 20px rgba(150,150,220,0.45);
+
+  --ds-btn-text-transform: none;
+  --ds-btn-letter-spacing: 0.01em;
+  --ds-btn-font-weight: 700;
+  --ds-btn-active-transform: scale(0.98);
+  --ds-btn-secondary-bg: #232333;
+  --ds-btn-secondary-text: #ffc6ff;
+  --ds-btn-secondary-border: #232333;
+  --ds-btn-secondary-hover-bg: #3a3a52;
+  --ds-btn-outline-text: #232333;
+  --ds-btn-outline-border: #b8c0ff;
+  --ds-btn-outline-hover-bg: rgba(255,255,255,0.6);
+  --ds-btn-outline-hover-text: #232333;
+
+  --ds-table-header-bg: #dcdaf0;
+  --ds-table-header-text: #232333;
+  --ds-table-header-border-bottom: 1px solid #b8b8e4;
+  --ds-table-container-radius: 24px;
+  --ds-table-container-border: 1px solid rgba(255,255,255,0.9);
+
+  --ds-focus-ring: 0 0 0 3px #b8c0ff;
+
+  --ds-ease-standard: cubic-bezier(0.16, 1, 0.3, 1);
+  --ds-duration-fast: 120ms;
+  --ds-duration-base: 180ms;
+  --ds-duration-slow: 280ms;
+}
+
+/* Translucent chrome with an inner highlight; gradients run pink-lilac-blue, never neon. */
+[data-ds="y2k-chrome"] .ds-btn-primary { background: linear-gradient(120deg, #b8c0ff, #ffc6ff); border: 1px solid rgba(255,255,255,0.9); color: #232333; }
+[data-ds="y2k-chrome"] .ds-card, [data-ds="y2k-chrome"] .ds-modal { background: linear-gradient(160deg, rgba(255,255,255,0.85), rgba(255,255,255,0.55)); border: 1px solid rgba(255,255,255,0.9); box-shadow: var(--ds-shadow-card), inset 0 1px 0 #ffffff; }
+[data-ds="y2k-chrome"] .ds-bento-card { border-radius: 24px; }
+[data-ds="y2k-chrome"] .ds-bento-scope { background: linear-gradient(150deg, #e9e7f5 0%, #d7e4f5 45%, #f6e3f0 100%); }
+[data-ds="y2k-chrome"] .ds-bento-title { background: linear-gradient(100deg, #7b8cff, #d67bd8, #7b8cff); -webkit-background-clip: text; background-clip: text; color: transparent; }
