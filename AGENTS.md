@@ -21,4 +21,7 @@ This repo's binding agent rules live in `docs/rules/`. Read and follow every fil
 1. Before writing code, open the rule files that cover the area you are touching and follow them exactly.
 2. No requirement is done until its tests exist, trace to the spec, and pass (see `docs/rules/test-standards.md`).
 3. Commit messages follow `docs/rules/commit.md`.
-4. Design guidelines live in `docs/design-guidelines/`; follow anything added there for UI work.
+4. Design guidelines live in `docs/design-guidelines/`, one folder per design system, and are binding for all UI work. The Y2K Chrome system is in `docs/design-guidelines/y2k-chrome/`:
+   - `y2k-chrome-design-system.md` — the Y2K Chrome design system: tokens, palette, typography, spacing, radius, shadows, component specs.
+   - `y2k-chrome-instructions.md` — construction rules: font law, color application, radius and shadow decisions, component and layout rules.
+   - `tokens.css` — the master token sheet as CSS, scoped under `[data-ds="y2k-chrome"]`. Reference `--ds-*` tokens in code, never raw values.
