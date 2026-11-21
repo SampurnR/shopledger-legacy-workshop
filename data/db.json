@@ -1,6 +1,6 @@
 {
   "nextOrderId": 1010,
-  "nextSettlementId": 505,
+  "nextSettlementId": 506,
   "products": [
     {
       "id": 1,
@@ -157,8 +157,8 @@
       "creditLimit": 5000,
       "openingBalance": 450,
       "totalBilled": 1982.01,
-      "totalSettled": 1200,
-      "balance": 1232.01
+      "totalSettled": 1700,
+      "balance": 732.01
     },
     {
       "id": 2,
@@ -478,6 +478,15 @@
   ],
   "settlements": [
     {
+      "id": 505,
+      "customerId": 1,
+      "customerName": "Meera Joshi",
+      "date": "21/11/2026",
+      "amount": 500,
+      "mode": "upi",
+      "note": "Khata settlement"
+    },
+    {
       "id": 501,
       "customerId": 1,
       "customerName": "Meera Joshi",
@@ -515,6 +524,11 @@
     }
   ],
   "auditLog": [
+    {
+      "ts": "2026-11-21T07:34:03.213Z",
+      "action": "KHATA_SETTLEMENT",
+      "details": "Meera Joshi settled ₹500 via UPI"
+    },
     {
       "ts": "2026-11-21T07:22:15.305Z",
       "action": "ORDER_CANCELLED",
