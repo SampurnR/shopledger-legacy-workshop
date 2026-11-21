@@ -1,0 +1,105 @@
+✖ invoice uses the checkout subtotal, capped discount, tax, and total for Order #1004 (8.286514ms)
+✖ invoice resolves HSN rates and applies the checkout discount to Order #1002 (1.417981ms)
+✖ invoice uses persisted checkout figures for a non-coupon order with a 5% HSN item (1.138487ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 0
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 448.702746
+
+✖ failing tests:
+
+test at test/invoice.test.js:7:1
+✖ invoice uses the checkout subtotal, capped discount, tax, and total for Order #1004 (8.286514ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+  +   discount: 264.32,
+  -   discount: 150,
+      subtotal: 2240,
+  +   tax: 403.2,
+  +   total: 2378.88
+  -   tax: 104.5,
+  -   total: 2194.5
+    }
+  
+      at TestContext.<anonymous> (/tmp/shopledger-cp4-red/test/invoice.test.js:13:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.start (node:internal/test_runner/test:1191:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:385:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { subtotal: 2240, discount: 264.32, tax: 403.2, total: 2378.88 },
+    expected: { subtotal: 2240, discount: 150, tax: 104.5, total: 2194.5 },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at test/invoice.test.js:19:1
+✖ invoice resolves HSN rates and applies the checkout discount to Order #1002 (1.417981ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+  +   discount: 120.36,
+  -   discount: 102,
+      rates: [
+  +     18,
+  +     18
+  -     5,
+  -     5
+      ],
+  +   tax: 183.6,
+  +   total: 1083.24
+  -   tax: 45.9,
+  -   total: 963.9
+    }
+  
+      at TestContext.<anonymous> (/tmp/shopledger-cp4-red/test/invoice.test.js:28:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { rates: [ 18, 18 ], tax: 183.6, discount: 120.36, total: 1083.24 },
+    expected: { rates: [ 5, 5 ], tax: 45.9, discount: 102, total: 963.9 },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at test/invoice.test.js:34:1
+✖ invoice uses persisted checkout figures for a non-coupon order with a 5% HSN item (1.138487ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+      discount: 0,
+      subtotal: 640,
+  +   tax: 115.2,
+  +   total: 755.2
+  -   tax: 32,
+  -   total: 672
+    }
+  
+      at TestContext.<anonymous> (/tmp/shopledger-cp4-red/test/invoice.test.js:40:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { subtotal: 640, discount: 0, tax: 115.2, total: 755.2 },
+    expected: { subtotal: 640, discount: 0, tax: 32, total: 672 },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
