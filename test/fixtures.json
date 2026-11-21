@@ -1,0 +1,159 @@
+{
+  "orders": {
+    "1001": {
+      "id": 1001,
+      "date": "15/11/2021",
+      "status": "completed",
+      "items": [
+        {
+          "id": 8,
+          "name": "Product 8",
+          "sku": "SKU-8",
+          "hsn": "0902",
+          "price": 140,
+          "qty": 2
+        },
+        {
+          "id": 2,
+          "name": "Product 2",
+          "sku": "SKU-2",
+          "hsn": "0713",
+          "price": 165,
+          "qty": 2
+        }
+      ],
+      "subtotal": 610,
+      "discount": 0,
+      "tax": 66.9,
+      "total": 676.9
+    },
+    "1002": {
+      "id": 1002,
+      "date": "15/11/2021",
+      "status": "completed",
+      "coupon": "SAVE10",
+      "items": [
+        {
+          "id": 1,
+          "name": "Product 1",
+          "sku": "SKU-1",
+          "hsn": "1006",
+          "price": 640,
+          "qty": 1
+        },
+        {
+          "id": 4,
+          "name": "Product 4",
+          "sku": "SKU-4",
+          "hsn": "1512",
+          "price": 190,
+          "qty": 2
+        }
+      ],
+      "subtotal": 1020,
+      "discount": 102,
+      "tax": 45.9,
+      "total": 963.9
+    },
+    "1004": {
+      "id": 1004,
+      "date": "15/11/2021",
+      "status": "completed",
+      "coupon": "SAVE10",
+      "items": [
+        {
+          "id": 5,
+          "name": "Product 5",
+          "sku": "SKU-5",
+          "hsn": "1508",
+          "price": 1120,
+          "qty": 2
+        }
+      ],
+      "subtotal": 2240,
+      "discount": 150,
+      "tax": 104.5,
+      "total": 2194.5
+    },
+    "1007": {
+      "id": 1007,
+      "date": "15/11/2021",
+      "status": "pending",
+      "items": [
+        {
+          "id": 6,
+          "name": "Product 6",
+          "sku": "SKU-6",
+          "hsn": "0405",
+          "price": 450,
+          "qty": 2
+        },
+        {
+          "id": 4,
+          "name": "Product 4",
+          "sku": "SKU-4",
+          "hsn": "1512",
+          "price": 190,
+          "qty": 2
+        }
+      ],
+      "subtotal": 1280,
+      "discount": 0,
+      "tax": 127,
+      "total": 1407
+    },
+    "1008": {
+      "id": 1008,
+      "date": "15/11/2021",
+      "status": "completed",
+      "items": [
+        {
+          "id": 8,
+          "name": "Product 8",
+          "sku": "SKU-8",
+          "hsn": "0902",
+          "price": 140,
+          "qty": 1
+        },
+        {
+          "id": 12,
+          "name": "Product 12",
+          "sku": "SKU-12",
+          "hsn": "2106",
+          "price": 180,
+          "qty": 2
+        }
+      ],
+      "subtotal": 500,
+      "discount": 0,
+      "tax": 90,
+      "total": 590
+    }
+  },
+  "fractionalItems": [
+    {
+      "id": 1,
+      "name": "Product 1",
+      "sku": "SKU-1",
+      "hsn": "1006",
+      "price": 123.45,
+      "qty": 1.5
+    },
+    {
+      "id": 2,
+      "name": "Product 2",
+      "sku": "SKU-2",
+      "hsn": "0405",
+      "price": 87.65,
+      "qty": 2.25
+    },
+    {
+      "id": 3,
+      "name": "Product 3",
+      "sku": "SKU-3",
+      "hsn": "0902",
+      "price": 21.99,
+      "qty": 0.75
+    }
+  ]
+}
