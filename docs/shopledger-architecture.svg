@@ -1,0 +1,157 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1600" viewBox="0 0 1600 1080" preserveAspectRatio="xMidYMid meet" role="img" aria-labelledby="title desc">
+  <title id="title">ShopLedger app architecture</title>
+  <desc id="desc">Architecture map of the ShopLedger browser UI, Express server, API routers, library modules, configuration, and JSON data store. The order placement flow is highlighted.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#64748b"/></marker>
+    <marker id="orderArrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#d97706"/></marker>
+    <style>
+      text{font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#172033}
+      .title{font-size:30px;font-weight:750}.subtitle{font-size:14px;fill:#64748b}
+      .section{font-size:13px;font-weight:700;letter-spacing:1.3px;fill:#526178}
+      .node{fill:#fff;stroke:#cbd5e1;stroke-width:1.5}.ui{fill:#eff6ff;stroke:#93c5fd}.server{fill:#f1f5f9;stroke:#94a3b8}
+      .router{fill:#f5f3ff;stroke:#c4b5fd}.lib{fill:#f0fdf4;stroke:#86efac}.data{fill:#fff7ed;stroke:#fdba74}.config{fill:#fdf2f8;stroke:#f9a8d4}
+      .order{fill:#fffbeb;stroke:#f59e0b;stroke-width:2}.nodeTitle{font-size:16px;font-weight:700}.small{font-size:12px;fill:#526178}.tiny{font-size:11px;fill:#526178}
+      .edge{fill:none;stroke:#64748b;stroke-width:1.7;marker-end:url(#arrow)}.flow{fill:none;stroke:#d97706;stroke-width:3;marker-end:url(#orderArrow)}
+      .label{font-size:11px;font-weight:600;fill:#475569}.flowLabel{font-size:11px;font-weight:700;fill:#b45309}
+      .legend{font-size:12px;fill:#526178}
+    </style>
+  </defs>
+  <rect width="1600" height="1080" fill="#f8fafc"/>
+  <text x="56" y="58" class="title">ShopLedger · application architecture</text>
+  <text x="56" y="84" class="subtitle">Browser POS, Express routes, business logic modules, and JSON-file persistence</text>
+
+  <text x="56" y="128" class="section">CLIENT</text>
+  <text x="330" y="128" class="section">HTTP SERVER</text>
+  <text x="640" y="128" class="section">API ROUTERS · routes/</text>
+  <text x="1000" y="128" class="section">LIBRARY MODULES · lib/</text>
+  <text x="1370" y="128" class="section">PERSISTENCE</text>
+
+  <!-- Order flow connectors, behind nodes -->
+  <path class="flow" d="M260 264H330"/>
+  <path class="flow" d="M545 264H640"/>
+  <path class="flow" d="M835 264H900V260H1000"/>
+  <path class="flow" d="M835 264H900V405H1000"/>
+  <path class="flow" d="M835 264H900V550H1000"/>
+  <path class="flow" d="M835 264H900V695H1000"/>
+  <path class="flow" d="M835 264H900V840H1000"/>
+  <path class="flow" d="M1190 840H1265V315H1370"/>
+  <path class="flow" d="M1190 260H1265V315H1370"/>
+  <path class="flow" d="M1190 405H1265V315H1370"/>
+  <path class="flow" d="M1190 550H1265V315H1370"/>
+  <path class="flow" d="M1190 695H1265V315H1370"/>
+  <path class="edge" d="M545 264V930H1000"/>
+  <path class="edge" d="M545 264V980H1000"/>
+
+  <!-- Supporting connections -->
+  <path class="edge" d="M545 264H600V480H640"/>
+  <path class="edge" d="M545 264H600V600H640"/>
+  <path class="edge" d="M545 264H600V720H640"/>
+  <path class="edge" d="M835 480H940V405H1000"/>
+  <path class="edge" d="M835 480H955V550H1000"/>
+  <path class="edge" d="M835 600H960V695H1000"/>
+  <path class="edge" d="M835 720H950V260H1000"/>
+  <path class="edge" d="M835 720H965V550H1000"/>
+  <path class="edge" d="M835 720H970V695H1000"/>
+  <path class="edge" d="M835 720H975V260H1000"/>
+  <path class="edge" d="M1190 260H1315V520H1370"/>
+  <path class="edge" d="M1190 405H1325V520H1370"/>
+  <path class="edge" d="M1190 550H1335V520H1370"/>
+  <path class="edge" d="M1190 695H1345V520H1370"/>
+  <path class="edge" d="M1190 840H1355V520H1370"/>
+  <path class="edge" d="M1190 930H1315V520H1370"/>
+  <path class="edge" d="M1190 980H1325V520H1370"/>
+  <path class="edge" d="M1450 440V390"/>
+  <path class="edge" d="M1080 360V405"/>
+  <path class="edge" d="M1080 505V550"/>
+  <path class="edge" d="M1080 650V695"/>
+
+  <!-- Client and server -->
+  <rect x="56" y="205" width="204" height="118" rx="14" class="node ui"/>
+  <text x="76" y="237" class="nodeTitle">Browser UI</text>
+  <text x="76" y="260" class="small">public/index.html</text>
+  <text x="76" y="280" class="small">public/js/app.js</text>
+  <text x="76" y="300" class="small">public/css/style.css</text>
+
+  <rect x="330" y="205" width="215" height="118" rx="14" class="node server"/>
+  <text x="350" y="237" class="nodeTitle">Express app</text>
+  <text x="350" y="260" class="small">server.js</text>
+  <text x="350" y="280" class="small">serves public/ · mounts /api</text>
+  <text x="350" y="300" class="small">GET /orders/:id/invoice</text>
+  <text x="372" y="190" class="flowLabel">POST /api/orders</text>
+  <text x="263" y="250" class="flowLabel">HTTP</text>
+
+  <!-- Routers -->
+  <rect x="640" y="205" width="195" height="118" rx="12" class="node order"/>
+  <text x="658" y="236" class="nodeTitle">orders.js</text>
+  <text x="658" y="258" class="small">POST /orders</text>
+  <text x="658" y="278" class="small">GET /orders · /:id</text>
+  <text x="658" y="298" class="small">POST /:id/cancel</text>
+  <text x="653" y="190" class="flowLabel">1 · validate request</text>
+
+  <rect x="640" y="430" width="195" height="100" rx="12" class="node router"/>
+  <text x="658" y="462" class="nodeTitle">products.js</text>
+  <text x="658" y="485" class="small">GET /products</text>
+  <text x="658" y="505" class="small">GET /coupons</text>
+  <rect x="640" y="550" width="195" height="100" rx="12" class="node router"/>
+  <text x="658" y="582" class="nodeTitle">customers.js</text>
+  <text x="658" y="605" class="small">GET /customers</text>
+  <text x="658" y="625" class="small">POST /:id/settle</text>
+  <rect x="640" y="670" width="195" height="100" rx="12" class="node router"/>
+  <text x="658" y="702" class="nodeTitle">reports.js</text>
+  <text x="658" y="725" class="small">dashboard · GST recon</text>
+  <text x="658" y="745" class="small">pricing preview · admin export</text>
+
+  <!-- Business logic modules -->
+  <rect x="1000" y="205" width="190" height="110" rx="12" class="node order"/>
+  <text x="1018" y="237" class="nodeTitle">orders.js</text><text x="1018" y="261" class="small">Add · get · list · cancel</text><text x="1018" y="282" class="flowLabel">2 · create order record</text>
+  <rect x="1000" y="350" width="190" height="110" rx="12" class="node order"/>
+  <text x="1018" y="382" class="nodeTitle">inventory.js</text><text x="1018" y="406" class="small">Find · check · reserve</text><text x="1018" y="427" class="flowLabel">3 · check and deduct stock</text>
+  <rect x="1000" y="495" width="190" height="110" rx="12" class="node order"/>
+  <text x="1018" y="527" class="nodeTitle">pricing.js</text><text x="1018" y="551" class="small">Subtotal · discount · GST</text><text x="1018" y="572" class="flowLabel">4 · calculate totals</text>
+  <rect x="1000" y="640" width="190" height="110" rx="12" class="node order"/>
+  <text x="1018" y="672" class="nodeTitle">coupons.js</text><text x="1018" y="696" class="small">Normalize · validate · discount</text><text x="1018" y="717" class="flowLabel">5 · validate coupon</text>
+  <rect x="1000" y="785" width="190" height="110" rx="12" class="node order"/>
+  <text x="1018" y="817" class="nodeTitle">ledger.js</text><text x="1018" y="841" class="small">Customer credit / Khata</text><text x="1018" y="862" class="flowLabel">6 · charge when Khata</text>
+  <rect x="1000" y="900" width="190" height="70" rx="12" class="node lib"/>
+  <text x="1018" y="930" class="nodeTitle">tax.js</text><text x="1018" y="951" class="small">HSN GST rates · CGST / SGST</text>
+  <rect x="1000" y="985" width="190" height="70" rx="12" class="node lib"/>
+  <text x="1018" y="1015" class="nodeTitle">dates.js</text><text x="1018" y="1036" class="small">Today · date normalization</text>
+
+  <!-- Config and storage -->
+  <rect x="1370" y="205" width="185" height="100" rx="12" class="node data"/>
+  <text x="1388" y="237" class="nodeTitle">store.js</text><text x="1388" y="261" class="small">read · write · audit log</text><text x="1388" y="281" class="small">JSON file persistence</text>
+  <rect x="1370" y="335" width="185" height="105" rx="12" class="node data"/>
+  <text x="1388" y="367" class="nodeTitle">data/db.json</text><text x="1388" y="391" class="small">products · orders</text><text x="1388" y="411" class="small">customers · settlements</text>
+  <rect x="1370" y="480" width="185" height="100" rx="12" class="node config"/>
+  <text x="1388" y="512" class="nodeTitle">config.js</text><text x="1388" y="536" class="small">shop · tax · inventory</text><text x="1388" y="556" class="small">coupons · admin key</text>
+  <rect x="1370" y="635" width="185" height="105" rx="12" class="node lib"/>
+  <text x="1388" y="667" class="nodeTitle">invoice.js</text><text x="1388" y="691" class="small">compute invoice figures</text><text x="1388" y="711" class="small">render printable HTML</text>
+  <rect x="1370" y="780" width="185" height="120" rx="12" class="node lib"/>
+  <text x="1388" y="812" class="nodeTitle">reports.js</text><text x="1388" y="836" class="small">dashboard summary</text><text x="1388" y="856" class="small">GST reconciliation</text><text x="1388" y="876" class="small">uses invoice figures</text>
+
+  <!-- Explicit supporting relationships -->
+  <path class="edge" d="M1190 950H1270V530H1370"/>
+  <path class="edge" d="M1190 1035H1280V530H1370"/>
+  <path class="edge" d="M1190 695H1300V530H1370"/>
+  <path class="edge" d="M1190 550H1290V530H1370"/>
+  <path class="edge" d="M1190 840H1310V530H1370"/>
+  <path class="edge" d="M1190 260H1300V260H1370"/>
+  <path class="edge" d="M1190 405H1310V260H1370"/>
+  <path class="edge" d="M1190 840H1320V260H1370"/>
+  <path class="edge" d="M835 720H930V830H1000"/>
+  <path class="edge" d="M835 720H920V830H1000"/>
+  <path class="edge" d="M545 264H585V690H1370"/>
+  <path class="edge" d="M1370 690H1330V260H1190"/>
+
+  <!-- Route and module labels -->
+  <text x="552" y="408" class="label" transform="rotate(90 552 408)">other /api routes</text>
+  <text x="1200" y="295" class="flowLabel">7 · persist order + stock + ledger + audit</text>
+  <text x="1327" y="329" class="tiny">read / write</text>
+  <text x="1296" y="612" class="label">config lookups</text>
+  <text x="1375" y="620" class="tiny">invoice endpoint</text>
+
+  <!-- Legend -->
+  <line x1="56" y1="1035" x2="104" y2="1035" class="flow"/><text x="116" y="1039" class="legend">Order placement path</text>
+  <line x1="290" y1="1035" x2="338" y2="1035" class="edge"/><text x="350" y="1039" class="legend">Other code dependencies / data access</text>
+  <text x="56" y="1065" class="tiny">Only files and endpoints present in this repository are shown.</text>
+</svg>
