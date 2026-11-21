@@ -105,20 +105,18 @@ test('check rejects when quantity exceeds sellable stock', function () {
   assert.equal(result.msg, 'Indrayani Basmati Rice 5kg is out of stock (16 sellable available)');
 });
 
-test('CURRENT BEHAVIOUR: check falsely rejects buying exact remaining sellable stock (last sellable unit)', function () {
+test('FIX VERIFIED: check allows buying exact remaining sellable stock (last sellable unit)', function () {
   var products = createMockProducts();
 
   // DRY-001 has 1 sellable unit (stock: 1, reserved: 0)
-  // Current bug: items[i].qty >= sellable rejects 1 unit with "out of stock (1 sellable available)"
+  // Fix verified: buying exact remaining sellable stock (1 unit) succeeds
   var gheeResult = inventory.check(products, [{ id: 6, qty: 1 }]);
-  assert.equal(gheeResult.ok, false);
-  assert.equal(gheeResult.msg, 'A2 Gir Cow Ghee 500ml is out of stock (1 sellable available)');
+  assert.deepEqual(gheeResult, { ok: true });
 
   // SPC-001 has 1 sellable unit (stock: 4, reserved: 3)
-  // Current bug: rejects 1 unit with "out of stock (1 sellable available)"
+  // Fix verified: buying exact remaining sellable stock (1 unit) succeeds
   var chilliResult = inventory.check(products, [{ id: 11, qty: 1 }]);
-  assert.equal(chilliResult.ok, false);
-  assert.equal(chilliResult.msg, 'Byadgi Kashmiri Chilli Powder 500g is out of stock (1 sellable available)');
+  assert.deepEqual(chilliResult, { ok: true });
 });
 
 test('reserve decrements physical stock for ordered items', function () {
@@ -128,32 +126,32 @@ test('reserve decrements physical stock for ordered items', function () {
   assert.equal(p.stock, 15);
 });
 
-test('CURRENT BEHAVIOUR: release fails to restore stock when line items have id property', function () {
+test('FIX VERIFIED: release restores stock when line items have id property', function () {
   var products = createMockProducts();
   var ghee = inventory.find(products, 6);
   assert.equal(ghee.stock, 1);
 
-  // Line items from order cancellation use `id`, but release looks for `productId`
+  // Line items from order cancellation use `id`
   inventory.release(products, [{ id: 6, qty: 2 }]);
 
-  // Stock remains 1 in unfixed code because release looks up items[i].productId (undefined)
-  assert.equal(ghee.stock, 1);
+  // Stock is restored: 1 + 2 = 3
+  assert.equal(ghee.stock, 3);
 });
 
-test('CURRENT BEHAVIOUR: release decrements reserved instead of restoring stock when productId is used', function () {
+test('FIX VERIFIED: release restores stock when line items have productId property', function () {
   var products = createMockProducts();
   var chilli = inventory.find(products, 11);
   assert.equal(chilli.stock, 4);
   assert.equal(chilli.reserved, 3);
 
-  // Even if productId is provided, unfixed code decrements reserved instead of restoring stock
+  // When productId is used, stock is restored and reserved is untouched
   inventory.release(products, [{ productId: 11, qty: 2 }]);
 
-  assert.equal(chilli.stock, 4); // stock not restored
-  assert.equal(chilli.reserved, 1); // reserved incorrectly modified
+  assert.equal(chilli.stock, 6); // 4 + 2 = 6
+  assert.equal(chilli.reserved, 3); // reserved untouched
 });
 
-test('CURRENT BEHAVIOUR: cancelling an order in orders.cancel does not restore product stock', function () {
+test('FIX VERIFIED: cancelling an order in orders.cancel restores product stock for all items', function () {
   var db = createMockDb();
   var ghee = inventory.find(db.products, 6);
   var oil = inventory.find(db.products, 4);
@@ -165,7 +163,7 @@ test('CURRENT BEHAVIOUR: cancelling an order in orders.cancel does not restore p
   assert.equal(cancelResult.ok, true);
   assert.equal(cancelResult.order.status, 'cancelled');
 
-  // In unfixed code, order is cancelled but product stock is NEVER restored
-  assert.equal(ghee.stock, 1);
-  assert.equal(oil.stock, 22);
+  // Product stock is restored for both items in Order #1007
+  assert.equal(ghee.stock, 3); // 1 + 2 = 3
+  assert.equal(oil.stock, 24); // 22 + 2 = 24
 });
