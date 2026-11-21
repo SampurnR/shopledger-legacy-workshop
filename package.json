@@ -10,7 +10,9 @@
   "author": "Rohit <rohit@shopledger.invalid>",
   "license": "ISC",
   "dependencies": {
-    "body-parser": "^1.19.0",
-    "express": "^4.17.1"
+    "body-parser": "^2.4.0",
+    "express": "^5.3.0",
+    "npm": "^12.2.3",
+    "start": "^5.1.0"
   }
 }
