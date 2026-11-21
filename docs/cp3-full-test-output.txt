@@ -1,0 +1,18 @@
+✔ test\fixtures\invoice-orders.js (143.3597ms)
+✔ CURRENT BEHAVIOUR: invoice #1001 complete figures (3.6337ms)
+✔ CURRENT BEHAVIOUR: invoice #1002 complete figures (0.2764ms)
+✔ CURRENT BEHAVIOUR: invoice #1003 complete figures (0.177ms)
+✔ CURRENT BEHAVIOUR: invoice #1004 complete figures (0.1508ms)
+✔ CURRENT BEHAVIOUR: invoice #1005 complete figures (0.182ms)
+✔ CURRENT BEHAVIOUR: invoice #1006 complete figures (0.1518ms)
+✔ CURRENT BEHAVIOUR: invoice #1007 complete figures (0.1477ms)
+✔ Matching control: invoice #1008 complete figures (0.1238ms)
+✔ Checkout authority applies SAVE10 subtotal discount and cap before HSN GST (0.9797ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 10
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 265.4713

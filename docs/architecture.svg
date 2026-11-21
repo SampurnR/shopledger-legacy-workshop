@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="1040" viewBox="0 0 1500 1040">
+<defs><marker id="a" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0 0L8 3L0 6" fill="#2563eb"/></marker></defs>
+<rect width="1500" height="1040" fill="#f1f5f9"/>
+<style>text{font-family:Segoe UI,Arial;fill:#0f172a;font-size:18px}.title{font-size:32px;font-weight:700}.h{font-size:21px;font-weight:700}.small{font-size:16px}.box{fill:white;stroke:#94a3b8;stroke-width:2;rx:12}.flow{fill:none;stroke:#2563eb;stroke-width:3;marker-end:url(#a)}.label{fill:#1d4ed8;font-weight:600}</style>
+<text x="50" y="52" class="title">ShopLedger | Current architecture and order flow</text>
+<text x="50" y="82">Static browser UI → Express → business modules → local JSON file</text>
+<rect x="50" y="115" width="430" height="120" class="box"/>
+<text x="70" y="148" class="h">public/index.html — POS and audit UI</text>
+<text x="70" y="180">public/js/app.js — API requests / rendering</text>
+<text x="70" y="210">public/css/style.css — presentation</text>
+<rect x="660" y="115" width="420" height="120" class="box"/>
+<text x="680" y="148" class="h">server.js — Express entry</text>
+<text x="680" y="180">Static assets; /api router mounting</text>
+<text x="680" y="210">GET /orders/:id/invoice → invoice.render</text>
+<path d="M480 174H655" class="flow"/><text x="490" y="144" class="label small">1. POST order</text>
+<path d="M870 235V300" class="flow"/><text x="885" y="275" class="label small">2. /api</text>
+<rect x="50" y="300" width="1380" height="160" class="box"/>
+<text x="70" y="333" class="h">routes/ — HTTP validation, orchestration and responses</text>
+<text x="70" y="375">products.js</text><text x="70" y="405" class="small">Catalog / active coupons</text>
+<text x="390" y="375">orders.js</text><text x="390" y="405" class="small">Place / list / cancel orders</text>
+<text x="750" y="375">customers.js</text><text x="750" y="405" class="small">Accounts / settlements</text>
+<text x="1080" y="375">reports.js</text><text x="1080" y="405" class="small">Preview / audit / export</text>
+<text x="70" y="440" class="small">Invoice HTML: server → invoice; reconciliation: reports router → reports → invoice</text>
+<path d="M480 460V520" class="flow"/><text x="495" y="495" class="label small">3. Resolve → stock check → coupon → pricing → Khata → reserve → add</text>
+<rect x="50" y="520" width="1040" height="310" class="box"/>
+<text x="70" y="554" class="h">lib/ — in-process business logic</text>
+<text x="70" y="597">inventory.js — lookup / check / reserve / release</text>
+<text x="70" y="637">pricing.js — subtotal / discounts / line totals</text>
+<text x="70" y="677">coupons.js — validation / caps</text>
+<text x="70" y="717">tax.js — HSN rates / CGST-SGST</text>
+<text x="70" y="757">orders.js — add / list / cancel</text>
+<text x="620" y="597">ledger.js — credit / settlements</text>
+<text x="620" y="637">dates.js — date utilities</text>
+<text x="620" y="677">invoice.js — figures / HTML</text>
+<text x="620" y="717">reports.js — dashboard / audit</text>
+<text x="620" y="757">store.js — read / write / audit log</text>
+<text x="70" y="805" class="small">Pricing → coupons + tax; orders → dates + inventory + ledger; reports → inventory + ledger + invoice</text>
+<rect x="1140" y="540" width="290" height="220" class="box"/>
+<text x="1160" y="580" class="h">config.js</text><text x="1160" y="620">Shop metadata / port</text>
+<text x="1160" y="655">Coupon definitions</text><text x="1160" y="690">HSN GST slabs</text><text x="1160" y="725">Inventory defaults</text>
+<path d="M1140 650H1095" class="flow"/>
+<path d="M920 830V900" class="flow"/><text x="60" y="875" class="label small">4. Router → store.appendAudit + store.write (store.read loads the starting snapshot)</text>
+<rect x="50" y="905" width="1380" height="90" class="box"/>
+<text x="70" y="940" class="h">data/db.json — local JSON persistence</text>
+<text x="70" y="973">Products · orders · customers · settlements · auditLog · nextOrderId / nextSettlementId</text>
+<text x="50" y="1025" class="small">HTTP 201 returns the stored order; the browser refreshes catalog, account and dashboard views.</text>
+</svg>

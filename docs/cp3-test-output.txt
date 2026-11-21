@@ -1,0 +1,17 @@
+✔ CURRENT BEHAVIOUR: invoice #1001 complete figures (3.005ms)
+✔ CURRENT BEHAVIOUR: invoice #1002 complete figures (0.3119ms)
+✔ CURRENT BEHAVIOUR: invoice #1003 complete figures (0.1728ms)
+✔ CURRENT BEHAVIOUR: invoice #1004 complete figures (0.1533ms)
+✔ CURRENT BEHAVIOUR: invoice #1005 complete figures (0.1747ms)
+✔ CURRENT BEHAVIOUR: invoice #1006 complete figures (0.1529ms)
+✔ CURRENT BEHAVIOUR: invoice #1007 complete figures (0.1423ms)
+✔ Matching control: invoice #1008 complete figures (0.1177ms)
+✔ Checkout authority applies SAVE10 subtotal discount and cap before HSN GST (0.9988ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 125.2474

@@ -1,0 +1,31 @@
+✔ test\fixtures\invoice-orders.js (183.752ms)
+✔ CORRECTED from CURRENT BEHAVIOUR: invoice #1001 complete figures (11.0443ms)
+✔ CORRECTED from CURRENT BEHAVIOUR: invoice #1002 complete figures (1.0197ms)
+✔ CORRECTED from CURRENT BEHAVIOUR: invoice #1003 complete figures (0.7275ms)
+✔ CORRECTED from CURRENT BEHAVIOUR: invoice #1004 complete figures (0.6982ms)
+✔ CORRECTED from CURRENT BEHAVIOUR: invoice #1005 complete figures (0.9642ms)
+✔ CORRECTED from CURRENT BEHAVIOUR: invoice #1006 complete figures (1.1827ms)
+✔ CORRECTED from CURRENT BEHAVIOUR: invoice #1007 complete figures (2.1582ms)
+✔ Matching control: invoice #1008 complete figures (1.5111ms)
+✔ Checkout authority applies SAVE10 subtotal discount and cap before HSN GST (1.4561ms)
+✔ CORRECT BEHAVIOUR: invoice #1001 agrees with customer billing (8.2701ms)
+✔ CORRECT BEHAVIOUR: invoice #1002 agrees with customer billing (1.3774ms)
+✔ CORRECT BEHAVIOUR: invoice #1003 agrees with customer billing (1.1862ms)
+✔ CORRECT BEHAVIOUR: invoice #1004 agrees with customer billing (0.8503ms)
+✔ CORRECT BEHAVIOUR: invoice #1005 agrees with customer billing (1.4477ms)
+✔ CORRECT BEHAVIOUR: invoice #1006 agrees with customer billing (1.3373ms)
+✔ CORRECT BEHAVIOUR: invoice #1007 agrees with customer billing (3.8435ms)
+✔ CORRECT BEHAVIOUR: invoice #1008 agrees with customer billing (0.9429ms)
+✔ Reconciliation matches all eight in-memory orders; flags stale recorded totals (3.8036ms)
+✔ Rendering retains metadata and removes notice only when totals match (4.8093ms)
+✔ Coupon eligibility, normalization and all discount caps follow checkout (5.5481ms)
+✔ Explicit percent/decimal/zero GST, HSN fallback, empty orders and numeric strings (5.8617ms)
+✔ Rounding and input immutability match checkout on fractional mixed-slab lines (1.0063ms)
+ℹ tests 23
+ℹ suites 0
+ℹ pass 23
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 512.6723
