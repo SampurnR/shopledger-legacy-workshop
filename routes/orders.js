@@ -69,6 +69,14 @@ router.post('/orders', function (req, res) {
   }
 
   var totals = pricing.computeTotals(items, rawCoupon);
+  // Keep the tax inputs used for billing on the order line so invoices remain
+  // stable if the HSN slab configuration changes later.
+  for (var t = 0; t < items.length; t++) {
+    items[t].gstRate = totals.lines[t].gstPercent;
+    items[t].gstTaxable = totals.lines[t].taxable;
+    items[t].gstAmount = totals.lines[t].tax;
+  }
+
   var paymentMode = (body.paymentMode || 'cash').toLowerCase();
   var customerName = (body.customer || '').trim() || 'Walk-in';
   var customerId = body.customerId ? Number(body.customerId) : null;
