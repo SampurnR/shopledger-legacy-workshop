@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
+  <style>
+    .box{fill:#102b25;stroke:#36b98b;stroke-width:2;rx:12}
+    .ticket{fill:#173d34;stroke:#f5b942;stroke-width:3;rx:12}
+    .title{font:700 24px Arial;fill:#f2f7f5}
+    .label{font:700 16px Arial;fill:#f2f7f5}
+    .text{font:14px Arial;fill:#c7d9d2}
+    .flow{stroke:#8fe0bd;stroke-width:3;fill:none;marker-end:url(#arrow)}
+    .dash{stroke:#8fe0bd;stroke-width:2;stroke-dasharray:8 6;fill:none;marker-end:url(#arrow)}
+  </style>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L9,3 L0,6 z" fill="#8fe0bd"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="800" fill="#071a16"/>
+  <text x="50" y="48" class="title">ShopLedger architecture and order flow</text>
+  <text x="50" y="78" class="text">Verified from the repository files; highlighted path is the invoice/GST ticket.</text>
+
+  <rect x="50" y="125" width="220" height="130" class="box"/>
+  <text x="70" y="158" class="label">Browser UI</text>
+  <text x="70" y="184" class="text">public/index.html</text>
+  <text x="70" y="207" class="text">public/js/app.js</text>
+  <text x="70" y="230" class="text">public/css/style.css</text>
+
+  <rect x="350" y="125" width="250" height="130" class="box"/>
+  <text x="370" y="158" class="label">Express server</text>
+  <text x="370" y="184" class="text">server.js</text>
+  <text x="370" y="207" class="text">static files + routes</text>
+  <text x="370" y="230" class="text">/orders/:id/invoice</text>
+
+  <rect x="680" y="105" width="220" height="90" class="box"/>
+  <text x="700" y="140" class="label">API routers</text>
+  <text x="700" y="166" class="text">routes/*.js</text>
+
+  <rect x="680" y="225" width="220" height="130" class="ticket"/>
+  <text x="700" y="258" class="label">Invoice ticket</text>
+  <text x="700" y="284" class="text">lib/invoice.js</text>
+  <text x="700" y="307" class="text">render + figures</text>
+  <text x="700" y="330" class="text">HSN GST + coupon path</text>
+
+  <rect x="980" y="125" width="170" height="130" class="box"/>
+  <text x="1000" y="158" class="label">Domain libs</text>
+  <text x="1000" y="184" class="text">pricing.js</text>
+  <text x="1000" y="207" class="text">tax.js</text>
+  <text x="1000" y="230" class="text">coupons.js</text>
+
+  <rect x="350" y="420" width="250" height="120" class="box"/>
+  <text x="370" y="454" class="label">Store</text>
+  <text x="370" y="480" class="text">lib/store.js</text>
+  <text x="370" y="503" class="text">read / appendAudit / write</text>
+
+  <rect x="680" y="420" width="220" height="120" class="box"/>
+  <text x="700" y="454" class="label">JSON database</text>
+  <text x="700" y="480" class="text">data/db.json</text>
+  <text x="700" y="503" class="text">products, orders, customers</text>
+
+  <rect x="50" y="650" width="1100" height="90" class="box"/>
+  <text x="70" y="684" class="label">Numbered order flow</text>
+  <text x="70" y="712" class="text">1 select products → 2 POST /api/orders → 3 pricing.computeTotals → 4 store.write → 5 invoice route calls pricing-backed figures → 6 printable HTML response</text>
+
+  <path d="M270 190 H350" class="flow"/>
+  <text x="285" y="178" class="text">1</text>
+  <path d="M600 165 H680" class="flow"/>
+  <text x="620" y="153" class="text">2</text>
+  <path d="M600 220 C635 250 650 270 680 280" class="flow"/>
+  <text x="626" y="250" class="text">3</text>
+  <path d="M900 165 H980" class="flow"/>
+  <text x="925" y="153" class="text">4</text>
+  <path d="M900 290 H980" class="flow"/>
+  <text x="925" y="278" class="text">5</text>
+  <path d="M475 255 V420" class="flow"/>
+  <text x="490" y="340" class="text">6</text>
+  <path d="M600 480 H680" class="dash"/>
+  <text x="620" y="468" class="text">7</text>
+  <path d="M790 355 V420" class="dash"/>
+  <text x="807" y="395" class="text">8</text>
+</svg>
