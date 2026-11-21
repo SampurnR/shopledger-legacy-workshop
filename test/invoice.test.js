@@ -25,16 +25,35 @@ test('18% GST without a coupon agrees with checkout', () => {
   );
 });
 
-test('CURRENT BEHAVIOUR: invoice uses 18% GST and discounts the tax-inclusive subtotal', () => {
-  const figures = invoice.computeInvoiceFigures(riceOrder());
+test('invoice matches the ledger for order #1002', () => {
+  const order = riceOrder();
+  const figures = invoice.computeInvoiceFigures(order);
   assert.deepEqual(
-    [figures.rows[0].gstPercent, figures.discount, figures.tax, figures.total],
-    [18, 120.36, 183.60, 1083.24]
+    [figures.rows[0].gstPercent, figures.rows[0].lineTax, figures.discount, figures.tax, figures.total],
+    [5, 45.90, 102, 45.90, 963.90]
   );
+
+  const html = invoice.render(order);
+  assert.match(html, /₹963\.90/);
+  assert.doesNotMatch(html, /Accountant Reconciliation Notice/);
+  assert.equal(reports.getGstReconciliation({ orders: [order] }).mismatchCount, 0);
 });
 
-test('CURRENT BEHAVIOUR: the invoice and GST Audit both report the ledger mismatch', () => {
-  const order = riceOrder();
-  assert.match(invoice.render(order), /Accountant Reconciliation Notice/);
-  assert.equal(reports.getGstReconciliation({ orders: [order] }).mismatchCount, 1);
+test('invoice applies the SAVE10 cap before calculating mixed GST slabs', () => {
+  const order = {
+    items: [
+      { name: 'Groundnut oil', hsn: '1508', price: 560, qty: 2 },
+      { name: 'Ghee', hsn: '0405', price: 1120, qty: 1 }
+    ],
+    coupon: 'SAVE10'
+  };
+  const figures = invoice.computeInvoiceFigures(order);
+  assert.deepEqual(
+    figures.rows.map(row => [row.gstPercent, row.lineTax]),
+    [[5, 52.25], [12, 125.40]]
+  );
+  assert.deepEqual(
+    [figures.subtotal, figures.discount, figures.tax, figures.cgst, figures.sgst, figures.total],
+    [2240, 150, 177.65, 88.83, 88.82, 2267.65]
+  );
 });
