@@ -1,0 +1,153 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="812" viewBox="0 0 1200 812" role="img" aria-labelledby="diagram-title diagram-description">
+<title id="diagram-title">ShopLedger architecture and Ticket 2 inventory flow</title>
+<desc id="diagram-description">The browser UI goes through Express routers, business modules, and a JSON store. The checkout path highlights an exact-quantity rejection. The cancellation path highlights an incorrect line-item field and missing physical stock restoration.</desc>
+<defs>
+  <marker id="normal-head" markerWidth="7" markerHeight="7" refX="5.5" refY="3.5" orient="auto"><path d="M0 0L6 3.5L0 7Z" fill="#305E8C"/></marker>
+  <marker id="flow-head" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto"><path d="M0 0L4.5 2.5L0 5Z" fill="#146A63"/></marker>
+</defs>
+<style>
+  text {font-family: "Segoe UI", Arial, sans-serif; fill: #14293A}
+  .hero {font-size: 34px; font-weight: 700; fill: #FFFFFF}
+  .header-tag {font-size: 12px; font-weight: 700; letter-spacing: 1.65px; fill: #A7E4D6}
+  .header-note {font-size: 15px; fill: #D2E4EE}
+  .section {font-size: 20px; font-weight: 700}
+  .card-title, .warn-title {font-size: 15px; font-weight: 700}
+  .flow-title {font-size: 16px; font-weight: 700; fill: #146A63}
+  .warn-title, .warn-text, .warn-tag {fill: #853B17}
+  .body, .warn-text {font-size: 13px}
+  .detail, .footer {font-size: 12px; fill: #465E70}
+  .mono, .mono-small {font-family: Consolas, "Courier New", monospace; font-size: 13px}
+  .mono-small {font-size: 11.5px}
+  .warn-tag {font-size: 10px; font-weight: 700; letter-spacing: 1px}
+  .arrow {stroke-width: 1.6; fill: none}
+  .normal {stroke: #305E8C}
+  .flow {stroke: #146A63; stroke-width: 1.3}
+</style>
+<rect width="1200" height="812" fill="#F3F7FA"/>
+<rect x="26" y="22" width="1148" height="81" rx="14" fill="#14293A" stroke="none"/>
+<text x="48" y="46" class="header-tag" text-anchor="start">CP2  /  SHOPLEDGER</text>
+<text x="48" y="83" class="hero" text-anchor="start">Architecture and inventory flow</text>
+<text x="1150" y="65" class="header-note" text-anchor="end">Ticket 2 · Baseline before fix</text>
+<text x="28" y="132" class="section" text-anchor="start">Request and data path</text>
+<rect x="28" y="148" width="194" height="120" rx="10" fill="#FFFFFF" stroke="#D0DDE6"/>
+<text x="44" y="174" class="card-title" text-anchor="start">Browser UI</text>
+<text x="44" y="196" class="mono" text-anchor="start">public/index.html</text>
+<text x="44" y="214" class="mono" text-anchor="start">public/js/app.js</text>
+<text x="44" y="232" class="mono" text-anchor="start">public/css/style.css</text>
+<text x="44" y="251" class="detail" text-anchor="start">POS, orders, Khata, audits</text>
+<path d="M226 208H247" class="arrow normal" marker-end="url(#normal-head)"/>
+<rect x="253" y="148" width="177" height="120" rx="10" fill="#FFFFFF" stroke="#D0DDE6"/>
+<text x="269" y="174" class="card-title" text-anchor="start">Express app</text>
+<text x="269" y="196" class="mono" text-anchor="start">server.js</text>
+<text x="269" y="214" class="detail" text-anchor="start">Static UI and API routing</text>
+<text x="269" y="233" class="mono" text-anchor="start">config.js</text>
+<text x="269" y="251" class="detail" text-anchor="start">Port and shop defaults</text>
+<path d="M434 208H455" class="arrow normal" marker-end="url(#normal-head)"/>
+<rect x="461" y="148" width="502" height="120" rx="10" fill="#FFFFFF" stroke="#D0DDE6"/>
+<text x="477" y="172" class="card-title" text-anchor="start">Routers mounted at /api</text>
+<rect x="477" y="182" width="223" height="33" rx="5" fill="#F3F7FA" stroke="none"/>
+<text x="486" y="195" class="mono-small" text-anchor="start">routes/products.js</text>
+<text x="486" y="209" class="detail" text-anchor="start">Catalog, coupons</text>
+<rect x="710" y="182" width="223" height="33" rx="5" fill="#E5F4F0" stroke="none"/>
+<text x="719" y="195" class="mono-small" text-anchor="start">routes/orders.js</text>
+<text x="719" y="209" class="detail" text-anchor="start">Place, list, cancel</text>
+<rect x="477" y="221" width="223" height="33" rx="5" fill="#F3F7FA" stroke="none"/>
+<text x="486" y="234" class="mono-small" text-anchor="start">routes/customers.js</text>
+<text x="486" y="248" class="detail" text-anchor="start">Khata and settlements</text>
+<rect x="710" y="221" width="223" height="33" rx="5" fill="#F3F7FA" stroke="none"/>
+<text x="719" y="234" class="mono-small" text-anchor="start">routes/reports.js</text>
+<text x="719" y="248" class="detail" text-anchor="start">Dashboard, GST, pricing preview</text>
+<path d="M967 208H988" class="arrow normal" marker-end="url(#normal-head)"/>
+<rect x="994" y="148" width="178" height="120" rx="10" fill="#FFFFFF" stroke="#D0DDE6"/>
+<text x="1010" y="174" class="card-title" text-anchor="start">Persistence</text>
+<text x="1010" y="197" class="mono" text-anchor="start">lib/store.js</text>
+<text x="1010" y="215" class="detail" text-anchor="start">Reads and writes</text>
+<text x="1010" y="235" class="mono" text-anchor="start">data/db.json</text>
+<text x="1010" y="253" class="detail" text-anchor="start">Orders, stock, audit</text>
+<text x="28" y="300" class="section" text-anchor="start">Business logic and shared modules</text>
+<rect x="28" y="315" width="372" height="116" rx="10" fill="#FFFFFF" stroke="#D0DDE6"/>
+<text x="44" y="341" class="card-title" text-anchor="start">Orders, stock and credit</text>
+<text x="44" y="364" class="mono" text-anchor="start">lib/orders.js</text>
+<text x="44" y="379" class="detail" text-anchor="start">Order lifecycle</text>
+<text x="217" y="364" class="mono" text-anchor="start">lib/inventory.js</text>
+<text x="217" y="379" class="detail" text-anchor="start">Sellable stock and holds</text>
+<text x="44" y="399" class="mono" text-anchor="start">lib/ledger.js</text>
+<text x="44" y="414" class="detail" text-anchor="start">Khata balances</text>
+<text x="217" y="399" class="mono" text-anchor="start">lib/dates.js</text>
+<text x="217" y="414" class="detail" text-anchor="start">Date helpers</text>
+<rect x="414" y="315" width="372" height="116" rx="10" fill="#FFFFFF" stroke="#D0DDE6"/>
+<text x="430" y="341" class="card-title" text-anchor="start">Pricing and GST</text>
+<text x="430" y="364" class="mono" text-anchor="start">lib/pricing.js</text>
+<text x="430" y="379" class="detail" text-anchor="start">Cart totals</text>
+<text x="603" y="364" class="mono" text-anchor="start">lib/coupons.js</text>
+<text x="603" y="379" class="detail" text-anchor="start">Promotions</text>
+<text x="430" y="399" class="mono" text-anchor="start">lib/tax.js</text>
+<text x="430" y="414" class="detail" text-anchor="start">GST slabs and split</text>
+<text x="603" y="399" class="mono" text-anchor="start">lib/invoice.js</text>
+<text x="603" y="414" class="detail" text-anchor="start">Printable invoices</text>
+<rect x="800" y="315" width="372" height="116" rx="10" fill="#FFFFFF" stroke="#D0DDE6"/>
+<text x="816" y="341" class="card-title" text-anchor="start">Reports and storage</text>
+<text x="816" y="364" class="mono" text-anchor="start">lib/reports.js</text>
+<text x="816" y="379" class="detail" text-anchor="start">Dashboard and GST checks</text>
+<text x="990" y="364" class="mono" text-anchor="start">lib/store.js</text>
+<text x="990" y="379" class="detail" text-anchor="start">JSON access and audit log</text>
+<text x="816" y="414" class="detail" text-anchor="start">Printable invoices are served by server.js.</text>
+<text x="28" y="466" class="section" text-anchor="start">Ticket 2 execution paths</text>
+<text x="28" y="491" class="flow-title" text-anchor="start">Place an order</text>
+<rect x="28" y="500" width="220" height="108" rx="10" fill="#FFFFFF" stroke="#D0DDE6"/>
+<text x="41" y="525" class="card-title" text-anchor="start">POS checkout</text>
+<text x="41" y="548" class="mono-small" text-anchor="start">POST /api/orders</text>
+<text x="41" y="565" class="body" text-anchor="start">Send the selected cart</text>
+<path d="M249 553H258" class="arrow flow" marker-end="url(#flow-head)"/>
+<rect x="259" y="500" width="220" height="108" rx="10" fill="#FFFFFF" stroke="#D0DDE6"/>
+<text x="272" y="525" class="card-title" text-anchor="start">Order route</text>
+<text x="272" y="548" class="body" text-anchor="start">Read the JSON store</text>
+<text x="272" y="565" class="body" text-anchor="start">Normalize product IDs</text>
+<text x="272" y="582" class="body" text-anchor="start">and quantities</text>
+<path d="M480 553H489" class="arrow flow" marker-end="url(#flow-head)"/>
+<rect x="490" y="500" width="220" height="108" rx="10" fill="#FFF2E5" stroke="#E9BC9B"/>
+<text x="503" y="525" class="warn-title" text-anchor="start">Stock validation</text>
+<text x="503" y="548" class="warn-text" text-anchor="start">Sellable = max(0, stock − holds)</text>
+<text x="503" y="565" class="warn-text" text-anchor="start">Rejects exact quantity</text>
+<text x="503" y="594" class="warn-tag" text-anchor="start">TICKET 2 BUG</text>
+<path d="M711 553H720" class="arrow flow" marker-end="url(#flow-head)"/>
+<rect x="721" y="500" width="220" height="108" rx="10" fill="#FFFFFF" stroke="#D0DDE6"/>
+<text x="734" y="525" class="card-title" text-anchor="start">Commit the sale</text>
+<text x="734" y="548" class="body" text-anchor="start">Price cart, handle Khata</text>
+<text x="734" y="565" class="body" text-anchor="start">Deduct physical stock</text>
+<text x="734" y="582" class="body" text-anchor="start">Add the order</text>
+<path d="M942 553H951" class="arrow flow" marker-end="url(#flow-head)"/>
+<rect x="952" y="500" width="220" height="108" rx="10" fill="#FFFFFF" stroke="#D0DDE6"/>
+<text x="965" y="525" class="card-title" text-anchor="start">Save and respond</text>
+<text x="965" y="548" class="body" text-anchor="start">Write order and audit entry</text>
+<text x="965" y="565" class="body" text-anchor="start">Return HTTP 201</text>
+<text x="28" y="649" class="flow-title" text-anchor="start">Cancel a pending order</text>
+<rect x="28" y="658" width="220" height="108" rx="10" fill="#FFFFFF" stroke="#D0DDE6"/>
+<text x="41" y="683" class="card-title" text-anchor="start">Order History</text>
+<text x="41" y="706" class="body" text-anchor="start">Select Cancel on #1007</text>
+<text x="41" y="723" class="body" text-anchor="start">Submit the cancellation</text>
+<path d="M249 711H258" class="arrow flow" marker-end="url(#flow-head)"/>
+<rect x="259" y="658" width="220" height="108" rx="10" fill="#FFFFFF" stroke="#D0DDE6"/>
+<text x="272" y="683" class="card-title" text-anchor="start">Order route</text>
+<text x="272" y="706" class="mono-small" text-anchor="start">POST /api/orders/:id/cancel</text>
+<text x="272" y="723" class="body" text-anchor="start">Read the JSON store</text>
+<path d="M480 711H489" class="arrow flow" marker-end="url(#flow-head)"/>
+<rect x="490" y="658" width="220" height="108" rx="10" fill="#FFFFFF" stroke="#D0DDE6"/>
+<text x="503" y="683" class="card-title" text-anchor="start">Update order state</text>
+<text x="503" y="706" class="body" text-anchor="start">Guard repeat cancellation</text>
+<text x="503" y="723" class="body" text-anchor="start">Set status to cancelled</text>
+<path d="M711 711H720" class="arrow flow" marker-end="url(#flow-head)"/>
+<rect x="721" y="658" width="220" height="108" rx="10" fill="#FFF2E5" stroke="#E9BC9B"/>
+<text x="734" y="683" class="warn-title" text-anchor="start">Inventory release</text>
+<text x="734" y="706" class="warn-text" text-anchor="start">Looks up productId</text>
+<text x="734" y="723" class="warn-text" text-anchor="start">Order lines carry id</text>
+<text x="734" y="740" class="warn-text" text-anchor="start">Physical stock stays unchanged</text>
+<text x="734" y="752" class="warn-tag" text-anchor="start">TICKET 2 BUG</text>
+<path d="M942 711H951" class="arrow flow" marker-end="url(#flow-head)"/>
+<rect x="952" y="658" width="220" height="108" rx="10" fill="#FFFFFF" stroke="#D0DDE6"/>
+<text x="965" y="683" class="card-title" text-anchor="start">Save and respond</text>
+<text x="965" y="706" class="body" text-anchor="start">Reverse Khata if applicable</text>
+<text x="965" y="723" class="body" text-anchor="start">Write order and audit entry</text>
+<text x="965" y="740" class="body" text-anchor="start">Return cancelled order</text>
+<text x="28" y="793" class="footer" text-anchor="start">Source   server.js, routes/, lib/, public/ and data/db.json</text>
+</svg>
