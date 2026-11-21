@@ -1,0 +1,11 @@
+✔ invoice uses the checkout subtotal, capped discount, tax, and total for Order #1004 (4.197958ms)
+✔ invoice resolves HSN rates and applies the checkout discount to Order #1002 (0.769116ms)
+✔ invoice uses persisted checkout figures for a non-coupon order with a 5% HSN item (0.469544ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 160.565239
