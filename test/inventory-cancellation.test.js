@@ -141,6 +141,24 @@ test('invalid release items are ignored and reported with warnings', function ()
   assert.equal(warnings.length, invalidItems.length);
 });
 
+test('non-array release inputs are ignored without throwing', function () {
+  const invalidCollections = ['not-an-array', {}, null, undefined];
+
+  for (const items of invalidCollections) {
+    const products = [{ id: 1, stock: 10, reserved: 2 }];
+    const warnings = captureWarnings(function () {
+      assert.doesNotThrow(function () {
+        inventory.release(products, items);
+      });
+    });
+
+    assert.equal(products[0].stock, 10);
+    assert.equal(products[0].reserved, 2);
+    assert.equal(warnings.length, 1);
+    assert.match(warnings[0], /items must be an array/);
+  }
+});
+
 test('invalid starting stock and overflowing restoration are left unchanged', function () {
   const products = [
     { id: 1, stock: 'not-a-number', reserved: 0 },
