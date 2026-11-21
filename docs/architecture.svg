@@ -1,0 +1,282 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 860" width="100%" height="100%" style="background-color: #0b1120; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+  <defs>
+    <!-- Gradients -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#020617" />
+    </linearGradient>
+    <linearGradient id="primaryGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#059669" />
+      <stop offset="100%" stop-color="#10b981" />
+    </linearGradient>
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#3b82f6" />
+      <stop offset="100%" stop-color="#60a5fa" />
+    </linearGradient>
+    <linearGradient id="warnGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#d97706" />
+      <stop offset="100%" stop-color="#f59e0b" />
+    </linearGradient>
+
+    <!-- Filters & Shadows -->
+    <filter id="cardShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.4" />
+    </filter>
+
+    <!-- Markers -->
+    <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#10b981" />
+    </marker>
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#60a5fa" />
+    </marker>
+    <marker id="arrow-amber" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#f59e0b" />
+    </marker>
+  </defs>
+
+  <!-- Title & Header -->
+  <g id="header" transform="translate(40, 30)">
+    <rect x="0" y="0" width="1120" height="60" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1" />
+    <text x="24" y="36" fill="#f8fafc" font-size="20" font-weight="700">ShopLedger — Architecture Diagram</text>
+    <text x="390" y="36" fill="#94a3b8" font-size="14">POS, Khata Ledger, GST Invoicing &amp; Order Lifecycle</text>
+    <rect x="1000" y="16" width="96" height="28" rx="4" fill="#059669" />
+    <text x="1048" y="34" fill="#ffffff" font-size="11" font-weight="700" text-anchor="middle">v0.8.4 LEGACY</text>
+  </g>
+
+  <!-- Layer 1: Client / UI Layer -->
+  <g id="client-layer" transform="translate(40, 110)">
+    <rect x="0" y="0" width="220" height="420" rx="10" fill="#1e293b" stroke="#475569" stroke-width="1.5" filter="url(#cardShadow)" />
+    <rect x="0" y="0" width="220" height="38" rx="10" fill="#334155" />
+    <text x="110" y="24" fill="#f8fafc" font-size="13" font-weight="700" text-anchor="middle">CLIENT / UI (public/)</text>
+
+    <!-- UI Components -->
+    <rect x="15" y="55" width="190" height="55" rx="6" fill="#0f172a" stroke="#059669" stroke-width="1.5" />
+    <text x="25" y="78" fill="#34d399" font-size="12" font-weight="700">New Order (POS Desk)</text>
+    <text x="25" y="96" fill="#94a3b8" font-size="10">12 SKUs, Cart Tax Preview, Khata</text>
+
+    <rect x="15" y="125" width="190" height="55" rx="6" fill="#0f172a" stroke="#3b82f6" stroke-width="1" />
+    <text x="25" y="148" fill="#60a5fa" font-size="12" font-weight="700">Order History Desk</text>
+    <text x="25" y="166" fill="#94a3b8" font-size="10">Search, Filters, Order Cancellation</text>
+
+    <rect x="15" y="195" width="190" height="55" rx="6" fill="#0f172a" stroke="#3b82f6" stroke-width="1" />
+    <text x="25" y="218" fill="#60a5fa" font-size="12" font-weight="700">Customer Khata Ledger</text>
+    <text x="25" y="236" fill="#94a3b8" font-size="10">Credit limits, Balance &amp; Settle</text>
+
+    <rect x="15" y="265" width="190" height="55" rx="6" fill="#0f172a" stroke="#f59e0b" stroke-width="1" />
+    <text x="25" y="288" fill="#fbbf24" font-size="12" font-weight="700">GST Audit Desk</text>
+    <text x="25" y="306" fill="#94a3b8" font-size="10">Accountant Invoices vs. Ledger</text>
+
+    <rect x="15" y="335" width="190" height="55" rx="6" fill="#0f172a" stroke="#cbd5e1" stroke-width="1" />
+    <text x="25" y="358" fill="#e2e8f0" font-size="12" font-weight="700">Printable Tax Invoice</text>
+    <text x="25" y="376" fill="#94a3b8" font-size="10">HTML Tax Invoice (/orders/:id/invoice)</text>
+  </g>
+
+  <!-- Server & Routers Layer (routes/) -->
+  <g id="routes-layer" transform="translate(300, 110)">
+    <rect x="0" y="0" width="250" height="420" rx="10" fill="#1e293b" stroke="#475569" stroke-width="1.5" filter="url(#cardShadow)" />
+    <rect x="0" y="0" width="250" height="38" rx="10" fill="#334155" />
+    <text x="125" y="24" fill="#f8fafc" font-size="13" font-weight="700" text-anchor="middle">EXPRESS APP (server.js &amp; routes/)</text>
+
+    <!-- Routers -->
+    <rect x="15" y="55" width="220" height="65" rx="6" fill="#0f172a" stroke="#059669" stroke-width="2" />
+    <text x="25" y="78" fill="#34d399" font-size="12" font-weight="700">routes/orders.js</text>
+    <text x="25" y="95" fill="#94a3b8" font-size="10">POST /api/orders (Checkout Flow)</text>
+    <text x="25" y="110" fill="#94a3b8" font-size="10">GET /api/orders &amp; /:id/cancel</text>
+
+    <rect x="15" y="135" width="220" height="55" rx="6" fill="#0f172a" stroke="#3b82f6" stroke-width="1" />
+    <text x="25" y="158" fill="#60a5fa" font-size="12" font-weight="700">routes/products.js</text>
+    <text x="25" y="176" fill="#94a3b8" font-size="10">GET /api/products, search &amp; details</text>
+
+    <rect x="15" y="205" width="220" height="55" rx="6" fill="#0f172a" stroke="#3b82f6" stroke-width="1" />
+    <text x="25" y="228" fill="#60a5fa" font-size="12" font-weight="700">routes/customers.js</text>
+    <text x="25" y="246" fill="#94a3b8" font-size="10">GET /api/customers &amp; POST /:id/settle</text>
+
+    <rect x="15" y="275" width="220" height="55" rx="6" fill="#0f172a" stroke="#3b82f6" stroke-width="1" />
+    <text x="25" y="298" fill="#60a5fa" font-size="12" font-weight="700">routes/reports.js</text>
+    <text x="25" y="316" fill="#94a3b8" font-size="10">GET /api/reports/summary &amp; /reconciliation</text>
+
+    <rect x="15" y="345" width="220" height="55" rx="6" fill="#0f172a" stroke="#cbd5e1" stroke-width="1" />
+    <text x="25" y="368" fill="#e2e8f0" font-size="12" font-weight="700">server.js HTML Route</text>
+    <text x="25" y="386" fill="#94a3b8" font-size="10">GET /orders/:id/invoice (Neha, Nov 2021)</text>
+  </g>
+
+  <!-- Business Logic Layer (lib/) -->
+  <g id="lib-layer" transform="translate(590, 110)">
+    <rect x="0" y="0" width="310" height="420" rx="10" fill="#1e293b" stroke="#475569" stroke-width="1.5" filter="url(#cardShadow)" />
+    <rect x="0" y="0" width="310" height="38" rx="10" fill="#334155" />
+    <text x="155" y="24" fill="#f8fafc" font-size="13" font-weight="700" text-anchor="middle">BUSINESS LOGIC (lib/)</text>
+
+    <!-- lib modules in grid -->
+    <rect x="15" y="55" width="135" height="55" rx="6" fill="#0f172a" stroke="#059669" stroke-width="1.5" />
+    <text x="25" y="78" fill="#34d399" font-size="11" font-weight="700">lib/inventory.js</text>
+    <text x="25" y="96" fill="#94a3b8" font-size="9">check, reserve, release</text>
+
+    <rect x="160" y="55" width="135" height="55" rx="6" fill="#0f172a" stroke="#059669" stroke-width="1.5" />
+    <text x="170" y="78" fill="#34d399" font-size="11" font-weight="700">lib/pricing.js</text>
+    <text x="170" y="96" fill="#94a3b8" font-size="9">subtotal, computeTotals</text>
+
+    <rect x="15" y="125" width="135" height="55" rx="6" fill="#0f172a" stroke="#3b82f6" stroke-width="1" />
+    <text x="25" y="148" fill="#60a5fa" font-size="11" font-weight="700">lib/tax.js</text>
+    <text x="25" y="166" fill="#94a3b8" font-size="9">HSN slabs, CGST/SGST</text>
+
+    <rect x="160" y="125" width="135" height="55" rx="6" fill="#0f172a" stroke="#3b82f6" stroke-width="1" />
+    <text x="170" y="148" fill="#60a5fa" font-size="11" font-weight="700">lib/coupons.js</text>
+    <text x="170" y="166" fill="#94a3b8" font-size="9">SAVE10, caps, validate</text>
+
+    <rect x="15" y="195" width="135" height="55" rx="6" fill="#0f172a" stroke="#059669" stroke-width="1.5" />
+    <text x="25" y="218" fill="#34d399" font-size="11" font-weight="700">lib/ledger.js</text>
+    <text x="25" y="236" fill="#94a3b8" font-size="9">Khata limits &amp; debits</text>
+
+    <rect x="160" y="195" width="135" height="55" rx="6" fill="#0f172a" stroke="#059669" stroke-width="1.5" />
+    <text x="170" y="218" fill="#34d399" font-size="11" font-weight="700">lib/orders.js</text>
+    <text x="170" y="236" fill="#94a3b8" font-size="9">add, get, cancel, list</text>
+
+    <rect x="15" y="265" width="135" height="55" rx="6" fill="#0f172a" stroke="#ef4444" stroke-width="1.5" />
+    <text x="25" y="288" fill="#f87171" font-size="11" font-weight="700">lib/invoice.js</text>
+    <text x="25" y="306" fill="#94a3b8" font-size="9">computeFigures, render</text>
+
+    <rect x="160" y="265" width="135" height="55" rx="6" fill="#0f172a" stroke="#3b82f6" stroke-width="1" />
+    <text x="170" y="288" fill="#60a5fa" font-size="11" font-weight="700">lib/reports.js</text>
+    <text x="170" y="306" fill="#94a3b8" font-size="9">GST reconciliation table</text>
+
+    <rect x="15" y="335" width="135" height="55" rx="6" fill="#0f172a" stroke="#3b82f6" stroke-width="1" />
+    <text x="25" y="358" fill="#60a5fa" font-size="11" font-weight="700">lib/dates.js</text>
+    <text x="25" y="376" fill="#94a3b8" font-size="9">DD/MM/YYYY formatting</text>
+
+    <rect x="160" y="335" width="135" height="55" rx="6" fill="#0f172a" stroke="#10b981" stroke-width="2" />
+    <text x="170" y="358" fill="#34d399" font-size="11" font-weight="700">lib/store.js</text>
+    <text x="170" y="376" fill="#94a3b8" font-size="9">read(), write(), audit</text>
+  </g>
+
+  <!-- Storage & Config Layer -->
+  <g id="storage-layer" transform="translate(940, 110)">
+    <rect x="0" y="0" width="220" height="420" rx="10" fill="#1e293b" stroke="#475569" stroke-width="1.5" filter="url(#cardShadow)" />
+    <rect x="0" y="0" width="220" height="38" rx="10" fill="#334155" />
+    <text x="110" y="24" fill="#f8fafc" font-size="13" font-weight="700" text-anchor="middle">CONFIG &amp; DATA</text>
+
+    <!-- config.js -->
+    <rect x="15" y="55" width="190" height="95" rx="6" fill="#0f172a" stroke="#3b82f6" stroke-width="1" />
+    <text x="25" y="78" fill="#60a5fa" font-size="12" font-weight="700">config.js</text>
+    <text x="25" y="96" fill="#94a3b8" font-size="10">• port: 3000</text>
+    <text x="25" y="112" fill="#94a3b8" font-size="10">• tax: HSN slabs (5/12/18%)</text>
+    <text x="25" y="128" fill="#94a3b8" font-size="10">• coupons: SAVE10, FLAT50</text>
+    <text x="25" y="142" fill="#94a3b8" font-size="10">• shop metadata (GSTIN Pune)</text>
+
+    <!-- data/db.json -->
+    <rect x="15" y="175" width="190" height="215" rx="6" fill="#0f172a" stroke="#10b981" stroke-width="2" />
+    <text x="25" y="200" fill="#34d399" font-size="12" font-weight="700">data/db.json</text>
+    <text x="25" y="218" fill="#64748b" font-size="10">(Single-file JSON Database)</text>
+    <text x="25" y="242" fill="#cbd5e1" font-size="11">Collections:</text>
+    <text x="25" y="262" fill="#94a3b8" font-size="10">• products: 12 SKUs</text>
+    <text x="25" y="282" fill="#94a3b8" font-size="10">• customers: 5 Khata accts</text>
+    <text x="25" y="302" fill="#94a3b8" font-size="10">• orders: #1001 – #1008</text>
+    <text x="25" y="322" fill="#94a3b8" font-size="10">• settlements: ledger logs</text>
+    <text x="25" y="342" fill="#94a3b8" font-size="10">• auditLog: chronological</text>
+    <text x="25" y="370" fill="#f87171" font-size="10" font-weight="600">⚠ Direct file write on checkout</text>
+  </g>
+
+  <!-- Flow Section: Order Checkout Pipeline -->
+  <g id="order-flow" transform="translate(40, 560)">
+    <rect x="0" y="0" width="1120" height="260" rx="10" fill="#1e293b" stroke="#059669" stroke-width="2" filter="url(#cardShadow)" />
+    <rect x="0" y="0" width="1120" height="38" rx="10" fill="#064e3b" />
+    <text x="24" y="25" fill="#a7f3d0" font-size="14" font-weight="700">FLOW: Placing an Order (routes/orders.js -> Checkout Lifecycle)</text>
+
+    <!-- Step 1 -->
+    <g transform="translate(20, 60)">
+      <rect x="0" y="0" width="140" height="160" rx="8" fill="#0f172a" stroke="#334155" stroke-width="1.5" />
+      <circle cx="24" cy="24" r="12" fill="#059669" />
+      <text x="24" y="28" fill="#ffffff" font-size="11" font-weight="700" text-anchor="middle">1</text>
+      <text x="44" y="28" fill="#f8fafc" font-size="12" font-weight="700">Cart Submit</text>
+      <text x="12" y="60" fill="#94a3b8" font-size="10">POS UI sends</text>
+      <text x="12" y="78" fill="#60a5fa" font-size="10">POST /api/orders</text>
+      <text x="12" y="98" fill="#94a3b8" font-size="10">Payload: items,</text>
+      <text x="12" y="114" fill="#94a3b8" font-size="10">coupon, payment</text>
+      <text x="12" y="130" fill="#94a3b8" font-size="10">mode, customer</text>
+    </g>
+
+    <!-- Arrow 1->2 -->
+    <path d="M 165 140 L 195 140" stroke="#10b981" stroke-width="2" marker-end="url(#arrow)" />
+
+    <!-- Step 2 -->
+    <g transform="translate(200, 60)">
+      <rect x="0" y="0" width="140" height="160" rx="8" fill="#0f172a" stroke="#334155" stroke-width="1.5" />
+      <circle cx="24" cy="24" r="12" fill="#059669" />
+      <text x="24" y="28" fill="#ffffff" font-size="11" font-weight="700" text-anchor="middle">2</text>
+      <text x="44" y="28" fill="#f8fafc" font-size="12" font-weight="700">Stock Check</text>
+      <text x="12" y="60" fill="#34d399" font-size="10">inventory.check()</text>
+      <text x="12" y="80" fill="#94a3b8" font-size="10">Validates sellable</text>
+      <text x="12" y="96" fill="#94a3b8" font-size="10">units (stock minus</text>
+      <text x="12" y="112" fill="#94a3b8" font-size="10">reserved wholesale)</text>
+      <text x="12" y="132" fill="#f87171" font-size="9">Bug: qty &gt;= sellable</text>
+    </g>
+
+    <!-- Arrow 2->3 -->
+    <path d="M 345 140 L 375 140" stroke="#10b981" stroke-width="2" marker-end="url(#arrow)" />
+
+    <!-- Step 3 -->
+    <g transform="translate(380, 60)">
+      <rect x="0" y="0" width="145" height="160" rx="8" fill="#0f172a" stroke="#334155" stroke-width="1.5" />
+      <circle cx="24" cy="24" r="12" fill="#059669" />
+      <text x="24" y="28" fill="#ffffff" font-size="11" font-weight="700" text-anchor="middle">3</text>
+      <text x="44" y="28" fill="#f8fafc" font-size="12" font-weight="700">Tax &amp; Promo</text>
+      <text x="12" y="60" fill="#34d399" font-size="10">pricing.computeTotals</text>
+      <text x="12" y="80" fill="#94a3b8" font-size="10">1. Subtotal</text>
+      <text x="12" y="96" fill="#94a3b8" font-size="10">2. Discount apprtn.</text>
+      <text x="12" y="112" fill="#94a3b8" font-size="10">3. HSN GST slabs</text>
+      <text x="12" y="128" fill="#94a3b8" font-size="10">4. CGST + SGST</text>
+    </g>
+
+    <!-- Arrow 3->4 -->
+    <path d="M 530 140 L 560 140" stroke="#10b981" stroke-width="2" marker-end="url(#arrow)" />
+
+    <!-- Step 4 -->
+    <g transform="translate(565, 60)">
+      <rect x="0" y="0" width="145" height="160" rx="8" fill="#0f172a" stroke="#334155" stroke-width="1.5" />
+      <circle cx="24" cy="24" r="12" fill="#059669" />
+      <text x="24" y="28" fill="#ffffff" font-size="11" font-weight="700" text-anchor="middle">4</text>
+      <text x="44" y="28" fill="#f8fafc" font-size="12" font-weight="700">Payment</text>
+      <text x="12" y="60" fill="#94a3b8" font-size="10">Mode Check:</text>
+      <text x="12" y="78" fill="#cbd5e1" font-size="10">• Cash / UPI</text>
+      <text x="12" y="96" fill="#cbd5e1" font-size="10">• Khata (Credit):</text>
+      <text x="12" y="114" fill="#34d399" font-size="9">ledger.chargeOrder()</text>
+      <text x="12" y="130" fill="#94a3b8" font-size="9">Credit limit check</text>
+    </g>
+
+    <!-- Arrow 4->5 -->
+    <path d="M 715 140 L 745 140" stroke="#10b981" stroke-width="2" marker-end="url(#arrow)" />
+
+    <!-- Step 5 -->
+    <g transform="translate(750, 60)">
+      <rect x="0" y="0" width="145" height="160" rx="8" fill="#0f172a" stroke="#334155" stroke-width="1.5" />
+      <circle cx="24" cy="24" r="12" fill="#059669" />
+      <text x="24" y="28" fill="#ffffff" font-size="11" font-weight="700" text-anchor="middle">5</text>
+      <text x="44" y="28" fill="#f8fafc" font-size="12" font-weight="700">Reserve Stock</text>
+      <text x="12" y="60" fill="#34d399" font-size="10">inventory.reserve()</text>
+      <text x="12" y="80" fill="#94a3b8" font-size="10">Deducts ordered</text>
+      <text x="12" y="96" fill="#94a3b8" font-size="10">quantities directly</text>
+      <text x="12" y="112" fill="#94a3b8" font-size="10">from p.stock in db</text>
+    </g>
+
+    <!-- Arrow 5->6 -->
+    <path d="M 900 140 L 930 140" stroke="#10b981" stroke-width="2" marker-end="url(#arrow)" />
+
+    <!-- Step 6 -->
+    <g transform="translate(935, 60)">
+      <rect x="0" y="0" width="165" height="160" rx="8" fill="#0f172a" stroke="#10b981" stroke-width="2" />
+      <circle cx="24" cy="24" r="12" fill="#059669" />
+      <text x="24" y="28" fill="#ffffff" font-size="11" font-weight="700" text-anchor="middle">6</text>
+      <text x="44" y="28" fill="#f8fafc" font-size="12" font-weight="700">Persist &amp; Audit</text>
+      <text x="12" y="60" fill="#34d399" font-size="10">orders.add(db, ...)</text>
+      <text x="12" y="78" fill="#34d399" font-size="10">store.appendAudit()</text>
+      <text x="12" y="96" fill="#10b981" font-size="10">store.write(db)</text>
+      <text x="12" y="116" fill="#94a3b8" font-size="10">Saves to data/db.json</text>
+      <text x="12" y="134" fill="#a7f3d0" font-size="10">Returns HTTP 201</text>
+    </g>
+  </g>
+
+  <!-- Connectors from UI to Server to Lib -->
+  <path d="M 260 210 L 300 210" stroke="#60a5fa" stroke-width="2" marker-end="url(#arrow-blue)" />
+  <path d="M 550 210 L 590 210" stroke="#10b981" stroke-width="2" marker-end="url(#arrow)" />
+  <path d="M 900 365 L 940 365" stroke="#10b981" stroke-width="2" marker-end="url(#arrow)" />
+</svg>
