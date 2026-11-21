@@ -1,0 +1,310 @@
+TAP version 13
+# Subtest: invoice \#1001 figures (updated after ticket \#1 fix)
+ok 1 - invoice \#1001 figures (updated after ticket \#1 fix)
+  ---
+  duration_ms: 2.6458
+  type: 'test'
+  ...
+# Subtest: invoice \#1002 figures (updated after ticket \#1 fix)
+ok 2 - invoice \#1002 figures (updated after ticket \#1 fix)
+  ---
+  duration_ms: 0.2765
+  type: 'test'
+  ...
+# Subtest: invoice \#1003 figures (updated after ticket \#1 fix)
+ok 3 - invoice \#1003 figures (updated after ticket \#1 fix)
+  ---
+  duration_ms: 0.2017
+  type: 'test'
+  ...
+# Subtest: invoice \#1004 figures (updated after ticket \#1 fix)
+ok 4 - invoice \#1004 figures (updated after ticket \#1 fix)
+  ---
+  duration_ms: 0.1941
+  type: 'test'
+  ...
+# Subtest: invoice \#1005 figures (updated after ticket \#1 fix)
+ok 5 - invoice \#1005 figures (updated after ticket \#1 fix)
+  ---
+  duration_ms: 0.2786
+  type: 'test'
+  ...
+# Subtest: invoice \#1006 figures (updated after ticket \#1 fix)
+ok 6 - invoice \#1006 figures (updated after ticket \#1 fix)
+  ---
+  duration_ms: 0.2162
+  type: 'test'
+  ...
+# Subtest: invoice \#1007 figures (updated after ticket \#1 fix)
+ok 7 - invoice \#1007 figures (updated after ticket \#1 fix)
+  ---
+  duration_ms: 0.2014
+  type: 'test'
+  ...
+# Subtest: invoice \#1008 figures
+ok 8 - invoice \#1008 figures
+  ---
+  duration_ms: 0.1977
+  type: 'test'
+  ...
+# Subtest: reconciliation matches all eight fixture orders (updated after ticket \#1 fix)
+ok 9 - reconciliation matches all eight fixture orders (updated after ticket \#1 fix)
+  ---
+  duration_ms: 0.7199
+  type: 'test'
+  ...
+# Subtest: invoice calculation preserves the input order
+ok 10 - invoice calculation preserves the input order
+  ---
+  duration_ms: 0.6895
+  type: 'test'
+  ...
+# Subtest: invoice exposes the established fields consumed by reports and rendering
+ok 11 - invoice exposes the established fields consumed by reports and rendering
+  ---
+  duration_ms: 1.2298
+  type: 'test'
+  ...
+# Subtest: empty order yields finite zero figures and an empty printable table
+ok 12 - empty order yields finite zero figures and an empty printable table
+  ---
+  duration_ms: 0.4536
+  type: 'test'
+  ...
+# Subtest: renderer escapes item/customer metadata and preserves invoice identity
+ok 13 - renderer escapes item/customer metadata and preserves invoice identity
+  ---
+  duration_ms: 0.3747
+  type: 'test'
+  ...
+# Subtest: renderer warns on a real ledger discrepancy rather than hiding it
+ok 14 - renderer warns on a real ledger discrepancy rather than hiding it
+  ---
+  duration_ms: 0.4096
+  type: 'test'
+  ...
+# Subtest: unknown HSN retains the configured fallback tax rate
+ok 15 - unknown HSN retains the configured fallback tax rate
+  ---
+  duration_ms: 0.2814
+  type: 'test'
+  ...
+# Subtest: reconciliation excludes cancelled orders
+ok 16 - reconciliation excludes cancelled orders
+  ---
+  duration_ms: 0.3908
+  type: 'test'
+  ...
+# Subtest: REGRESSION: invoice \#1001 matches independently recorded ledger figures
+ok 17 - REGRESSION: invoice \#1001 matches independently recorded ledger figures
+  ---
+  duration_ms: 2.8863
+  type: 'test'
+  ...
+# Subtest: REGRESSION: invoice \#1002 matches independently recorded ledger figures
+ok 18 - REGRESSION: invoice \#1002 matches independently recorded ledger figures
+  ---
+  duration_ms: 0.5344
+  type: 'test'
+  ...
+# Subtest: REGRESSION: invoice \#1003 matches independently recorded ledger figures
+ok 19 - REGRESSION: invoice \#1003 matches independently recorded ledger figures
+  ---
+  duration_ms: 0.5165
+  type: 'test'
+  ...
+# Subtest: REGRESSION: invoice \#1004 matches independently recorded ledger figures
+ok 20 - REGRESSION: invoice \#1004 matches independently recorded ledger figures
+  ---
+  duration_ms: 0.2655
+  type: 'test'
+  ...
+# Subtest: REGRESSION: invoice \#1005 matches independently recorded ledger figures
+ok 21 - REGRESSION: invoice \#1005 matches independently recorded ledger figures
+  ---
+  duration_ms: 0.3075
+  type: 'test'
+  ...
+# Subtest: REGRESSION: invoice \#1006 matches independently recorded ledger figures
+ok 22 - REGRESSION: invoice \#1006 matches independently recorded ledger figures
+  ---
+  duration_ms: 0.2892
+  type: 'test'
+  ...
+# Subtest: REGRESSION: invoice \#1007 matches independently recorded ledger figures
+ok 23 - REGRESSION: invoice \#1007 matches independently recorded ledger figures
+  ---
+  duration_ms: 0.1901
+  type: 'test'
+  ...
+# Subtest: REGRESSION: invoice \#1008 matches independently recorded ledger figures
+ok 24 - REGRESSION: invoice \#1008 matches independently recorded ledger figures
+  ---
+  duration_ms: 0.1621
+  type: 'test'
+  ...
+# Subtest: REGRESSION: invoice \#1002 shows discounted 5% line taxes of INR 28.80 and 17.10
+ok 25 - REGRESSION: invoice \#1002 shows discounted 5% line taxes of INR 28.80 and 17.10
+  ---
+  duration_ms: 0.362
+  type: 'test'
+  ...
+# Subtest: REGRESSION: correctly reconciled invoice \#1002 has no false mismatch banner
+ok 26 - REGRESSION: correctly reconciled invoice \#1002 has no false mismatch banner
+  ---
+  duration_ms: 1.0041
+  type: 'test'
+  ...
+# Subtest: REGRESSION: printable breakdown exposes discount, taxable value and both GST components
+ok 27 - REGRESSION: printable breakdown exposes discount, taxable value and both GST components
+  ---
+  duration_ms: 0.4549
+  type: 'test'
+  ...
+# Subtest: REGRESSION: invoice respects coupon eligibility/caps for "DIWALI20" at 2000
+ok 28 - REGRESSION: invoice respects coupon eligibility/caps for "DIWALI20" at 2000
+  ---
+  duration_ms: 0.3892
+  type: 'test'
+  ...
+# Subtest: REGRESSION: invoice respects coupon eligibility/caps for "SAVE10" at 400
+ok 29 - REGRESSION: invoice respects coupon eligibility/caps for "SAVE10" at 400
+  ---
+  duration_ms: 0.185
+  type: 'test'
+  ...
+# Subtest: REGRESSION: invoice respects coupon eligibility/caps for "FLAT50" at 250
+ok 30 - REGRESSION: invoice respects coupon eligibility/caps for "FLAT50" at 250
+  ---
+  duration_ms: 0.1948
+  type: 'test'
+  ...
+# Subtest: REGRESSION: invoice respects coupon eligibility/caps for " save10 " at 1000
+ok 31 - REGRESSION: invoice respects coupon eligibility/caps for " save10 " at 1000
+  ---
+  duration_ms: 0.1658
+  type: 'test'
+  ...
+# Subtest: REGRESSION: invoice respects coupon eligibility/caps for "WELCOME" at 4000
+ok 32 - REGRESSION: invoice respects coupon eligibility/caps for "WELCOME" at 4000
+  ---
+  duration_ms: 0.2827
+  type: 'test'
+  ...
+# Subtest: REGRESSION: invoice respects coupon eligibility/caps for "WHOLESALE15" at 4000
+ok 33 - REGRESSION: invoice respects coupon eligibility/caps for "WHOLESALE15" at 4000
+  ---
+  duration_ms: 0.3023
+  type: 'test'
+  ...
+# Subtest: REGRESSION: explicit GST rate 0 preserves the checkout contract
+ok 34 - REGRESSION: explicit GST rate 0 preserves the checkout contract
+  ---
+  duration_ms: 0.1932
+  type: 'test'
+  ...
+# Subtest: REGRESSION: explicit GST rate 0.12 preserves the checkout contract
+ok 35 - REGRESSION: explicit GST rate 0.12 preserves the checkout contract
+  ---
+  duration_ms: 0.1441
+  type: 'test'
+  ...
+# Subtest: REGRESSION: explicit GST rate 12 preserves the checkout contract
+ok 36 - REGRESSION: explicit GST rate 12 preserves the checkout contract
+  ---
+  duration_ms: 0.0968
+  type: 'test'
+  ...
+# Subtest: REGRESSION: invoice rounds each line like checkout for fractional-paise tax
+ok 37 - REGRESSION: invoice rounds each line like checkout for fractional-paise tax
+  ---
+  duration_ms: 0.3376
+  type: 'test'
+  ...
+# Subtest: REGRESSION: deterministic cart matrix preserves checkout parity and never mutates inputs
+ok 38 - REGRESSION: deterministic cart matrix preserves checkout parity and never mutates inputs
+  ---
+  duration_ms: 12.1421
+  type: 'test'
+  ...
+# Subtest: checkout contract: SAVE10 is capped at INR 150 before 5% GST
+ok 39 - checkout contract: SAVE10 is capped at INR 150 before 5% GST
+  ---
+  duration_ms: 4.2468
+  type: 'test'
+  ...
+# Subtest: checkout contract: flat discount is proportionally apportioned before mixed-slab GST
+ok 40 - checkout contract: flat discount is proportionally apportioned before mixed-slab GST
+  ---
+  duration_ms: 0.4402
+  type: 'test'
+  ...
+# Subtest: checkout coupon contract: "save10" at 1020
+ok 41 - checkout coupon contract: "save10" at 1020
+  ---
+  duration_ms: 0.1741
+  type: 'test'
+  ...
+# Subtest: checkout coupon contract: " SAVE10 " at 2240
+ok 42 - checkout coupon contract: " SAVE10 " at 2240
+  ---
+  duration_ms: 0.1152
+  type: 'test'
+  ...
+# Subtest: checkout coupon contract: "SAVE10" at 499.99
+ok 43 - checkout coupon contract: "SAVE10" at 499.99
+  ---
+  duration_ms: 0.1945
+  type: 'test'
+  ...
+# Subtest: checkout coupon contract: "FLAT50" at 299.99
+ok 44 - checkout coupon contract: "FLAT50" at 299.99
+  ---
+  duration_ms: 0.1548
+  type: 'test'
+  ...
+# Subtest: checkout coupon contract: "DIWALI20" at 2000
+ok 45 - checkout coupon contract: "DIWALI20" at 2000
+  ---
+  duration_ms: 0.1617
+  type: 'test'
+  ...
+# Subtest: checkout coupon contract: "UNKNOWN" at 2000
+ok 46 - checkout coupon contract: "UNKNOWN" at 2000
+  ---
+  duration_ms: 0.1058
+  type: 'test'
+  ...
+# Subtest: checkout coupon contract: "WELCOME" at 4000
+ok 47 - checkout coupon contract: "WELCOME" at 4000
+  ---
+  duration_ms: 0.2586
+  type: 'test'
+  ...
+# Subtest: checkout coupon contract: "WHOLESALE15" at 4000
+ok 48 - checkout coupon contract: "WHOLESALE15" at 4000
+  ---
+  duration_ms: 0.5085
+  type: 'test'
+  ...
+# Subtest: GST contract: HSN slabs, explicit percentage/decimal/zero and fallback
+ok 49 - GST contract: HSN slabs, explicit percentage/decimal/zero and fallback
+  ---
+  duration_ms: 0.3648
+  type: 'test'
+  ...
+# Subtest: checkout contract: tax is rounded per line, CGST gets the odd paise
+ok 50 - checkout contract: tax is rounded per line, CGST gets the odd paise
+  ---
+  duration_ms: 0.2661
+  type: 'test'
+  ...
+1..50
+# tests 50
+# suites 0
+# pass 50
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 177.4802

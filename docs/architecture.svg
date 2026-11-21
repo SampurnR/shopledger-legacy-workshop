@@ -56,8 +56,7 @@
 <path d="M1005 576H1054" class="order"/>
 <path d="M970 697H1025V618H1054" class="edge"/>
 <path d="M970 823H1054" class="edge"/>
-<path d="M480 615H510V727H1054" class="order"/>
-<text x="591" y="711" class="small">printable route → invoice.render</text>
+<path d="M480 615H510V640H1040V727H1054" class="order"/>
 <path d="M1400 803V788" class="edge"/>
 <rect x="60" y="965" width="485" height="143" rx="16" class="box"/>
 <text x="86" y="1003" class="file">lib/dates.js</text><text x="86" y="1039" class="body">today · normalizeDateKey · fiscal year</text><text x="86" y="1074" class="small">Used by orders and ledger</text>
@@ -70,6 +69,6 @@
 <text x="88" y="1193" style="fill:#e9bd6b;font-size:16px;letter-spacing:3px;font-weight:700">ORDER PLACEMENT / ACTUAL EXECUTION SEQUENCE</text>
 <text x="88" y="1240" style="fill:white;font-size:24px;font-weight:600">UI POST → catalog resolution → stock check → coupon validation → pricing totals</text>
 <text x="88" y="1284" style="fill:white;font-size:24px;font-weight:600">→ optional Khata charge → stock deduction → order ID + date → audit → store.write</text>
-<text x="88" y="1329" style="fill:#b7cfd2;font-size:19px">Original database preserved. Tests use in-memory fixtures. Browser reproduction uses temporary copies.</text>
+<text x="88" y="1329" style="fill:#b7cfd2;font-size:19px">Original database preserved. Tests use in-memory fixtures. Demo servers use temporary copies.</text>
 <text x="60" y="1410" class="small">Gold: selected order/invoice path. Slate: supporting calls. Module dependencies within each group are listed explicitly.</text>
 </svg>

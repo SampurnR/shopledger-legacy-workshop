@@ -1,0 +1,764 @@
+TAP version 13
+# Subtest: REGRESSION: invoice \#1001 matches independently recorded ledger figures
+not ok 1 - REGRESSION: invoice \#1001 matches independently recorded ledger figures
+  ---
+  duration_ms: 3.1671
+  type: 'test'
+  location: 'C:\\Users\\maazm\\Downloads\\greekscodexai\\shopledger\\tests\\invoice.regression.test.js:12:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      [
+        610,
+        0,
+    +   109.8,
+    +   719.8
+    -   66.9,
+    -   676.9
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: 610
+    1: 0
+    2: 66.9
+    3: 676.9
+  actual:
+    0: 610
+    1: 0
+    2: 109.8
+    3: 719.8
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\maazm\Downloads\greekscodexai\shopledger\tests\invoice.regression.test.js:14:12)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.start (node:internal/test_runner/test:1242:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+  ...
+# Subtest: REGRESSION: invoice \#1002 matches independently recorded ledger figures
+not ok 2 - REGRESSION: invoice \#1002 matches independently recorded ledger figures
+  ---
+  duration_ms: 0.376
+  type: 'test'
+  location: 'C:\\Users\\maazm\\Downloads\\greekscodexai\\shopledger\\tests\\invoice.regression.test.js:12:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      [
+        1020,
+    +   120.36,
+    +   183.6,
+    +   1083.24
+    -   102,
+    -   45.9,
+    -   963.9
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: 1020
+    1: 102
+    2: 45.9
+    3: 963.9
+  actual:
+    0: 1020
+    1: 120.36
+    2: 183.6
+    3: 1083.24
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\maazm\Downloads\greekscodexai\shopledger\tests\invoice.regression.test.js:14:12)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+# Subtest: REGRESSION: invoice \#1003 matches independently recorded ledger figures
+not ok 3 - REGRESSION: invoice \#1003 matches independently recorded ledger figures
+  ---
+  duration_ms: 0.2949
+  type: 'test'
+  location: 'C:\\Users\\maazm\\Downloads\\greekscodexai\\shopledger\\tests\\invoice.regression.test.js:12:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      [
+        400,
+        50,
+    +   72,
+    +   422
+    -   49.35,
+    -   399.35
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: 400
+    1: 50
+    2: 49.35
+    3: 399.35
+  actual:
+    0: 400
+    1: 50
+    2: 72
+    3: 422
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\maazm\Downloads\greekscodexai\shopledger\tests\invoice.regression.test.js:14:12)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: REGRESSION: invoice \#1004 matches independently recorded ledger figures
+not ok 4 - REGRESSION: invoice \#1004 matches independently recorded ledger figures
+  ---
+  duration_ms: 0.248
+  type: 'test'
+  location: 'C:\\Users\\maazm\\Downloads\\greekscodexai\\shopledger\\tests\\invoice.regression.test.js:12:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      [
+        2240,
+    +   264.32,
+    +   403.2,
+    +   2378.88
+    -   150,
+    -   104.5,
+    -   2194.5
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: 2240
+    1: 150
+    2: 104.5
+    3: 2194.5
+  actual:
+    0: 2240
+    1: 264.32
+    2: 403.2
+    3: 2378.88
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\maazm\Downloads\greekscodexai\shopledger\tests\invoice.regression.test.js:14:12)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: REGRESSION: invoice \#1005 matches independently recorded ledger figures
+not ok 5 - REGRESSION: invoice \#1005 matches independently recorded ledger figures
+  ---
+  duration_ms: 0.3418
+  type: 'test'
+  location: 'C:\\Users\\maazm\\Downloads\\greekscodexai\\shopledger\\tests\\invoice.regression.test.js:12:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      [
+        1000,
+        50,
+    +   180,
+    +   1130
+    -   91.96,
+    -   1041.96
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: 1000
+    1: 50
+    2: 91.96
+    3: 1041.96
+  actual:
+    0: 1000
+    1: 50
+    2: 180
+    3: 1130
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\maazm\Downloads\greekscodexai\shopledger\tests\invoice.regression.test.js:14:12)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: REGRESSION: invoice \#1006 matches independently recorded ledger figures
+not ok 6 - REGRESSION: invoice \#1006 matches independently recorded ledger figures
+  ---
+  duration_ms: 0.2603
+  type: 'test'
+  location: 'C:\\Users\\maazm\\Downloads\\greekscodexai\\shopledger\\tests\\invoice.regression.test.js:12:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      [
+        1210,
+    +   71.39,
+    +   217.8,
+    +   1356.41
+    -   60.5,
+    -   155.61,
+    -   1305.11
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: 1210
+    1: 60.5
+    2: 155.61
+    3: 1305.11
+  actual:
+    0: 1210
+    1: 71.39
+    2: 217.8
+    3: 1356.41
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\maazm\Downloads\greekscodexai\shopledger\tests\invoice.regression.test.js:14:12)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: REGRESSION: invoice \#1007 matches independently recorded ledger figures
+not ok 7 - REGRESSION: invoice \#1007 matches independently recorded ledger figures
+  ---
+  duration_ms: 0.2558
+  type: 'test'
+  location: 'C:\\Users\\maazm\\Downloads\\greekscodexai\\shopledger\\tests\\invoice.regression.test.js:12:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      [
+        1280,
+        0,
+    +   230.4,
+    +   1510.4
+    -   127,
+    -   1407
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: 1280
+    1: 0
+    2: 127
+    3: 1407
+  actual:
+    0: 1280
+    1: 0
+    2: 230.4
+    3: 1510.4
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\maazm\Downloads\greekscodexai\shopledger\tests\invoice.regression.test.js:14:12)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: REGRESSION: invoice \#1008 matches independently recorded ledger figures
+ok 8 - REGRESSION: invoice \#1008 matches independently recorded ledger figures
+  ---
+  duration_ms: 0.2146
+  type: 'test'
+  ...
+# Subtest: REGRESSION: invoice \#1002 shows discounted 5% line taxes of INR 28.80 and 17.10
+not ok 9 - REGRESSION: invoice \#1002 shows discounted 5% line taxes of INR 28.80 and 17.10
+  ---
+  duration_ms: 0.4048
+  type: 'test'
+  location: 'C:\\Users\\maazm\\Downloads\\greekscodexai\\shopledger\\tests\\invoice.regression.test.js:21:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      [
+        [
+    +     18,
+    +     115.2
+    -     5,
+    -     28.8
+        ],
+        [
+    +     18,
+    +     68.4
+    -     5,
+    -     17.1
+        ]
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0:
+      0: 5
+      1: 28.8
+    1:
+      0: 5
+      1: 17.1
+  actual:
+    0:
+      0: 18
+      1: 115.2
+    1:
+      0: 18
+      1: 68.4
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\maazm\Downloads\greekscodexai\shopledger\tests\invoice.regression.test.js:23:10)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: REGRESSION: correctly reconciled invoice \#1002 has no false mismatch banner
+not ok 10 - REGRESSION: correctly reconciled invoice \#1002 has no false mismatch banner
+  ---
+  duration_ms: 5.5251
+  type: 'test'
+  location: 'C:\\Users\\maazm\\Downloads\\greekscodexai\\shopledger\\tests\\invoice.regression.test.js:28:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The expression evaluated to a falsy value:
+    
+      assert.ok(!html.includes('Accountant Reconciliation Notice'))
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (C:\Users\maazm\Downloads\greekscodexai\shopledger\tests\invoice.regression.test.js:30:10)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: REGRESSION: printable breakdown exposes discount, taxable value and both GST components
+not ok 11 - REGRESSION: printable breakdown exposes discount, taxable value and both GST components
+  ---
+  duration_ms: 0.542
+  type: 'test'
+  location: 'C:\\Users\\maazm\\Downloads\\greekscodexai\\shopledger\\tests\\invoice.regression.test.js:34:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    undefined !== 918
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 918
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\maazm\Downloads\greekscodexai\shopledger\tests\invoice.regression.test.js:36:10)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: REGRESSION: invoice respects coupon eligibility/caps for "DIWALI20" at 2000
+not ok 12 - REGRESSION: invoice respects coupon eligibility/caps for "DIWALI20" at 2000
+  ---
+  duration_ms: 0.3945
+  type: 'test'
+  location: 'C:\\Users\\maazm\\Downloads\\greekscodexai\\shopledger\\tests\\invoice.regression.test.js:54:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      [
+    +   472,
+    +   360,
+    +   1888
+    -   0,
+    -   100,
+    -   2100
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: 0
+    1: 100
+    2: 2100
+  actual:
+    0: 472
+    1: 360
+    2: 1888
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\maazm\Downloads\greekscodexai\shopledger\tests\invoice.regression.test.js:56:12)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: REGRESSION: invoice respects coupon eligibility/caps for "SAVE10" at 400
+not ok 13 - REGRESSION: invoice respects coupon eligibility/caps for "SAVE10" at 400
+  ---
+  duration_ms: 0.2981
+  type: 'test'
+  location: 'C:\\Users\\maazm\\Downloads\\greekscodexai\\shopledger\\tests\\invoice.regression.test.js:54:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      [
+    +   47.2,
+    +   72,
+    +   424.8
+    -   0,
+    -   20,
+    -   420
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: 0
+    1: 20
+    2: 420
+  actual:
+    0: 47.2
+    1: 72
+    2: 424.8
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\maazm\Downloads\greekscodexai\shopledger\tests\invoice.regression.test.js:56:12)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: REGRESSION: invoice respects coupon eligibility/caps for "FLAT50" at 250
+not ok 14 - REGRESSION: invoice respects coupon eligibility/caps for "FLAT50" at 250
+  ---
+  duration_ms: 0.282
+  type: 'test'
+  location: 'C:\\Users\\maazm\\Downloads\\greekscodexai\\shopledger\\tests\\invoice.regression.test.js:54:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      [
+    +   50,
+    +   45,
+    +   245
+    -   0,
+    -   12.5,
+    -   262.5
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: 0
+    1: 12.5
+    2: 262.5
+  actual:
+    0: 50
+    1: 45
+    2: 245
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\maazm\Downloads\greekscodexai\shopledger\tests\invoice.regression.test.js:56:12)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: REGRESSION: invoice respects coupon eligibility/caps for " save10 " at 1000
+not ok 15 - REGRESSION: invoice respects coupon eligibility/caps for " save10 " at 1000
+  ---
+  duration_ms: 0.2684
+  type: 'test'
+  location: 'C:\\Users\\maazm\\Downloads\\greekscodexai\\shopledger\\tests\\invoice.regression.test.js:54:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      [
+    +   0,
+    +   180,
+    +   1180
+    -   100,
+    -   45,
+    -   945
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: 100
+    1: 45
+    2: 945
+  actual:
+    0: 0
+    1: 180
+    2: 1180
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\maazm\Downloads\greekscodexai\shopledger\tests\invoice.regression.test.js:56:12)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: REGRESSION: invoice respects coupon eligibility/caps for "WELCOME" at 4000
+not ok 16 - REGRESSION: invoice respects coupon eligibility/caps for "WELCOME" at 4000
+  ---
+  duration_ms: 0.3092
+  type: 'test'
+  location: 'C:\\Users\\maazm\\Downloads\\greekscodexai\\shopledger\\tests\\invoice.regression.test.js:54:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      [
+    +   236,
+    +   720,
+    +   4484
+    -   100,
+    -   195,
+    -   4095
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: 100
+    1: 195
+    2: 4095
+  actual:
+    0: 236
+    1: 720
+    2: 4484
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\maazm\Downloads\greekscodexai\shopledger\tests\invoice.regression.test.js:56:12)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: REGRESSION: invoice respects coupon eligibility/caps for "WHOLESALE15" at 4000
+not ok 17 - REGRESSION: invoice respects coupon eligibility/caps for "WHOLESALE15" at 4000
+  ---
+  duration_ms: 0.3681
+  type: 'test'
+  location: 'C:\\Users\\maazm\\Downloads\\greekscodexai\\shopledger\\tests\\invoice.regression.test.js:54:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      [
+    +   708,
+    +   720,
+    +   4012
+    -   400,
+    -   180,
+    -   3780
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: 400
+    1: 180
+    2: 3780
+  actual:
+    0: 708
+    1: 720
+    2: 4012
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\maazm\Downloads\greekscodexai\shopledger\tests\invoice.regression.test.js:56:12)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: REGRESSION: explicit GST rate 0 preserves the checkout contract
+not ok 18 - REGRESSION: explicit GST rate 0 preserves the checkout contract
+  ---
+  duration_ms: 0.4127
+  type: 'test'
+  location: 'C:\\Users\\maazm\\Downloads\\greekscodexai\\shopledger\\tests\\invoice.regression.test.js:61:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    18 !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: 18
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\maazm\Downloads\greekscodexai\shopledger\tests\invoice.regression.test.js:63:12)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: REGRESSION: explicit GST rate 0.12 preserves the checkout contract
+not ok 19 - REGRESSION: explicit GST rate 0.12 preserves the checkout contract
+  ---
+  duration_ms: 0.1952
+  type: 'test'
+  location: 'C:\\Users\\maazm\\Downloads\\greekscodexai\\shopledger\\tests\\invoice.regression.test.js:61:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    0.12 !== 12
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 12
+  actual: 0.12
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\maazm\Downloads\greekscodexai\shopledger\tests\invoice.regression.test.js:63:12)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: REGRESSION: explicit GST rate 12 preserves the checkout contract
+ok 20 - REGRESSION: explicit GST rate 12 preserves the checkout contract
+  ---
+  duration_ms: 0.1125
+  type: 'test'
+  ...
+# Subtest: REGRESSION: invoice rounds each line like checkout for fractional-paise tax
+not ok 21 - REGRESSION: invoice rounds each line like checkout for fractional-paise tax
+  ---
+  duration_ms: 0.3262
+  type: 'test'
+  location: 'C:\\Users\\maazm\\Downloads\\greekscodexai\\shopledger\\tests\\invoice.regression.test.js:68:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    0.04 !== 0.02
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0.02
+  actual: 0.04
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\maazm\Downloads\greekscodexai\shopledger\tests\invoice.regression.test.js:73:10)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: REGRESSION: deterministic cart matrix preserves checkout parity and never mutates inputs
+not ok 22 - REGRESSION: deterministic cart matrix preserves checkout parity and never mutates inputs
+  ---
+  duration_ms: 0.8724
+  type: 'test'
+  location: 'C:\\Users\\maazm\\Downloads\\greekscodexai\\shopledger\\tests\\invoice.regression.test.js:77:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    1006/0.1//1: tax
+    
+    25.22 !== 25.21
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 25.21
+  actual: 25.22
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\maazm\Downloads\greekscodexai\shopledger\tests\invoice.regression.test.js:93:20)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+1..22
+# tests 22
+# suites 0
+# pass 2
+# fail 20
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 158.4374
