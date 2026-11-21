@@ -7,21 +7,23 @@ const invoice = require('../lib/invoice');
 const reports = require('../lib/reports');
 const orders = require('./fixtures/orders.json');
 
-// Baseline assertions written and run before any production change.
+// Baseline assertions written and run before any production change (c9b2b3b).
+// Intentionally updated after the fix: #1001-#1007 and mismatch count.
+// The original CURRENT BEHAVIOUR expectations remain in that commit.
 // Tuple order: subtotal, discount, GST, invoice total.
 const baseline = [
-  [610, 0, 109.8, 719.8],
-  [1020, 120.36, 183.6, 1083.24],
-  [400, 50, 72, 422],
-  [2240, 264.32, 403.2, 2378.88],
-  [1000, 50, 180, 1130],
-  [1210, 71.39, 217.8, 1356.41],
-  [1280, 0, 230.4, 1510.4],
+  [610, 0, 66.9, 676.9],
+  [1020, 102, 45.9, 963.9],
+  [400, 50, 49.35, 399.35],
+  [2240, 150, 104.5, 2194.5],
+  [1000, 50, 91.96, 1041.96],
+  [1210, 60.5, 155.61, 1305.11],
+  [1280, 0, 127, 1407],
   [500, 0, 90, 590]
 ];
 
 for (const [index, order] of orders.entries()) {
-  test(`${index < 7 ? 'CURRENT BEHAVIOUR: ' : ''}invoice #${order.id} figures`, () => {
+  test(`invoice #${order.id} figures${index < 7 ? ' (updated after ticket #1 fix)' : ''}`, () => {
     const figures = invoice.computeInvoiceFigures(structuredClone(order));
     assert.deepEqual(
       [figures.subtotal, figures.discount, figures.tax, figures.total],
@@ -30,10 +32,10 @@ for (const [index, order] of orders.entries()) {
   });
 }
 
-test('CURRENT BEHAVIOUR: reconciliation flags seven of eight fixture orders', () => {
+test('reconciliation matches all eight fixture orders (updated after ticket #1 fix)', () => {
   const result = reports.getGstReconciliation({ orders: structuredClone(orders) });
   assert.equal(result.totalChecked, 8);
-  assert.equal(result.mismatchCount, 7);
+  assert.equal(result.mismatchCount, 0);
 });
 
 test('invoice calculation preserves the input order', () => {
@@ -54,7 +56,7 @@ test('invoice exposes the established fields consumed by reports and rendering',
   }
   assert.deepEqual(result.rows[0], {
     name: orders[7].items[0].name, sku: 'BEV-001', hsn: '0902', qty: 1,
-    price: 140, gstPercent: 18, line: 140, lineTax: 25.2
+    price: 140, gstPercent: 18, line: 140, discount: 0, taxable: 140, lineTax: 25.2
   });
 });
 
