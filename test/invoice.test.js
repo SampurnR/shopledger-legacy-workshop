@@ -6,7 +6,7 @@ var invoice = require('../lib/invoice');
 var pricing = require('../lib/pricing');
 var reports = require('../lib/reports');
 
-test('CURRENT BEHAVIOUR: order pricing uses HSN slabs and applies WELCOME discount before GST', function () {
+test('invoice uses billed HSN slabs and applies WELCOME discount before GST', function () {
   var items = [
     { id: 1, name: 'Rice', hsn: '1006', price: 100, qty: 1 },
     { id: 2, name: 'Tea', hsn: '0902', price: 100, qty: 1 }
@@ -26,18 +26,16 @@ test('CURRENT BEHAVIOUR: order pricing uses HSN slabs and applies WELCOME discou
   assert.equal(billed.total, 211.85);
   assert.deepEqual(billed.lines.map(function (line) { return line.gstPercent; }), [5, 18]);
 
-  // Order lines store HSN but not gstRate. The invoice therefore uses the
-  // configured default rate and computes the percentage coupon on subtotal + tax.
   assert.equal(invoiceFigures.subtotal, 200);
-  assert.equal(invoiceFigures.discount, 11.8);
-  assert.equal(invoiceFigures.tax, 36);
-  assert.equal(invoiceFigures.cgst, 18);
-  assert.equal(invoiceFigures.sgst, 18);
-  assert.equal(invoiceFigures.total, 224.2);
-  assert.deepEqual(invoiceFigures.rows.map(function (line) { return line.gstPercent; }), [18, 18]);
+  assert.equal(invoiceFigures.discount, billed.discount);
+  assert.equal(invoiceFigures.tax, billed.tax);
+  assert.equal(invoiceFigures.cgst, billed.cgst);
+  assert.equal(invoiceFigures.sgst, billed.sgst);
+  assert.equal(invoiceFigures.total, billed.total);
+  assert.deepEqual(invoiceFigures.rows.map(function (line) { return line.gstPercent; }), [5, 18]);
 });
 
-test('CURRENT BEHAVIOUR: invoice ignores SAVE10 minimum cap and taxes the undiscounted subtotal', function () {
+test('invoice matches billed SAVE10 cap and discounted taxable amount', function () {
   var items = [
     { id: 1, name: 'Rice', hsn: '1006', price: 2000, qty: 1 }
   ];
@@ -58,9 +56,11 @@ test('CURRENT BEHAVIOUR: invoice ignores SAVE10 minimum cap and taxes the undisc
   assert.equal(billed.tax, 92.5);
   assert.equal(billed.total, 1942.5);
 
-  assert.equal(invoiceFigures.discount, 236);
-  assert.equal(invoiceFigures.tax, 360);
-  assert.equal(invoiceFigures.total, 2124);
+  assert.equal(invoiceFigures.discount, billed.discount);
+  assert.equal(invoiceFigures.tax, billed.tax);
+  assert.equal(invoiceFigures.cgst, billed.cgst);
+  assert.equal(invoiceFigures.sgst, billed.sgst);
+  assert.equal(invoiceFigures.total, billed.total);
 
   var html = invoice.render({
     id: 77,
@@ -72,11 +72,10 @@ test('CURRENT BEHAVIOUR: invoice ignores SAVE10 minimum cap and taxes the undisc
     coupon: 'SAVE10',
     total: billed.total
   });
-  assert.match(html, /Accountant Reconciliation Notice/);
-  assert.match(html, /Invoice computed total/);
+  assert.doesNotMatch(html, /Accountant Reconciliation Notice/);
 });
 
-test('CURRENT BEHAVIOUR: GST reconciliation reports invoice versus billed-total variance', function () {
+test('GST reconciliation reports no variance when invoice matches the billed figures', function () {
   var items = [
     { id: 1, name: 'Rice', hsn: '1006', price: 100, qty: 1 },
     { id: 2, name: 'Tea', hsn: '0902', price: 100, qty: 1 }
@@ -101,10 +100,10 @@ test('CURRENT BEHAVIOUR: GST reconciliation reports invoice versus billed-total 
   });
 
   assert.equal(reconciliation.totalChecked, 1);
-  assert.equal(reconciliation.mismatchCount, 1);
-  assert.equal(reconciliation.totalDelta, 12.35);
-  assert.equal(reconciliation.rows[0].invoiceTax, 36);
-  assert.equal(reconciliation.rows[0].invoiceTotal, 224.2);
-  assert.equal(reconciliation.rows[0].delta, 12.35);
-  assert.equal(reconciliation.rows[0].matched, false);
+  assert.equal(reconciliation.mismatchCount, 0);
+  assert.equal(reconciliation.totalDelta, 0);
+  assert.equal(reconciliation.rows[0].invoiceTax, billed.tax);
+  assert.equal(reconciliation.rows[0].invoiceTotal, billed.total);
+  assert.equal(reconciliation.rows[0].delta, 0);
+  assert.equal(reconciliation.rows[0].matched, true);
 });
