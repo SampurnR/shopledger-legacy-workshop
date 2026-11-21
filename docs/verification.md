@@ -15,6 +15,7 @@ session. This is a manual self-review, not `/review` or independent approval.
 | First green, before HTTP additions | `node --test --test-reporter=tap` | 50 passed, 0 failed |
 | Full QA | `node --test --test-reporter=tap` | 65 passed, 0 failed |
 | Coverage | `node --test --experimental-test-coverage --test-coverage-include=lib/invoice.js --test-reporter=tap` | 65 passed; selected-module line/functions 100%, branches 95.24% |
+| GitHub CI | Node 22 and Node 24 on Ubuntu | Both jobs passed in [run 44898016503](https://github.com/maazmohammed112/shopledger-legacy-workshop/actions/runs/44898016503) |
 
 Raw, unedited outputs are stored under [evidence/](evidence/). Test files are
 `tests/invoice.characterization.test.js`, `tests/pricing.contract.test.js`,
@@ -45,7 +46,7 @@ to 0.00. Existing ledger revenue remains 8578.72. No ledger rewrite is performed
 - Fifteen HTTP tests through the real Express app: invoice HTML, audit,
   dashboard, preview, create -> print -> audit, invalid input, missing orders,
   stock rejection, escaped metadata, genuine mismatches and static assets.
-- Tests use an authored fixture copy and an in-memory store. Original store
+- Tests use a frozen fixture copy and an in-memory store. Original store
   read/write functions are guarded to throw. No tests read `data/db.json`.
 - `git diff --check` passes. No dependency manifests or original UI files change.
 - Installation of existing dependencies reported zero vulnerabilities at that

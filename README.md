@@ -6,6 +6,13 @@ Workshop submission for [ticket #1](https://github.com/SampurnR/shopledger-legac
 This exercise fixes printable invoice figures so they agree with the existing
 checkout/ledger rules. Only `lib/invoice.js` changes among production modules.
 
+**[Open pull request #269](https://github.com/SampurnR/shopledger-legacy-workshop/pull/269)**
+· **[Downloadable submission reports](docs/submission/)**
+· **[Passing Node 22/24 CI](https://github.com/maazmohammed112/shopledger-legacy-workshop/actions/runs/44898016503)**
+
+The reports are designed document exports. The submission guide identifies
+genuine UI screenshots that still need to be captured manually.
+
 | Verified result | Before | After |
 | --- | ---: | ---: |
 | Sample invoices with amount/GST mismatch | 7 of 8 | 0 of 8 |
