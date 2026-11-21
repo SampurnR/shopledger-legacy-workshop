@@ -1,0 +1,178 @@
+TAP version 13
+# Subtest: CURRENT BEHAVIOUR: invoice \#1001 figures
+ok 1 - CURRENT BEHAVIOUR: invoice \#1001 figures
+  ---
+  duration_ms: 4.2956
+  type: 'test'
+  ...
+# Subtest: CURRENT BEHAVIOUR: invoice \#1002 figures
+ok 2 - CURRENT BEHAVIOUR: invoice \#1002 figures
+  ---
+  duration_ms: 0.2468
+  type: 'test'
+  ...
+# Subtest: CURRENT BEHAVIOUR: invoice \#1003 figures
+ok 3 - CURRENT BEHAVIOUR: invoice \#1003 figures
+  ---
+  duration_ms: 0.188
+  type: 'test'
+  ...
+# Subtest: CURRENT BEHAVIOUR: invoice \#1004 figures
+ok 4 - CURRENT BEHAVIOUR: invoice \#1004 figures
+  ---
+  duration_ms: 0.1943
+  type: 'test'
+  ...
+# Subtest: CURRENT BEHAVIOUR: invoice \#1005 figures
+ok 5 - CURRENT BEHAVIOUR: invoice \#1005 figures
+  ---
+  duration_ms: 0.1791
+  type: 'test'
+  ...
+# Subtest: CURRENT BEHAVIOUR: invoice \#1006 figures
+ok 6 - CURRENT BEHAVIOUR: invoice \#1006 figures
+  ---
+  duration_ms: 0.1603
+  type: 'test'
+  ...
+# Subtest: CURRENT BEHAVIOUR: invoice \#1007 figures
+ok 7 - CURRENT BEHAVIOUR: invoice \#1007 figures
+  ---
+  duration_ms: 0.1423
+  type: 'test'
+  ...
+# Subtest: invoice \#1008 figures
+ok 8 - invoice \#1008 figures
+  ---
+  duration_ms: 0.1466
+  type: 'test'
+  ...
+# Subtest: CURRENT BEHAVIOUR: reconciliation flags seven of eight fixture orders
+ok 9 - CURRENT BEHAVIOUR: reconciliation flags seven of eight fixture orders
+  ---
+  duration_ms: 0.4817
+  type: 'test'
+  ...
+# Subtest: invoice calculation preserves the input order
+ok 10 - invoice calculation preserves the input order
+  ---
+  duration_ms: 0.5589
+  type: 'test'
+  ...
+# Subtest: invoice exposes the established fields consumed by reports and rendering
+ok 11 - invoice exposes the established fields consumed by reports and rendering
+  ---
+  duration_ms: 0.2235
+  type: 'test'
+  ...
+# Subtest: empty order yields finite zero figures and an empty printable table
+ok 12 - empty order yields finite zero figures and an empty printable table
+  ---
+  duration_ms: 0.5422
+  type: 'test'
+  ...
+# Subtest: renderer escapes item/customer metadata and preserves invoice identity
+ok 13 - renderer escapes item/customer metadata and preserves invoice identity
+  ---
+  duration_ms: 1.2506
+  type: 'test'
+  ...
+# Subtest: renderer warns on a real ledger discrepancy rather than hiding it
+ok 14 - renderer warns on a real ledger discrepancy rather than hiding it
+  ---
+  duration_ms: 0.2893
+  type: 'test'
+  ...
+# Subtest: unknown HSN retains the configured fallback tax rate
+ok 15 - unknown HSN retains the configured fallback tax rate
+  ---
+  duration_ms: 0.1553
+  type: 'test'
+  ...
+# Subtest: reconciliation excludes cancelled orders
+ok 16 - reconciliation excludes cancelled orders
+  ---
+  duration_ms: 0.2353
+  type: 'test'
+  ...
+# Subtest: checkout contract: SAVE10 is capped at INR 150 before 5% GST
+ok 17 - checkout contract: SAVE10 is capped at INR 150 before 5% GST
+  ---
+  duration_ms: 3.8438
+  type: 'test'
+  ...
+# Subtest: checkout contract: flat discount is proportionally apportioned before mixed-slab GST
+ok 18 - checkout contract: flat discount is proportionally apportioned before mixed-slab GST
+  ---
+  duration_ms: 0.3947
+  type: 'test'
+  ...
+# Subtest: checkout coupon contract: "save10" at 1020
+ok 19 - checkout coupon contract: "save10" at 1020
+  ---
+  duration_ms: 0.1403
+  type: 'test'
+  ...
+# Subtest: checkout coupon contract: " SAVE10 " at 2240
+ok 20 - checkout coupon contract: " SAVE10 " at 2240
+  ---
+  duration_ms: 0.105
+  type: 'test'
+  ...
+# Subtest: checkout coupon contract: "SAVE10" at 499.99
+ok 21 - checkout coupon contract: "SAVE10" at 499.99
+  ---
+  duration_ms: 0.1673
+  type: 'test'
+  ...
+# Subtest: checkout coupon contract: "FLAT50" at 299.99
+ok 22 - checkout coupon contract: "FLAT50" at 299.99
+  ---
+  duration_ms: 0.1024
+  type: 'test'
+  ...
+# Subtest: checkout coupon contract: "DIWALI20" at 2000
+ok 23 - checkout coupon contract: "DIWALI20" at 2000
+  ---
+  duration_ms: 0.1014
+  type: 'test'
+  ...
+# Subtest: checkout coupon contract: "UNKNOWN" at 2000
+ok 24 - checkout coupon contract: "UNKNOWN" at 2000
+  ---
+  duration_ms: 0.1473
+  type: 'test'
+  ...
+# Subtest: checkout coupon contract: "WELCOME" at 4000
+ok 25 - checkout coupon contract: "WELCOME" at 4000
+  ---
+  duration_ms: 0.1941
+  type: 'test'
+  ...
+# Subtest: checkout coupon contract: "WHOLESALE15" at 4000
+ok 26 - checkout coupon contract: "WHOLESALE15" at 4000
+  ---
+  duration_ms: 0.2778
+  type: 'test'
+  ...
+# Subtest: GST contract: HSN slabs, explicit percentage/decimal/zero and fallback
+ok 27 - GST contract: HSN slabs, explicit percentage/decimal/zero and fallback
+  ---
+  duration_ms: 0.2984
+  type: 'test'
+  ...
+# Subtest: checkout contract: tax is rounded per line, CGST gets the odd paise
+ok 28 - checkout contract: tax is rounded per line, CGST gets the odd paise
+  ---
+  duration_ms: 0.3385
+  type: 'test'
+  ...
+1..28
+# tests 28
+# suites 0
+# pass 28
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 181.5442
