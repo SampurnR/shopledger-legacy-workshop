@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" role="img" aria-labelledby="title desc">
+<title id="title">ShopLedger architecture and order flow</title><desc id="desc">Browser UI calls Express routes. Orders route uses order, pricing, inventory, and ledger modules. Modules use configuration and JSON store.</desc>
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#0b6b50"/></marker><style>text{font-family:Arial,sans-serif;fill:#12352c}.box{fill:#f0f8f4;stroke:#14835f;stroke-width:2;rx:12}.head{font-size:22px;font-weight:bold}.small{font-size:16px}.line{stroke:#0b6b50;stroke-width:2;marker-end:url(#arrow)}.group{fill:#f9fbfa;stroke:#afc9bd;stroke-width:2;rx:18}</style></defs>
+<rect width="1200" height="760" fill="#fff"/><text x="600" y="42" text-anchor="middle" class="head">ShopLedger · request and order flow</text>
+<rect class="box" x="45" y="100" width="245" height="125"/><text x="167" y="137" text-anchor="middle" class="head">Browser UI</text><text x="167" y="170" text-anchor="middle" class="small">public/index.html</text><text x="167" y="196" text-anchor="middle" class="small">public/js · public/css</text>
+<rect class="box" x="370" y="100" width="240" height="125"/><text x="490" y="145" text-anchor="middle" class="head">Express server</text><text x="490" y="180" text-anchor="middle" class="small">server.js</text>
+<line class="line" x1="290" y1="162" x2="360" y2="162"/><text x="325" y="147" text-anchor="middle" class="small">HTTP</text>
+<rect class="group" x="680" y="80" width="475" height="270"/><text x="917" y="112" text-anchor="middle" class="head">Express routes</text>
+<rect class="box" x="710" y="135" width="190" height="75"/><text x="805" y="166" text-anchor="middle" class="small">routes/orders.js</text><text x="805" y="191" text-anchor="middle" class="small">create / cancel</text>
+<rect class="box" x="935" y="135" width="190" height="75"/><text x="1030" y="166" text-anchor="middle" class="small">routes/products.js</text><text x="1030" y="191" text-anchor="middle" class="small">catalog / coupons</text>
+<rect class="box" x="710" y="240" width="190" height="75"/><text x="805" y="271" text-anchor="middle" class="small">routes/customers.js</text><text x="805" y="296" text-anchor="middle" class="small">Khata / settlements</text>
+<rect class="box" x="935" y="240" width="190" height="75"/><text x="1030" y="271" text-anchor="middle" class="small">routes/reports.js</text><text x="1030" y="296" text-anchor="middle" class="small">reports / preview</text>
+<line class="line" x1="610" y1="160" x2="670" y2="160"/>
+<rect class="group" x="55" y="400" width="800" height="290"/><text x="455" y="433" text-anchor="middle" class="head">Business modules · lib/</text>
+<rect class="box" x="85" y="465" width="200" height="82"/><text x="185" y="497" text-anchor="middle" class="small">lib/orders.js</text><text x="185" y="523" text-anchor="middle" class="small">order operations</text>
+<rect class="box" x="335" y="465" width="220" height="82"/><text x="445" y="497" text-anchor="middle" class="small">lib/pricing.js</text><text x="445" y="523" text-anchor="middle" class="small">discount + GST totals</text>
+<rect class="box" x="605" y="465" width="210" height="82"/><text x="710" y="497" text-anchor="middle" class="small">lib/invoice.js</text><text x="710" y="523" text-anchor="middle" class="small">invoice + print HTML</text>
+<rect class="box" x="85" y="580" width="200" height="75"/><text x="185" y="625" text-anchor="middle" class="small">inventory / ledger</text>
+<rect class="box" x="335" y="580" width="220" height="75"/><text x="445" y="625" text-anchor="middle" class="small">coupons / tax</text>
+<rect class="box" x="605" y="580" width="210" height="75"/><text x="710" y="612" text-anchor="middle" class="small">lib/store.js</text><text x="710" y="638" text-anchor="middle" class="small">read / write JSON</text>
+<rect class="box" x="925" y="475" width="220" height="90"/><text x="1035" y="510" text-anchor="middle" class="head">config.js</text><text x="1035" y="540" text-anchor="middle" class="small">tax slabs · coupons · shop</text>
+<rect class="box" x="925" y="600" width="220" height="90"/><text x="1035" y="635" text-anchor="middle" class="head">data/db.json</text><text x="1035" y="665" text-anchor="middle" class="small">products · orders · customers</text>
+<path class="line" d="M805 210 C805 370 710 380 710 455"/><text x="757" y="370" class="small">invoice route</text><line class="line" x1="555" y1="506" x2="595" y2="506"/><line class="line" x1="710" y1="550" x2="710" y2="570"/><line class="line" x1="815" y1="620" x2="915" y2="645"/><line class="line" x1="1035" y1="565" x2="1035" y2="590"/>
+</svg>
