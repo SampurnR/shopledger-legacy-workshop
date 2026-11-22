@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1120" viewBox="0 0 1600 1120" role="img" aria-labelledby="title desc">
+  <title id="title">ShopLedger architecture and order placement flow</title>
+  <desc id="desc">Architecture map showing the browser UI, Express server, all route and library modules, configuration, JSON data store, and highlighted order placement path.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#64748b"/></marker>
+    <marker id="blueArrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#2563eb"/></marker>
+    <marker id="greenArrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#059669"/></marker>
+    <style>
+      text{font-family:Inter,Segoe UI,Arial,sans-serif;fill:#172033}.title{font-size:31px;font-weight:750}.subtitle{font-size:15px;fill:#536176}.section{font-size:15px;font-weight:750;letter-spacing:1.1px;fill:#526176}.head{font-size:17px;font-weight:700}.body{font-size:13px;fill:#40516a}.small{font-size:12px;fill:#536176}.tiny{font-size:11px;fill:#526176}.box{fill:#fff;stroke:#cbd5e1;stroke-width:1.5}.ui{fill:#f0f9ff;stroke:#7dd3fc}.router{fill:#f5f3ff;stroke:#c4b5fd}.module{fill:#f8fafc;stroke:#cbd5e1}.flow{fill:#eff6ff;stroke:#60a5fa;stroke-width:1.8}.data{fill:#ecfdf5;stroke:#6ee7b7;stroke-width:1.8}.line{fill:none;stroke:#64748b;stroke-width:2;marker-end:url(#arrow)}.orderline{fill:none;stroke:#2563eb;stroke-width:3;marker-end:url(#blueArrow)}.persist{fill:none;stroke:#059669;stroke-width:3;marker-end:url(#greenArrow)}
+    </style>
+  </defs>
+  <rect width="1600" height="1120" fill="#f8fafc"/>
+  <text x="56" y="58" class="title">ShopLedger · application architecture</text>
+  <text x="57" y="86" class="subtitle">Browser POS and ledgers · Express API · JSON file persistence</text>
+
+  <!-- Browser UI -->
+  <rect x="52" y="125" width="330" height="185" rx="15" class="box ui"/>
+  <text x="76" y="158" class="section">BROWSER UI</text>
+  <text x="76" y="190" class="head">public/</text>
+  <text x="76" y="216" class="body">index.html · POS, order register, khata, audit</text>
+  <text x="76" y="241" class="body">js/app.js · catalog, cart, API calls, tables</text>
+  <text x="76" y="266" class="body">css/style.css · presentation</text>
+  <text x="76" y="291" class="small">Loads products, customers and dashboard; sends JSON requests</text>
+
+  <!-- Server -->
+  <rect x="455" y="125" width="340" height="185" rx="15" class="box"/>
+  <text x="480" y="158" class="section">HTTP APP</text>
+  <text x="480" y="190" class="head">server.js · Express</text>
+  <text x="480" y="217" class="body">JSON body parser · serves public/ static files</text>
+  <text x="480" y="244" class="body">Mounts four routers under /api</text>
+  <text x="480" y="271" class="body">GET /orders/:id/invoice → lib/invoice.js</text>
+  <text x="480" y="293" class="small">PORT from config.js (default 3000)</text>
+  <path d="M382 218H449" class="line"/>
+
+  <!-- Routes -->
+  <text x="52" y="359" class="section">ROUTES · mounted at /api</text>
+  <rect x="52" y="380" width="350" height="160" rx="14" class="box router"/>
+  <text x="76" y="414" class="head">routes/products.js</text>
+  <text x="76" y="443" class="body">GET /products · GET /coupons</text>
+  <text x="76" y="469" class="small">store · inventory · tax · coupons</text>
+  <rect x="425" y="380" width="390" height="160" rx="14" class="box flow"/>
+  <text x="449" y="414" class="head">routes/orders.js</text>
+  <text x="449" y="443" class="body">GET /orders · GET /orders/:id</text>
+  <text x="449" y="469" class="body">POST /orders · POST /orders/:id/cancel</text>
+  <text x="449" y="510" class="small">store · inventory · pricing · coupons · orders · ledger</text>
+  <rect x="838" y="380" width="330" height="160" rx="14" class="box router"/>
+  <text x="862" y="414" class="head">routes/customers.js</text>
+  <text x="862" y="443" class="body">GET /customers</text>
+  <text x="862" y="469" class="body">POST /customers/:id/settle</text>
+  <text x="862" y="510" class="small">store · ledger</text>
+  <rect x="1190" y="380" width="358" height="160" rx="14" class="box router"/>
+  <text x="1214" y="414" class="head">routes/reports.js</text>
+  <text x="1214" y="443" class="body">GET dashboard · GST reconciliation</text>
+  <text x="1214" y="469" class="body">POST pricing preview · GET admin export</text>
+  <text x="1214" y="510" class="small">store · reports · pricing · coupons · config</text>
+  <path d="M625 310V345H227V374" class="line"/><path d="M625 345H620V374" class="orderline"/><path d="M625 345H1003V374" class="line"/><path d="M625 345H1369V374" class="line"/>
+
+  <!-- Order flow -->
+  <rect x="52" y="570" width="1496" height="91" rx="14" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.5"/>
+  <text x="76" y="598" class="section" style="fill:#1d4ed8">ORDER PLACEMENT · POST /api/orders</text>
+  <text x="76" y="629" class="body">1 · UI sends selected product IDs, quantities, customer/payment mode and coupon</text>
+  <text x="605" y="629" class="body">2 · Route reloads products, resolves server-side prices, validates stock and coupon, computes tax and total</text>
+  <text x="1245" y="629" class="body">3 · On success, save and return order</text>
+  <path d="M227 540V566" class="orderline"/><path d="M620 540V566" class="orderline"/>
+
+  <!-- Libraries -->
+  <text x="52" y="707" class="section">LIBRARIES · BUSINESS LOGIC AND SUPPORT</text>
+  <rect x="52" y="729" width="245" height="135" rx="12" class="box flow"/>
+  <text x="72" y="761" class="head">lib/orders.js</text><text x="72" y="788" class="body">Create, find, filter, cancel</text><text x="72" y="815" class="small">Cancel calls inventory release</text>
+  <rect x="316" y="729" width="245" height="135" rx="12" class="box flow"/>
+  <text x="336" y="761" class="head">lib/inventory.js</text><text x="336" y="788" class="body">Find products · stock check</text><text x="336" y="815" class="small">Reserve · release · summary</text>
+  <rect x="580" y="729" width="245" height="135" rx="12" class="box flow"/>
+  <text x="600" y="761" class="head">lib/pricing.js</text><text x="600" y="788" class="body">Subtotal · discount · totals</text><text x="600" y="815" class="small">Per-line tax from lib/tax.js</text>
+  <rect x="844" y="729" width="245" height="135" rx="12" class="box"/>
+  <text x="864" y="761" class="head">lib/coupons.js</text><text x="864" y="788" class="body">Normalize · validate · discount</text><text x="864" y="815" class="small">Coupon rules from config.js</text>
+  <rect x="1108" y="729" width="210" height="135" rx="12" class="box"/>
+  <text x="1128" y="761" class="head">lib/tax.js</text><text x="1128" y="788" class="body">HSN GST rates</text><text x="1128" y="815" class="small">CGST / SGST split</text>
+  <rect x="1337" y="729" width="211" height="135" rx="12" class="box"/>
+  <text x="1357" y="761" class="head">lib/ledger.js</text><text x="1357" y="788" class="body">Khata and settlements</text><text x="1357" y="815" class="small">Balance and credit limit</text>
+  <rect x="52" y="883" width="245" height="112" rx="12" class="box"/>
+  <text x="72" y="915" class="head">lib/store.js</text><text x="72" y="942" class="body">Read / write JSON · audit log</text><text x="72" y="971" class="small">Used by every router</text>
+  <rect x="316" y="883" width="245" height="112" rx="12" class="box"/>
+  <text x="336" y="915" class="head">lib/reports.js</text><text x="336" y="942" class="body">Dashboard · GST reconciliation</text><text x="336" y="971" class="small">Uses inventory, ledger, invoice</text>
+  <rect x="580" y="883" width="245" height="112" rx="12" class="box"/>
+  <text x="600" y="915" class="head">lib/invoice.js</text><text x="600" y="942" class="body">Invoice figures · HTML rendering</text><text x="600" y="971" class="small">Used by invoice URL and reports</text>
+  <rect x="844" y="883" width="245" height="112" rx="12" class="box"/>
+  <text x="864" y="915" class="head">lib/dates.js</text><text x="864" y="942" class="body">Today · date keys · fiscal year</text>
+  <rect x="1108" y="883" width="440" height="112" rx="12" class="box"/>
+  <text x="1128" y="915" class="head">config.js</text><text x="1128" y="942" class="body">Port · shop details · admin key · tax slabs · coupons · inventory defaults</text>
+
+  <!-- Persistence and dependencies -->
+  <rect x="1040" y="1021" width="508" height="70" rx="13" class="box data"/>
+  <text x="1064" y="1051" class="head">data/db.json</text><text x="1064" y="1075" class="small">Products · orders · customers · settlements · audit log</text>
+  <path d="M174 864V1007H1033V1049" class="persist"/>
+  <path d="M553 939H1029V1052" class="persist"/>
+  <path d="M90 540V704H174V722" class="orderline"/>
+  <path d="M620 540V704H438V876" class="line"/>
+  <path d="M620 540V704H702V876" class="line"/>
+  <path d="M620 540V704H946V876" class="line"/>
+  <path d="M620 540V704H1230V722" class="line"/>
+  <path d="M620 540V704H1442V722" class="line"/>
+  <text x="66" y="1071" class="tiny">Highlighted blue path: order request and order / inventory / ledger processing. Green arrows: JSON persistence.</text>
+</svg>
