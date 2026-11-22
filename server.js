@@ -31,6 +31,11 @@ app.get('/orders/:id/invoice', function (req, res) {
 
 // app.get('/api/orders/:id/pdf', function (req, res) { ... });  // never finished
 
+app.use(function (err, req, res, next) {
+  if (err.code === 'STORE_CONFLICT') return res.status(409).json({ error: err.message });
+  next(err);
+});
+
 if (require.main === module) {
   app.listen(config.port, function () {
     console.log('ShopLedger listening on http://localhost:' + config.port);

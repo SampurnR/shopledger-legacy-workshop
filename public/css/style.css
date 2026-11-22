@@ -630,6 +630,11 @@ body {
   background: #1d4ed8;
 }
 
+.btn:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
 .btn-secondary {
   background: #0f172a;
   color: #ffffff;
