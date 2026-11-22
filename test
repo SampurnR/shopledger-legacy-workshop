@@ -1,0 +1,68 @@
+const assert = require('node:assert/strict');
+const invoice = require('./lib/invoice');
+const pricing = require('./lib/pricing');
+
+const cases = [];
+
+function test(name, run) {
+  cases.push({ name, run });
+}
+
+test('CURRENT BEHAVIOUR: invoice uses the billed HSN slab when an order line has no gstRate', function () {
+  const items = [{ id: 1, name: 'Rice', sku: 'GRN-001', hsn: '1006', price: 1000, qty: 1 }];
+  const billed = pricing.computeTotals(items, '');
+  const printed = invoice.computeInvoiceFigures({ items: items, coupon: '' });
+
+  assert.equal(billed.tax, 50);
+  assert.equal(billed.total, 1050);
+  assert.equal(printed.rows[0].gstPercent, 5);
+  assert.equal(printed.rows[0].lineTax, 50);
+  assert.equal(printed.tax, billed.tax);
+  assert.equal(printed.total, billed.total);
+});
+
+test('CURRENT BEHAVIOUR: invoice applies SAVE10 to the subtotal and honors its configured discount cap', function () {
+  const items = [{ id: 2, name: 'Rice', sku: 'GRN-001', hsn: '1006', gstRate: 5, price: 3000, qty: 1 }];
+  const billed = pricing.computeTotals(items, 'SAVE10');
+  const printed = invoice.computeInvoiceFigures({ items: items, coupon: 'SAVE10' });
+
+  assert.equal(billed.discount, 150);
+  assert.equal(billed.tax, 142.5);
+  assert.equal(billed.total, 2992.5);
+  assert.equal(printed.discount, billed.discount);
+  assert.equal(printed.tax, billed.tax);
+  assert.equal(printed.total, billed.total);
+});
+
+test('CURRENT BEHAVIOUR: invoice renderer omits the reconciliation notice when its total matches billing', function () {
+  const order = {
+    id: 1001,
+    date: '01/01/2026',
+    status: 'completed',
+    customer: 'Walk-in',
+    paymentMode: 'cash',
+    coupon: '',
+    total: 1050,
+    items: [{ name: 'Rice', sku: 'GRN-001', hsn: '1006', price: 1000, qty: 1 }]
+  };
+
+  const html = invoice.render(order);
+
+  assert.doesNotMatch(html, /Invoice computed total/);
+  assert.match(html, /Invoice Total/);
+  assert.match(html, /1050\.00/);
+});
+
+let failures = 0;
+for (const current of cases) {
+  try {
+    current.run();
+    process.stdout.write('ok - ' + current.name + '\n');
+  } catch (error) {
+    failures += 1;
+    process.stderr.write('not ok - ' + current.name + '\n' + error.stack + '\n');
+  }
+}
+
+process.stdout.write((cases.length - failures) + '/' + cases.length + ' characterization tests passed\n');
+if (failures) process.exitCode = 1;
