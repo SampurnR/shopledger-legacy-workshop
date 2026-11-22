@@ -31,7 +31,7 @@ test('CURRENT BEHAVIOUR: default GST produces matching figures and line breakdow
   });
 });
 
-test('CURRENT BEHAVIOUR: mixed HSN slabs bill 35 GST while the invoice uses 54', () => {
+test('CURRENT BEHAVIOUR: mixed HSN slabs produce matching billed and invoice GST', () => {
   const items = [
     item({ id: 1, name: 'Rice', hsn: '1006' }),
     item({ id: 2, name: 'Ghee', hsn: '0405' }),
@@ -46,16 +46,16 @@ test('CURRENT BEHAVIOUR: mixed HSN slabs bill 35 GST while the invoice uses 54',
     ]
   });
   assert.deepEqual(invoice.computeInvoiceFigures({ items }), {
-    subtotal: 300, discount: 0, tax: 54, cgst: 27, sgst: 27, total: 354,
+    subtotal: 300, discount: 0, tax: 35, cgst: 17.5, sgst: 17.5, total: 335,
     rows: [
-      { name: 'Rice', sku: '-', hsn: '1006', qty: 1, price: 100, gstPercent: 18, line: 100, lineTax: 18 },
-      { name: 'Ghee', sku: '-', hsn: '0405', qty: 1, price: 100, gstPercent: 18, line: 100, lineTax: 18 },
+      { name: 'Rice', sku: '-', hsn: '1006', qty: 1, price: 100, gstPercent: 5, line: 100, lineTax: 5 },
+      { name: 'Ghee', sku: '-', hsn: '0405', qty: 1, price: 100, gstPercent: 12, line: 100, lineTax: 12 },
       { name: 'Tea', sku: 'TEA', hsn: '0902', qty: 1, price: 100, gstPercent: 18, line: 100, lineTax: 18 }
     ]
   });
 });
 
-test('CURRENT BEHAVIOUR: FLAT50 reduces billed taxable value but not invoice GST', () => {
+test('CURRENT BEHAVIOUR: FLAT50 reduces taxable value before GST in billing and invoice', () => {
   const items = [item({ price: 300 })];
   assert.deepEqual(pricing.computeTotals(items, 'FLAT50'), {
     subtotal: 300, discount: 50, taxable: 250, tax: 45, cgst: 22.5, sgst: 22.5, total: 295,
@@ -64,11 +64,11 @@ test('CURRENT BEHAVIOUR: FLAT50 reduces billed taxable value but not invoice GST
   });
   const figures = invoice.computeInvoiceFigures({ items, coupon: 'FLAT50' });
   assert.equal(figures.discount, 50);
-  assert.equal(figures.tax, 54);
-  assert.equal(figures.total, 304);
+  assert.equal(figures.tax, 45);
+  assert.equal(figures.total, 295);
 });
 
-test('CURRENT BEHAVIOUR: SAVE10 caps billed discount at 150 but discounts invoice GST too', () => {
+test('CURRENT BEHAVIOUR: SAVE10 caps both discounts at 150 before GST', () => {
   const items = [item({ price: 2000 })];
   const billed = pricing.computeTotals(items, 'SAVE10');
   const printed = invoice.computeInvoiceFigures({ items, coupon: 'SAVE10' });
@@ -76,16 +76,16 @@ test('CURRENT BEHAVIOUR: SAVE10 caps billed discount at 150 but discounts invoic
   assert.equal(billed.taxable, 1850);
   assert.equal(billed.tax, 333);
   assert.equal(billed.total, 2183);
-  assert.equal(printed.discount, 236);
-  assert.equal(printed.tax, 360);
-  assert.equal(printed.total, 2124);
+  assert.equal(printed.discount, 150);
+  assert.equal(printed.tax, 333);
+  assert.equal(printed.total, 2183);
 });
 
 for (const scenario of [
-  { name: 'does not normalize coupon codes', price: 300, coupon: ' flat50 ', billedDiscount: 50, billedTotal: 295, invoiceDiscount: 0, invoiceTotal: 354 },
-  { name: 'ignores minimum-order eligibility', price: 100, coupon: 'FLAT50', billedDiscount: 0, billedTotal: 118, invoiceDiscount: 50, invoiceTotal: 68 },
-  { name: 'accepts expired coupons', price: 1000, coupon: 'DIWALI20', billedDiscount: 0, billedTotal: 1180, invoiceDiscount: 236, invoiceTotal: 944 },
-  { name: 'does not limit a flat discount to the subtotal', price: 10, coupon: 'FLAT50', billedDiscount: 0, billedTotal: 11.8, invoiceDiscount: 50, invoiceTotal: -38.2 }
+  { name: 'normalizes coupon codes', price: 300, coupon: ' flat50 ', billedDiscount: 50, billedTotal: 295, invoiceDiscount: 50, invoiceTotal: 295 },
+  { name: 'enforces minimum-order eligibility', price: 100, coupon: 'FLAT50', billedDiscount: 0, billedTotal: 118, invoiceDiscount: 0, invoiceTotal: 118 },
+  { name: 'rejects expired coupons', price: 1000, coupon: 'DIWALI20', billedDiscount: 0, billedTotal: 1180, invoiceDiscount: 0, invoiceTotal: 1180 },
+  { name: 'ignores an ineligible flat coupon on a small subtotal', price: 10, coupon: 'FLAT50', billedDiscount: 0, billedTotal: 11.8, invoiceDiscount: 0, invoiceTotal: 11.8 }
 ]) {
   test('CURRENT BEHAVIOUR: invoice ' + scenario.name, () => {
     const items = [item({ price: scenario.price })];
@@ -100,10 +100,10 @@ for (const scenario of [
 
 for (const scenario of [
   { rate: 12, billedTax: 12, billedTotal: 112, billedPercent: 12, invoiceTax: 12, invoiceTotal: 112, invoicePercent: 12 },
-  { rate: 0.18, billedTax: 18, billedTotal: 118, billedPercent: 18, invoiceTax: 0.18, invoiceTotal: 100.18, invoicePercent: 0 },
-  { rate: 0, billedTax: 0, billedTotal: 100, billedPercent: 0, invoiceTax: 18, invoiceTotal: 118, invoicePercent: 18 }
+  { rate: 0.18, billedTax: 18, billedTotal: 118, billedPercent: 18, invoiceTax: 18, invoiceTotal: 118, invoicePercent: 18 },
+  { rate: 0, billedTax: 0, billedTotal: 100, billedPercent: 0, invoiceTax: 0, invoiceTotal: 100, invoicePercent: 0 }
 ]) {
-  test('CURRENT BEHAVIOUR: explicit GST rate ' + scenario.rate + ' overrides the HSN differently', () => {
+  test('CURRENT BEHAVIOUR: explicit GST rate ' + scenario.rate + ' overrides the HSN consistently', () => {
     const items = [item({ hsn: '1006', gstRate: scenario.rate })];
     const billed = pricing.computeTotals(items);
     const printed = invoice.computeInvoiceFigures({ items });
@@ -117,7 +117,7 @@ for (const scenario of [
   });
 }
 
-test('CURRENT BEHAVIOUR: per-line billing rounding differs from invoice aggregate rounding', () => {
+test('CURRENT BEHAVIOUR: billing and invoice both round GST per line', () => {
   const items = [1, 2, 3].map(id => item({ id, price: 0.03 }));
   const billed = pricing.computeTotals(items);
   const printed = invoice.computeInvoiceFigures({ items });
@@ -127,9 +127,9 @@ test('CURRENT BEHAVIOUR: per-line billing rounding differs from invoice aggregat
   assert.equal(billed.cgst, 0.02);
   assert.equal(billed.sgst, 0.01);
   assert.deepEqual(billed.lines.map(line => line.tax), [0.01, 0.01, 0.01]);
-  assert.equal(printed.tax, 0.02);
-  assert.equal(printed.total, 0.11);
-  assert.equal(printed.cgst, 0.01);
+  assert.equal(printed.tax, 0.03);
+  assert.equal(printed.total, 0.12);
+  assert.equal(printed.cgst, 0.02);
   assert.equal(printed.sgst, 0.01);
   assert.deepEqual(printed.rows.map(row => row.lineTax), [0.01, 0.01, 0.01]);
   assert.equal(printed.rows.reduce((sum, row) => sum + row.lineTax, 0), 0.03);
@@ -156,18 +156,18 @@ test('CURRENT BEHAVIOUR: invoice recomputes figures instead of using stored orde
 });
 
 for (const scenario of [
-  { total: 295, difference: '+₹9.00' },
-  { total: 313, difference: '-₹9.00' },
-  { total: 304, difference: null }
+  { total: 286, difference: '+₹9.00' },
+  { total: 304, difference: '-₹9.00' },
+  { total: 295, difference: null }
 ]) {
   test('CURRENT BEHAVIOUR: rendered invoice reconciles recorded total ' + scenario.total, () => {
     const html = invoice.render(order({ items: [item({ price: 300 })], coupon: 'FLAT50', total: scenario.total }));
     assert.ok(html.includes('<tr><td>Gross Subtotal</td><td class="r">₹300.00</td></tr>'));
-    assert.ok(html.includes('<tr><td>CGST + SGST (Total GST)</td><td class="r">₹54.00</td></tr>'));
+    assert.ok(html.includes('<tr><td>CGST + SGST (Total GST)</td><td class="r">₹45.00</td></tr>'));
     assert.ok(html.includes('Coupon Discount (FLAT50)</td><td class="r" style="color:#16a34a">-₹50.00'));
-    assert.ok(html.includes('<tr class="grand"><td>Invoice Total</td><td class="r">₹304.00</td></tr>'));
+    assert.ok(html.includes('<tr class="grand"><td>Invoice Total</td><td class="r">₹295.00</td></tr>'));
     if (scenario.difference) {
-      assert.ok(html.includes('<strong>Accountant Reconciliation Notice:</strong> Invoice computed total (₹304.00) ' +
+      assert.ok(html.includes('<strong>Accountant Reconciliation Notice:</strong> Invoice computed total (₹295.00) ' +
         'differs from Order Ledger recorded total (₹' + scenario.total.toFixed(2) + ') by ' + scenario.difference + '.'));
     } else {
       assert.ok(!html.includes('Accountant Reconciliation Notice:'));
