@@ -40,8 +40,22 @@ router.post('/orders', function (req, res) {
     if (!p) {
       return res.status(400).json({ error: 'Unknown product ID ' + body.items[i].id });
     }
-    var q = parseInt(body.items[i].qty, 10);
-    if (!q || q < 1) q = 1;
+    var rawQty = body.items[i].qty;
+    var q = Number(rawQty);
+    var validQuantity = typeof rawQty === 'number' &&
+      Number.isFinite(rawQty) && Number.isInteger(rawQty);
+
+    if (typeof rawQty === 'string') {
+      var quantityText = rawQty.trim();
+      validQuantity = /^\+?\d+$/.test(quantityText) &&
+        Number.isFinite(q) && Number.isInteger(q);
+    }
+
+    if (!validQuantity || q < 1) {
+      return res.status(400).json({
+        error: 'Quantity must be a finite positive integer for product ID ' + p.id
+      });
+    }
 
     // Note: hsn is stored on line items; tax slab is resolved via lib/tax.js
     items.push({
