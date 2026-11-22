@@ -5,7 +5,7 @@ const pricing = require('../lib/pricing');
 const invoice = require('../lib/invoice');
 const reports = require('../lib/reports');
 
-test('CURRENT BEHAVIOUR: reported order 1002 invoice matches capped SAVE10 and 5% HSN GST billed', () => {
+test('reported order 1002 invoice matches capped SAVE10 and 5% HSN GST billed', () => {
   const order = {
     id: 1002,
     items: [
@@ -27,7 +27,7 @@ test('CURRENT BEHAVIOUR: reported order 1002 invoice matches capped SAVE10 and 5
   assert.deepEqual(figures.rows.map(function (row) { return [row.gstPercent, row.lineTax]; }), [[5, 28.8], [5, 17.1]]);
 });
 
-test('CURRENT BEHAVIOUR: reported order 1004 invoice matches SAVE10 cap and groundnut oil HSN GST', () => {
+test('reported order 1004 invoice matches SAVE10 cap and groundnut oil HSN GST', () => {
   const order = {
     id: 1004,
     items: [{ id: 5, name: 'Cold-Pressed Groundnut Oil 5L', hsn: '1508', price: 1120, qty: 2 }],
@@ -42,7 +42,7 @@ test('CURRENT BEHAVIOUR: reported order 1004 invoice matches SAVE10 cap and grou
   assert.equal(figures.rows[0].lineTax, 104.5);
 });
 
-test('CURRENT BEHAVIOUR: invoice and GST reconciliation agree for mixed HSN slabs and capped coupon orders', () => {
+test('all eight reported invoices reconcile with stored mixed-HSN order totals', () => {
   const db = {
     orders: [
       {
@@ -58,9 +58,27 @@ test('CURRENT BEHAVIOUR: invoice and GST reconciliation agree for mixed HSN slab
         ], coupon: 'SAVE10', subtotal: 1020, discount: 102, tax: 45.9, total: 963.9
       },
       {
+        id: 1003, status: 'completed', items: [
+          { id: 7, name: 'Butter', hsn: '0405', price: 260, qty: 1 },
+          { id: 8, name: 'Tea', hsn: '0902', price: 140, qty: 1 }
+        ], coupon: 'FLAT50', subtotal: 400, discount: 50, tax: 49.35, total: 399.35
+      },
+      {
         id: 1004, status: 'completed', items: [
           { id: 5, name: 'Groundnut oil', hsn: '1508', price: 1120, qty: 2 }
         ], coupon: 'SAVE10', subtotal: 2240, discount: 150, tax: 104.5, total: 2194.5
+      },
+      {
+        id: 1005, status: 'completed', items: [
+          { id: 1, name: 'Rice', hsn: '1006', price: 640, qty: 1 },
+          { id: 12, name: 'Sherbet', hsn: '2106', price: 180, qty: 2 }
+        ], coupon: 'FLAT50', subtotal: 1000, discount: 50, tax: 91.96, total: 1041.96
+      },
+      {
+        id: 1006, status: 'completed', items: [
+          { id: 6, name: 'Ghee', hsn: '0405', price: 450, qty: 2 },
+          { id: 9, name: 'Coffee', hsn: '0901', price: 310, qty: 1 }
+        ], coupon: 'WELCOME', subtotal: 1210, discount: 60.5, tax: 155.61, total: 1305.11
       },
       {
         id: 1007, status: 'pending', items: [
@@ -78,7 +96,7 @@ test('CURRENT BEHAVIOUR: invoice and GST reconciliation agree for mixed HSN slab
   };
 
   const reconciliation = reports.getGstReconciliation(db);
-  assert.equal(reconciliation.totalChecked, 5);
+  assert.equal(reconciliation.totalChecked, 8);
   assert.equal(reconciliation.mismatchCount, 0);
   assert.ok(reconciliation.rows.every(function (row) { return row.matched; }));
 });
