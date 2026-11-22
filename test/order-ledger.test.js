@@ -9,6 +9,8 @@ test('orders sort newest-first by calendar date across month and year boundaries
     orders: [
       { id: 1001, date: '28/12/2021' },
       { id: 1002, date: '05/01/2022' },
+      { id: 1003, date: '14/01/2022' },
+      { id: 1004, date: '30/01/2022' },
       { id: 1008, date: '15/03/2022' },
       { id: 1007, date: '04/03/2022' }
     ]
@@ -16,7 +18,7 @@ test('orders sort newest-first by calendar date across month and year boundaries
 
   assert.deepEqual(
     orders.list(db, {}).map(function (order) { return order.id; }),
-    [1008, 1007, 1002, 1001]
+    [1008, 1007, 1004, 1003, 1002, 1001]
   );
 });
 
@@ -25,13 +27,15 @@ test('date range filter includes only dates within the requested calendar range'
     orders: [
       { id: 1001, date: '28/12/2021' },
       { id: 1002, date: '05/01/2022' },
+      { id: 1003, date: '14/01/2022' },
+      { id: 1004, date: '30/01/2022' },
       { id: 1008, date: '15/03/2022' }
     ]
   };
 
   assert.deepEqual(
     orders.list(db, { from: '2022-01-01', to: '2022-01-31' }).map(function (order) { return order.id; }),
-    [1002]
+    [1004, 1003, 1002]
   );
 });
 
