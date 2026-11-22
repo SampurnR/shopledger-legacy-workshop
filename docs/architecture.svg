@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="920" viewBox="0 0 1500 920" role="img" aria-labelledby="title desc">
+  <title id="title">ShopLedger architecture and order flow</title>
+  <desc id="desc">The browser UI calls Express routes, which use library modules and the JSON database. The order flow goes from product selection through validation, pricing, inventory, ledger, order storage, and invoice reporting.</desc>
+  <defs>
+    <style>
+      .bg{fill:#f8fafc}.box{fill:#ffffff;stroke:#334155;stroke-width:2;rx:12}.group{fill:#e0f2fe;stroke:#0369a1;stroke-width:2;rx:16}.data{fill:#fef3c7;stroke:#b45309;stroke-width:2;rx:12}.flow{stroke:#475569;stroke-width:3;fill:none;marker-end:url(#arrow)}.title{font:700 28px Arial;fill:#0f172a}.head{font:700 18px Arial;fill:#0f172a}.label{font:14px Arial;fill:#334155}.small{font:12px Arial;fill:#475569}.note{font:italic 13px Arial;fill:#475569}
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L10,3 L0,6 Z" fill="#475569"/></marker>
+  </defs>
+  <rect class="bg" width="1500" height="920"/>
+  <text class="title" x="50" y="52">ShopLedger architecture</text>
+  <text class="note" x="50" y="78">Verified from the current repository; arrows show the order-placement path.</text>
+
+  <rect class="group" x="50" y="115" width="300" height="180"/>
+  <text class="head" x="75" y="150">Browser UI</text>
+  <text class="label" x="75" y="180">public/index.html</text>
+  <text class="label" x="75" y="205">public/js/app.js</text>
+  <text class="label" x="75" y="230">public/css/style.css</text>
+  <text class="small" x="75" y="265">POS · Orders · Khata · GST Audit</text>
+
+  <rect class="group" x="430" y="105" width="410" height="215"/>
+  <text class="head" x="455" y="140">Express application (server.js)</text>
+  <text class="label" x="455" y="170">routes/products.js</text>
+  <text class="label" x="455" y="195">routes/orders.js</text>
+  <text class="label" x="455" y="220">routes/customers.js</text>
+  <text class="label" x="455" y="245">routes/reports.js</text>
+  <text class="small" x="455" y="280">Static assets + JSON API + invoice HTML</text>
+
+  <rect class="group" x="920" y="90" width="500" height="265"/>
+  <text class="head" x="945" y="125">Domain modules (lib/)</text>
+  <text class="label" x="945" y="155">pricing.js · coupons.js · tax.js</text>
+  <text class="label" x="945" y="180">inventory.js · orders.js</text>
+  <text class="label" x="945" y="205">ledger.js · dates.js</text>
+  <text class="label" x="945" y="230">invoice.js · reports.js</text>
+  <text class="label" x="945" y="255">store.js</text>
+  <text class="small" x="945" y="305">Calculations, stock, Khata, invoices, reporting</text>
+
+  <rect class="data" x="1030" y="435" width="280" height="100"/>
+  <text class="head" x="1060" y="475">data/db.json</text>
+  <text class="label" x="1060" y="505">products · orders · customers</text>
+  <text class="label" x="1060" y="525">settlements · auditLog</text>
+
+  <rect class="group" x="55" y="430" width="300" height="300"/>
+  <text class="head" x="80" y="470">Order flow</text>
+  <text class="label" x="80" y="510">1. Select products and quantities</text>
+  <text class="label" x="80" y="545">2. POST /api/orders</text>
+  <text class="label" x="80" y="580">3. Validate products and stock</text>
+  <text class="label" x="80" y="615">4. Calculate coupon and GST</text>
+  <text class="label" x="80" y="650">5. Charge Khata if selected</text>
+  <text class="label" x="80" y="685">6. Reserve stock and add order</text>
+  <text class="label" x="80" y="720">7. Audit and persist</text>
+
+  <rect class="box" x="480" y="430" width="330" height="155"/>
+  <text class="head" x="505" y="470">Pricing + tax</text>
+  <text class="label" x="505" y="505">pricing.computeTotals()</text>
+  <text class="label" x="505" y="530">coupons.calculateDiscount()</text>
+  <text class="label" x="505" y="555">tax.getRateForItem()</text>
+
+  <rect class="box" x="860" y="635" width="300" height="145"/>
+  <text class="head" x="885" y="675">After placement</text>
+  <text class="label" x="885" y="710">orders.list() / cancel()</text>
+  <text class="label" x="885" y="735">invoice.render()</text>
+  <text class="label" x="885" y="760">reports reconciliation</text>
+
+  <path class="flow" d="M350 205 L430 205"/>
+  <path class="flow" d="M840 205 L920 205"/>
+  <path class="flow" d="M1140 355 L1170 435"/>
+  <path class="flow" d="M355 575 L480 510"/>
+  <path class="flow" d="M810 510 L1030 485"/>
+  <path class="flow" d="M1170 535 L1010 635"/>
+  <path class="flow" d="M650 320 L650 430"/>
+  <text class="small" x="665" y="385">POST /api/orders</text>
+</svg>
