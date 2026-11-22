@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="920" viewBox="0 0 1440 920" role="img" aria-labelledby="title">
+<title id="title">ShopLedger architecture and order checkout</title>
+<style>text{font-family:'Segoe UI',Arial,sans-serif;fill:#193640}.body{font-size:19px}.head{font-size:26px;font-weight:650}.label{font-size:20px;font-weight:650;fill:#126652}</style>
+<defs><marker id="tip" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#126652"/></marker></defs>
+<rect x="0" y="0" width="1440" height="920" rx="9" fill="#eff4f2"/>
+<text x="40" y="60" class="head">ShopLedger architecture</text>
+<text x="40" y="93" class="body">How a sale moves from the browser to the order ledger</text>
+<rect x="40" y="130" width="390" height="105" rx="9" fill="white"/>
+<text x="62" y="170" class="head">Browser UI</text>
+<text x="62" y="206" class="body">public/index.html  ·  public/js/app.js</text>
+<path d="M430 185 H667" stroke="#126652" stroke-width="3" fill="none" marker-end="url(#tip)"/>
+<text x="455" y="166" class="label">POST /api/orders</text>
+<rect x="670" y="130" width="730" height="105" rx="9" fill="#d8ece3"/>
+<text x="694" y="170" class="head">server.js</text>
+<text x="694" y="206" class="body">Serves public/, parses JSON and mounts four routers at /api.</text>
+<path d="M756 235 V282" stroke="#126652" stroke-width="3" fill="none" marker-end="url(#tip)"/>
+<path d="M982 235 V282" stroke="#126652" stroke-width="3" fill="none" marker-end="url(#tip)"/>
+<rect x="40" y="286" width="790" height="439" rx="9" fill="white"/>
+<text x="62" y="334" class="head">routes/orders.js</text>
+<text x="325" y="334" class="body">Checkout calls in execution order</text>
+<text x="62" y="382" class="label">1</text>
+<text x="95" y="382" class="body">lib/store.js</text>
+<text x="351" y="382" class="body">Read and parse data/db.json.</text>
+<rect x="61" y="395" width="746" height="1" rx="9" fill="#dbe6e1"/>
+<text x="62" y="427" class="label">2</text>
+<text x="95" y="427" class="body">lib/inventory.js</text>
+<text x="351" y="427" class="body">Look up products and check sellable stock.</text>
+<rect x="61" y="440" width="746" height="1" rx="9" fill="#dbe6e1"/>
+<text x="62" y="472" class="label">3</text>
+<text x="95" y="472" class="body">lib/pricing.js · lib/coupons.js</text>
+<text x="351" y="472" class="body">Get subtotal and validate any coupon.</text>
+<rect x="61" y="485" width="746" height="1" rx="9" fill="#dbe6e1"/>
+<text x="62" y="517" class="label">4</text>
+<text x="95" y="517" class="body">lib/pricing.js</text>
+<text x="351" y="517" class="body">Use coupons.js and tax.js for discounts and GST.</text>
+<rect x="61" y="530" width="746" height="1" rx="9" fill="#dbe6e1"/>
+<text x="62" y="562" class="label">5</text>
+<text x="95" y="562" class="body">lib/ledger.js</text>
+<text x="351" y="562" class="body">For Khata credit, check the limit and debit the account.</text>
+<rect x="61" y="575" width="746" height="1" rx="9" fill="#dbe6e1"/>
+<text x="62" y="607" class="label">6</text>
+<text x="95" y="607" class="body">lib/inventory.js</text>
+<text x="351" y="607" class="body">Deduct ordered quantities from stock.</text>
+<rect x="61" y="620" width="746" height="1" rx="9" fill="#dbe6e1"/>
+<text x="62" y="652" class="label">7</text>
+<text x="95" y="652" class="body">lib/orders.js</text>
+<text x="351" y="652" class="body">Assign an ID and date (lib/dates.js), then add the order.</text>
+<rect x="61" y="665" width="746" height="1" rx="9" fill="#dbe6e1"/>
+<text x="62" y="697" class="label">8</text>
+<text x="95" y="697" class="body">lib/store.js</text>
+<text x="351" y="697" class="body">Append ORDER_CREATED and call store.write(db).</text>
+<path d="M235 725 V793" stroke="#126652" stroke-width="3" fill="none" marker-end="url(#tip)"/>
+<text x="253" y="767" class="label">fs.writeFileSync</text>
+<rect x="40" y="797" width="790" height="88" rx="9" fill="#d8ece3"/>
+<text x="62" y="832" class="head">data/db.json</text>
+<text x="62" y="864" class="body">After saving, the router returns the order to the browser with HTTP 201.</text>
+<rect x="854" y="286" width="546" height="599" rx="9" fill="white"/>
+<text x="878" y="334" class="head">Other routes and shared settings</text>
+<text x="878" y="389" class="label">routes/products.js</text>
+<text x="878" y="417" class="body">Product catalog and active coupons.</text>
+<text x="878" y="466" class="label">routes/customers.js</text>
+<text x="878" y="494" class="body">Customer accounts and settlements via lib/ledger.js.</text>
+<text x="878" y="543" class="label">routes/reports.js</text>
+<text x="878" y="571" class="body">Dashboard and GST reconciliation via lib/reports.js.</text>
+<text x="878" y="599" class="body">Also handles pricing previews and data export.</text>
+<text x="878" y="648" class="label">GET /orders/:id/invoice</text>
+<text x="878" y="676" class="body">server.js loads the order via lib/store.js and lib/orders.js.</text>
+<text x="878" y="704" class="body">lib/invoice.js calculates and renders the printable invoice.</text>
+<text x="878" y="753" class="label">config.js</text>
+<text x="878" y="781" class="body">Server port, shop details, GST slabs, coupon rules</text>
+<text x="878" y="809" class="body">and inventory settings.</text>
+</svg>
