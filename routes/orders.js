@@ -5,6 +5,7 @@ var pricing = require('../lib/pricing');
 var coupons = require('../lib/coupons');
 var orders = require('../lib/orders');
 var ledger = require('../lib/ledger');
+var replay = require('../lib/request-replay');
 
 var router = express.Router();
 
@@ -28,30 +29,19 @@ router.get('/orders/:id', function (req, res) {
 
 router.post('/orders', function (req, res) {
   var db = store.read();
+  var remember = replay.start(db, req, res, 'order');
+  if (!remember) return;
   var body = req.body || {};
-  var items = [];
-
-  if (!body.items || !body.items.length) {
+  var resolved = inventory.resolveOrderItems(db.products, body.items || []);
+  if (resolved.error) return res.status(400).json({ error: resolved.error });
+  var items = resolved.items;
+  if (!items.length) {
     return res.status(400).json({ error: 'Pick at least one item to place an order' });
   }
 
-  for (var i = 0; i < body.items.length; i++) {
-    var p = inventory.find(db.products, body.items[i].id);
-    if (!p) {
-      return res.status(400).json({ error: 'Unknown product ID ' + body.items[i].id });
-    }
-    var q = parseInt(body.items[i].qty, 10);
-    if (!q || q < 1) q = 1;
-
-    // Note: hsn is stored on line items; tax slab is resolved via lib/tax.js
-    items.push({
-      id: p.id,
-      sku: p.sku,
-      name: p.name,
-      hsn: p.hsn,
-      price: p.price,
-      qty: q
-    });
+  var status = body.status === undefined ? 'completed' : body.status;
+  if (status !== 'completed' && status !== 'pending') {
+    return res.status(400).json({ error: 'New orders must be pending or completed' });
   }
 
   var stock = inventory.check(db.products, items);
@@ -69,7 +59,10 @@ router.post('/orders', function (req, res) {
   }
 
   var totals = pricing.computeTotals(items, rawCoupon);
-  var paymentMode = (body.paymentMode || 'cash').toLowerCase();
+  var paymentMode = String(body.paymentMode || 'cash').toLowerCase();
+  if (['cash', 'upi', 'khata'].indexOf(paymentMode) === -1) {
+    return res.status(400).json({ error: 'Unsupported payment mode' });
+  }
   var customerName = (body.customer || '').trim() || 'Walk-in';
   var customerId = body.customerId ? Number(body.customerId) : null;
 
@@ -96,7 +89,8 @@ router.post('/orders', function (req, res) {
     customer: customerName,
     customerId: customerId,
     paymentMode: paymentMode,
-    status: body.status || 'completed',
+    status: status,
+    pricingVersion: 2,
     items: items,
     coupon: rawCoupon,
     subtotal: totals.subtotal,
@@ -106,9 +100,22 @@ router.post('/orders', function (req, res) {
   });
 
   store.appendAudit(db, 'ORDER_CREATED', 'Order #' + order.id + ' (' + customerName + ') ₹' + order.total.toFixed(2));
+  remember(order);
   store.write(db);
 
   res.status(201).json(order);
+});
+
+router.post('/orders/:id/dispatch', function (req, res) {
+  var db = store.read();
+  var result = orders.dispatch(db, req.params.id);
+  if (result.error) return res.status(result.status).json({ error: result.error });
+
+  if (result.changed) {
+    store.appendAudit(db, 'ORDER_DISPATCHED', 'Order #' + result.order.id + ' dispatched');
+    store.write(db);
+  }
+  res.json(result.order);
 });
 
 router.post('/orders/:id/cancel', function (req, res) {

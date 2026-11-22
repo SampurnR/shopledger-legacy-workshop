@@ -90,8 +90,8 @@ test('a placed order prints its capped discount and checkout GST by HSN', async 
   assert.equal(db.orders[0], order);
   assert.equal(order.coupon, 'SAVE10');
   assert.deepEqual(order.items, [
-    { id: 1, sku: 'RICE', name: 'Rice', hsn: '1006', price: 500, qty: 2 },
-    { id: 2, sku: 'GHEE', name: 'Ghee', hsn: '0405', price: 1000, qty: 1 }
+    { id: 1, sku: 'RICE', name: 'Rice', hsn: '1006', price: 500, qty: 2, gstRate: 0.05 },
+    { id: 2, sku: 'GHEE', name: 'Ghee', hsn: '0405', price: 1000, qty: 1, gstRate: 0.12 }
   ]);
   assert.equal(order.subtotal, 2000);
   assert.equal(order.discount, 150);

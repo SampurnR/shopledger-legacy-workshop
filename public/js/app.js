@@ -2,6 +2,9 @@ var allProducts = [];
 var cartQuantities = {}; // productId -> qty
 var activeCategory = 'all';
 var customersList = [];
+var previewVersion = 0;
+var orderSubmission = {};
+var settlementSubmission = {};
 
 function get(url, cb) {
   var x = new XMLHttpRequest();
@@ -16,20 +19,42 @@ function get(url, cb) {
   x.send();
 }
 
-function post(url, data, cb) {
+function post(url, data, cb, key) {
   var x = new XMLHttpRequest();
   x.open('POST', url);
+  x.timeout = 15000;
   x.setRequestHeader('Content-Type', 'application/json');
+  if (key) x.setRequestHeader('Idempotency-Key', key);
   x.onload = function () {
     var parsed = {};
     try {
       parsed = JSON.parse(x.responseText);
     } catch (e) {
-      parsed = { error: x.responseText || 'Request failed' };
+      parsed = { error: 'Request failed' };
     }
     cb(x.status, parsed);
   };
+  x.onerror = x.ontimeout = x.onabort = function () {
+    cb(0, { error: 'No response from the server. Retry to check the result.' });
+  };
   x.send(JSON.stringify(data));
+}
+
+function submitOnce(button, submission, url, payload, cb) {
+  if (button.disabled) return;
+  var signature = url + JSON.stringify(payload);
+  if (submission.signature !== signature) {
+    var bytes = window.crypto.getRandomValues(new Uint8Array(16));
+    submission.key = Array.from(bytes, function (byte) { return byte.toString(16).padStart(2, '0'); }).join('');
+    submission.signature = signature;
+  }
+
+  button.disabled = true;
+  post(url, payload, function (status, result) {
+    button.disabled = false;
+    if (status > 0 && status < 500) submission.signature = null;
+    cb(status, result);
+  }, submission.key);
 }
 
 function fmtMoney(n) {
@@ -161,6 +186,7 @@ function getSelectedCartItems() {
 }
 
 function updateCartPreview() {
+  var version = ++previewVersion;
   var items = getSelectedCartItems();
   var countEl = document.getElementById('cart-count');
   var listEl = document.getElementById('cart-items-list');
@@ -194,9 +220,21 @@ function updateCartPreview() {
   }
   listEl.className = '';
   listEl.innerHTML = miniHtml;
+  feedbackEl.className = 'field-hint';
+  feedbackEl.textContent = '';
+  document.getElementById('preview-subtotal').textContent = '—';
+  document.getElementById('preview-discount').textContent = '—';
+  document.getElementById('preview-tax').textContent = '—';
+  document.getElementById('preview-total').textContent = 'Calculating…';
 
   post('/api/pricing/preview', { items: items, coupon: couponCode }, function (status, res) {
-    if (!res || !res.totals) return;
+    if (version !== previewVersion) return;
+    if (status !== 200 || !res || !res.totals) {
+      document.getElementById('preview-total').textContent = 'Unavailable';
+      feedbackEl.className = 'field-hint err';
+      feedbackEl.textContent = (res && res.error) || 'Unable to calculate preview';
+      return;
+    }
     var t = res.totals;
     document.getElementById('preview-subtotal').textContent = fmtMoney(t.subtotal);
     document.getElementById('preview-discount').textContent = '-' + fmtMoney(t.discount);
@@ -271,6 +309,9 @@ function loadOrders() {
       }).join(', ');
 
       var st = o.status || 'completed';
+      var dispatchBtn = st === 'pending'
+        ? ' <button type="button" class="btn btn-ghost btn-sm" onclick="dispatchOrder(' + o.id + ')">Mark dispatched</button>'
+        : '';
       var cancelBtn = st !== 'cancelled'
         ? ' <button type="button" class="btn btn-danger-outline" onclick="cancelOrder(' + o.id + ')">Cancel</button>'
         : '';
@@ -289,7 +330,7 @@ function loadOrders() {
         '<td><span class="status-pill ' + st + '">' + st + '</span></td>' +
         '<td class="r" style="white-space:nowrap">' +
         '<a class="btn-link" href="/orders/' + o.id + '/invoice" target="_blank">Invoice &nearr;</a>' +
-        cancelBtn +
+        dispatchBtn + cancelBtn +
         '</td>' +
         '</tr>';
     }
@@ -315,6 +356,21 @@ window.cancelOrder = function (orderId) {
     } else {
       msgEl.className = 'err';
       msgEl.textContent = (res && res.error) ? res.error : 'Failed to cancel order';
+    }
+  });
+};
+
+window.dispatchOrder = function (orderId) {
+  var msgEl = document.getElementById('orders-action-msg');
+  post('/api/orders/' + orderId + '/dispatch', {}, function (status, res) {
+    if (status === 200) {
+      msgEl.className = 'ok';
+      msgEl.textContent = 'Order #' + orderId + ' marked as dispatched.';
+      loadOrders();
+      loadDashboardSummary();
+    } else {
+      msgEl.className = 'err';
+      msgEl.textContent = (res && res.error) || 'Failed to dispatch order';
     }
   });
 };
@@ -509,7 +565,7 @@ document.getElementById('place').onclick = function () {
 
   var selectedCustId = document.getElementById('customer-select').value;
   var payload = {
-    items: items,
+    items: items.map(function (item) { return { id: item.id, qty: item.qty }; }),
     customerId: selectedCustId ? Number(selectedCustId) : null,
     customer: document.getElementById('customer').value,
     paymentMode: document.getElementById('payment-mode').value,
@@ -517,7 +573,7 @@ document.getElementById('place').onclick = function () {
     coupon: document.getElementById('coupon').value
   };
 
-  post('/api/orders', payload, function (status, res) {
+  submitOnce(this, orderSubmission, '/api/orders', payload, function (status, res) {
     if (status === 201) {
       cartQuantities = {};
       msg.className = 'ok';
@@ -529,7 +585,7 @@ document.getElementById('place').onclick = function () {
       loadCustomersDropdown();
     } else {
       msg.className = 'err';
-      msg.innerHTML = (res && res.error) ? res.error : 'Order failed';
+      msg.textContent = (res && res.error) ? res.error : 'Order failed';
     }
   });
 };
@@ -553,7 +609,7 @@ document.getElementById('btn-record-settlement').onclick = function () {
   var note = document.getElementById('settle-note').value;
   var khataMsg = document.getElementById('khata-msg');
 
-  post('/api/customers/' + custId + '/settle', {
+  submitOnce(this, settlementSubmission, '/api/customers/' + custId + '/settle', {
     amount: amount,
     mode: mode,
     note: note
