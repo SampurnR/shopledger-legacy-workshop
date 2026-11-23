@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="650" viewBox="0 0 1100 650" role="img" aria-labelledby="title">
+  <title id="title">ShopLedger architecture and order flow</title>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4 0 8z" fill="#64748b"/></marker>
+    <style>
+      text{font-family:system-ui,sans-serif;fill:#13233b}.title{font-size:36px;font-weight:700}.label{font-size:19px;font-weight:650}.detail{font-size:15px;fill:#334155}.box{fill:white;stroke:#a5b4c8;stroke-width:2}.ticket{fill:#e0f2fe;stroke:#0284c7;stroke-width:2}.edge{stroke:#64748b;stroke-width:2;fill:none;marker-end:url(#arrow)}
+    </style>
+  </defs>
+  <rect width="1100" height="650" fill="#f3f6fb"/>
+  <text x="36" y="60" class="title">ShopLedger architecture</text>
+  <text x="38" y="88" class="detail">Invoice and GST ticket modules are highlighted in blue.</text>
+  <g>
+    <rect x="35" y="125" width="300" height="105" rx="12" class="box"/>
+    <text x="53" y="155" class="label">1 · Browser POS</text>
+    <text x="53" y="183" class="detail">public/index.html · public/js/app.js</text>
+    <text x="53" y="207" class="detail">Sends POST /api/orders</text>
+    <rect x="400" y="125" width="300" height="105" rx="12" class="box"/>
+    <text x="418" y="155" class="label">2 · Express and order route</text>
+    <text x="418" y="183" class="detail">server.js · routes/orders.js</text>
+    <text x="418" y="207" class="detail">Resolves items and checks stock/coupon</text>
+    <rect x="765" y="125" width="300" height="105" rx="12" class="ticket"/>
+    <text x="783" y="155" class="label">3 · Checkout pricing</text>
+    <text x="783" y="183" class="detail">pricing.js · tax.js · coupons.js</text>
+    <text x="783" y="207" class="detail">Computes discount, GST and total</text>
+    <rect x="400" y="290" width="300" height="105" rx="12" class="box"/>
+    <text x="418" y="320" class="label">4 · Apply the order</text>
+    <text x="418" y="348" class="detail">ledger.js · inventory.js · orders.js</text>
+    <text x="418" y="372" class="detail">Charges Khata if used and deducts stock</text>
+    <rect x="35" y="290" width="300" height="105" rx="12" class="box"/>
+    <text x="53" y="320" class="label">5 · Persist and return HTTP 201</text>
+    <text x="53" y="348" class="detail">lib/store.js → data/db.json</text>
+    <text x="53" y="372" class="detail">Writes order and audit entry</text>
+    <rect x="765" y="290" width="300" height="105" rx="12" class="box"/>
+    <text x="783" y="320" class="label">Business rules</text>
+    <text x="783" y="348" class="detail">config.js</text>
+    <text x="783" y="372" class="detail">HSN rates, coupon rules, shop details</text>
+    <rect x="35" y="470" width="300" height="112" rx="12" class="box"/>
+    <text x="53" y="500" class="label">Other API routes</text>
+    <text x="53" y="528" class="detail">products.js · customers.js · reports.js</text>
+    <text x="53" y="552" class="detail">Inventory, Khata and GST Audit views</text>
+    <rect x="400" y="470" width="300" height="112" rx="12" class="ticket"/>
+    <text x="418" y="500" class="label">Printable invoice</text>
+    <text x="418" y="528" class="detail">GET /orders/:id/invoice → lib/invoice.js</text>
+    <text x="418" y="552" class="detail">Shared with the GST Audit calculation</text>
+    <path d="M335 176H395" class="edge"/> <path d="M700 176H760" class="edge"/> <path d="M765 222L703 289" class="edge"/> <path d="M400 342H340" class="edge"/> <path d="M915 290V235" class="edge"/> <path d="M185 470V400" class="edge"/> <path d="M400 517H340" class="edge"/> <path d="M489 470L333 393" class="edge"/>
+  </g>
+</svg>
