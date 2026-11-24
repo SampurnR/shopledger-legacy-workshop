@@ -1,0 +1,157 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" role="img" aria-labelledby="title desc">
+  <title id="title">ShopLedger architecture and order placement</title>
+  <desc id="desc">Browser to Express server to four routers and ten library modules. Each box lists its direct internal dependencies. A numbered sequence traces POST /api/orders through validation, pricing, Khata, stock deduction, order creation and JSON persistence. The invoice module is highlighted as the ticket scope and calculates separately from checkout.</desc>
+  <defs>
+    <style>
+      text { font-family: Arial, Helvetica, sans-serif; fill: #172d42; font-size: 13px; }
+      .title { font-size: 24px; font-weight: bold; }
+      .name { font-size: 16px; font-weight: bold; }
+      .small { font-size: 12px; }
+      .muted { fill: #4b6073; }
+      .box { fill: #ffffff; stroke: #9aabba; stroke-width: 1.2; }
+      .lib { fill: #f5f8fb; stroke: #9aabba; stroke-width: 1.2; }
+      .ticket { fill: #fff0dc; stroke: #a65a00; stroke-width: 2; }
+      .wire { fill: none; stroke: #526b80; stroke-width: 1.5; marker-end: url(#arrow); }
+      .bus { fill: none; stroke: #526b80; stroke-width: 1.5; }
+      .num { fill: #176287; font-weight: bold; }
+    </style>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0 L8 4 L0 8 Z" fill="#526b80"/></marker>
+  </defs>
+  <rect width="1200" height="800" fill="#ffffff"/>
+  <text x="24" y="32" class="title">ShopLedger / architecture</text>
+  <text x="24" y="53" class="muted">Verified source map • direct internal dependencies are listed as “uses” • order flow below</text>
+  <rect x="836" y="18" width="15" height="15" class="ticket"/><text x="858" y="31" class="small">Ticket: invoice.js</text>
+  <path d="M1000 26 H1033" class="wire"/><text x="1042" y="31" class="small">request / I/O</text>
+
+  <rect x="24" y="75" width="320" height="94" rx="6" class="box"/>
+  <text x="38" y="98" class="name">Browser UI · public/</text>
+  <text x="38" y="120">index.html · css/style.css · js/app.js</text>
+  <text x="38" y="141" class="small">getSelectedCartItems() · post() · updateCartPreview()</text>
+  <text x="38" y="159" class="small">POS · orders · Khata · inventory / GST audit</text>
+
+  <path d="M344 119 H400" class="wire"/>
+  <rect x="400" y="75" width="418" height="94" rx="6" class="box"/>
+  <text x="414" y="98" class="name">server.js · Express</text>
+  <text x="414" y="120">JSON parsing · static public/ · /api router mounts</text>
+  <text x="414" y="141" class="small">GET /orders/:id/invoice → store.read() → orders.get()</text>
+  <text x="414" y="159" class="small">→ invoice.render() → printable HTML to browser</text>
+
+  <rect x="842" y="75" width="334" height="94" rx="6" class="box"/>
+  <text x="856" y="98" class="name">config.js</text>
+  <text x="856" y="120" class="small">Shop · port · admin key · GST slabs · coupons · stock</text>
+  <text x="856" y="141" class="small">Read by: server.js, routes/reports.js;</text>
+  <text x="856" y="159" class="small">lib/{inventory, coupons, tax, invoice}.js</text>
+
+  <path d="M609 169 V191 M162 191 H1038" class="bus"/>
+  <path d="M162 191 V208 M454 191 V208 M746 191 V208 M1038 191 V208" class="wire"/>
+  <rect x="24" y="208" width="276" height="80" rx="5" class="box"/>
+  <text x="36" y="231" class="name">routes/products.js</text>
+  <text x="36" y="252" class="small">GET products, coupons</text>
+  <text x="36" y="273" class="small">uses: store, inventory, tax, coupons</text>
+
+  <rect x="316" y="208" width="276" height="80" rx="5" class="box"/>
+  <text x="328" y="231" class="name">routes/orders.js</text>
+  <text x="328" y="251" class="small">GET orders; POST orders, orders/:id/cancel</text>
+  <text x="328" y="268" class="small">uses: store, inventory, pricing, coupons,</text>
+  <text x="328" y="282" class="small">orders, ledger</text>
+
+  <rect x="608" y="208" width="276" height="80" rx="5" class="box"/>
+  <text x="620" y="231" class="name">routes/customers.js</text>
+  <text x="620" y="252" class="small">GET customers; POST customers/:id/settle</text>
+  <text x="620" y="273" class="small">uses: store, ledger</text>
+
+  <rect x="900" y="208" width="276" height="80" rx="5" class="box"/>
+  <text x="912" y="231" class="name">routes/reports.js</text>
+  <text x="912" y="251" class="small">GET dashboard, GST reconciliation, export;</text>
+  <text x="912" y="268" class="small">POST pricing/preview</text>
+  <text x="912" y="282" class="small">uses: config, store, reports, pricing, coupons</text>
+
+  <text x="24" y="311" class="small muted">LIBRARY MODULES · names in “uses” refer to lib/*.js unless stated otherwise</text>
+  <rect x="24" y="322" width="224" height="100" rx="5" class="lib"/>
+  <text x="36" y="346" class="name">lib/inventory.js</text>
+  <text x="36" y="367">find() · check() · reserve()</text>
+  <text x="36" y="386">release() · summarize()</text>
+  <text x="36" y="408" class="small muted">uses: config</text>
+
+  <rect x="256" y="322" width="224" height="100" rx="5" class="lib"/>
+  <text x="268" y="346" class="name">lib/pricing.js</text>
+  <text x="268" y="367">subtotal() · discount()</text>
+  <text x="268" y="386">computeTotals()</text>
+  <text x="268" y="408" class="small muted">uses: tax, coupons</text>
+
+  <rect x="488" y="322" width="224" height="100" rx="5" class="lib"/>
+  <text x="500" y="346" class="name">lib/coupons.js</text>
+  <text x="500" y="367">normalizeCode() · validate()</text>
+  <text x="500" y="386">calculateDiscount() · listActive()</text>
+  <text x="500" y="408" class="small muted">uses: config</text>
+
+  <rect x="720" y="322" width="224" height="100" rx="5" class="lib"/>
+  <text x="732" y="346" class="name">lib/tax.js</text>
+  <text x="732" y="367">getRateForItem()</text>
+  <text x="732" y="386">getSlabPercent() · splitCgstSgst()</text>
+  <text x="732" y="408" class="small muted">uses: config · checkout GST</text>
+
+  <rect x="952" y="322" width="224" height="100" rx="5" class="ticket"/>
+  <text x="964" y="346" class="name">lib/invoice.js</text>
+  <text x="964" y="367">render()</text>
+  <text x="964" y="386">computeInvoiceFigures()</text>
+  <text x="964" y="408" class="small">uses: config · does not call tax.js</text>
+
+  <rect x="24" y="434" width="224" height="100" rx="5" class="lib"/>
+  <text x="36" y="458" class="name">lib/orders.js</text>
+  <text x="36" y="479">add() · get() · list() · cancel()</text>
+  <text x="36" y="501" class="small">Order IDs, records and cancellation</text>
+  <text x="36" y="521" class="small muted">uses: dates, inventory, ledger</text>
+
+  <rect x="256" y="434" width="224" height="100" rx="5" class="lib"/>
+  <text x="268" y="458" class="name">lib/ledger.js</text>
+  <text x="268" y="479" class="small">findCustomer() · chargeOrderToKhata()</text>
+  <text x="268" y="498" class="small">recordSettlement() · reverseOrderDebit()</text>
+  <text x="268" y="521" class="small muted">uses: dates · customer balances</text>
+
+  <rect x="488" y="434" width="224" height="100" rx="5" class="lib"/>
+  <text x="500" y="458" class="name">lib/dates.js</text>
+  <text x="500" y="479">today() · normalizeDateKey()</text>
+  <text x="500" y="498">getFiscalYear()</text>
+  <text x="500" y="521" class="small muted">No internal module dependencies</text>
+
+  <rect x="720" y="434" width="224" height="100" rx="5" class="lib"/>
+  <text x="732" y="458" class="name">lib/reports.js</text>
+  <text x="732" y="479">getDashboardSummary()</text>
+  <text x="732" y="498">getGstReconciliation()</text>
+  <text x="732" y="521" class="small muted">uses: inventory, ledger, invoice</text>
+
+  <rect x="952" y="434" width="224" height="100" rx="5" class="lib"/>
+  <text x="964" y="458" class="name">lib/store.js</text>
+  <text x="964" y="479">read() · write() · appendAudit()</text>
+  <text x="964" y="501" class="small">Synchronous whole-file JSON I/O</text>
+  <text x="964" y="521" class="small muted">uses: Node fs, path</text>
+
+  <path d="M1064 534 V563" class="wire"/>
+  <rect x="952" y="563" width="224" height="181" rx="6" class="box"/>
+  <text x="964" y="588" class="name">data/db.json</text>
+  <text x="964" y="613">products · orders · customers</text>
+  <text x="964" y="634">settlements · auditLog</text>
+  <text x="964" y="655">nextOrderId · nextSettlementId</text>
+  <text x="964" y="685" class="small muted">Order save includes stock changes,</text>
+  <text x="964" y="703" class="small muted">Khata changes, order and audit.</text>
+  <text x="964" y="730" class="small muted">No saved per-line tax breakdown.</text>
+
+  <rect x="24" y="553" width="904" height="191" rx="6" fill="#eef6fa" stroke="#a9c2d0"/>
+  <text x="38" y="578" class="name">Placing an order · successful request, in execution order</text>
+  <text x="38" y="602"><tspan class="num">1 </tspan>UI post() → POST /api/orders → server.js</text>
+  <text x="38" y="625"><tspan class="num">2 </tspan>routes/orders.js → store.read()</text>
+  <text x="38" y="648"><tspan class="num">3 </tspan>inventory.find() → resolve price / HSN; parse quantity</text>
+  <text x="38" y="671"><tspan class="num">4 </tspan>inventory.check() → check sellable stock</text>
+  <text x="38" y="694"><tspan class="num">5 </tspan>pricing.subtotal() → coupons.normalizeCode(), validate()</text>
+  <text x="38" y="726" class="small muted">Invalid items, stock, coupons or Khata credit can stop the request.</text>
+  <text x="486" y="602"><tspan class="num">6 </tspan>pricing.computeTotals() → coupons + tax</text>
+  <text x="486" y="625"><tspan class="num">7 </tspan>ledger.findCustomer(); chargeOrderToKhata() if Khata</text>
+  <text x="486" y="648"><tspan class="num">8 </tspan>inventory.reserve() → subtract physical stock</text>
+  <text x="486" y="671"><tspan class="num">9 </tspan>orders.add() → ID, date, item snapshots, stored totals</text>
+  <text x="486" y="694"><tspan class="num">10 </tspan>store.appendAudit() → store.write() → HTTP 201</text>
+  <text x="486" y="726" class="small muted">Numbered steps describe calls; they are not extra endpoints.</text>
+
+  <text x="24" y="770" class="small">Checkout: proportional discount → HSN GST on discounted lines. Invoice: separate GST / coupon calculation from config.</text>
+  <text x="24" y="789" class="small muted">Invoice is highlighted as ticket scope; tax.js is shown for checkout context. Source inspection only; no runtime verification.</text>
+</svg>
