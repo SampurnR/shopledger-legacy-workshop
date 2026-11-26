@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "skills": {
+    "interview-me": {
+      "source": "addyosmani/agent-skills",
+      "commit": "e997ac5b9a74eab332d5e9793bb38a38c8cfdd74",
+      "sourceType": "github",
+      "skillPath": "skills/interview-me/SKILL.md",
+      "computedHash": "68615337944c1d56cd9db6b934e247ff1d67600dd9db3d41cc9bf7236b9d986c"
+    }
+  }
+}
