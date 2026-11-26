@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 920" role="img" aria-labelledby="title desc">
+  <title id="title">ShopLedger architecture and order flow</title>
+  <desc id="desc">The browser UI calls Express routes. Order creation validates inventory and coupons, calculates totals, updates the ledger and order, and writes the JSON data file. The invoice route reads an order and calls the invoice renderer and pricing module.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#476856"/></marker>
+    <marker id="soft-arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#7d8f82"/></marker>
+    <style>
+      text{font-family:Arial,Helvetica,sans-serif;fill:#23362d}.title{font-size:30px;font-weight:700}.subtitle{font-size:14px;fill:#60746a}.section{font-size:15px;font-weight:700;letter-spacing:1px;fill:#436653}.name{font-size:15px;font-weight:700}.small{font-size:12px;fill:#52665b}.tiny{font-size:11px;fill:#61756a}.box{fill:#fff;stroke:#bfd0c4;stroke-width:1.5}.ui{fill:#edf5f0;stroke:#97b7a3}.route{fill:#eaf4f7;stroke:#9cbcc3}.module{fill:#f6f2e8;stroke:#c9b98e}.data{fill:#f8eee9;stroke:#cfaa99}.line{stroke:#476856;stroke-width:2;fill:none;marker-end:url(#arrow)}.support{stroke:#7d8f82;stroke-width:1.5;fill:none;stroke-dasharray:5 4;marker-end:url(#soft-arrow)}
+    </style>
+  </defs>
+  <rect width="1400" height="920" fill="#f8faf8"/>
+  <text x="60" y="58" class="title">ShopLedger · architecture &amp; order flow</text>
+  <text x="60" y="84" class="subtitle">Existing modules only · browser checkout to saved order and printable invoice</text>
+  <text x="60" y="134" class="section">BROWSER UI</text>
+  <rect x="60" y="152" width="310" height="160" rx="14" class="box ui"/>
+  <text x="84" y="184" class="name">public/</text><text x="84" y="212" class="small">index.html · tabs and form layout</text><text x="84" y="238" class="small">js/app.js · cart, orders, reports, API calls</text><text x="84" y="264" class="small">css/style.css · presentation</text>
+  <text x="450" y="134" class="section">EXPRESS SERVER &amp; ROUTES</text>
+  <rect x="450" y="152" width="300" height="80" rx="12" class="box route"/>
+  <text x="474" y="184" class="name">server.js</text><text x="474" y="208" class="small">static UI · mounts /api routers</text>
+  <rect x="450" y="254" width="300" height="220" rx="12" class="box route"/>
+  <text x="474" y="286" class="name">routes/</text><text x="474" y="314" class="small">orders.js · GET/POST /api/orders</text><text x="474" y="340" class="small">products.js · products and coupons</text><text x="474" y="366" class="small">customers.js · customer and settlement APIs</text><text x="474" y="392" class="small">reports.js · dashboard, GST and price preview</text><text x="474" y="436" class="tiny">GET /orders/:id/invoice is served by server.js</text>
+  <text x="830" y="134" class="section">BUSINESS MODULES · lib/</text>
+  <rect x="830" y="152" width="250" height="114" rx="12" class="box module"/>
+  <text x="852" y="182" class="name">Checkout calculation</text><text x="852" y="208" class="small">pricing.js · totals and discount allocation</text><text x="852" y="234" class="small">tax.js · HSN rates and CGST / SGST split</text>
+  <rect x="1100" y="152" width="250" height="114" rx="12" class="box module"/>
+  <text x="1122" y="182" class="name">Coupons &amp; inventory</text><text x="1122" y="208" class="small">coupons.js · validation and caps</text><text x="1122" y="234" class="small">inventory.js · sellable stock and holds</text>
+  <rect x="830" y="288" width="250" height="114" rx="12" class="box module"/>
+  <text x="852" y="318" class="name">Orders &amp; customer ledger</text><text x="852" y="344" class="small">orders.js · order records and cancellation</text><text x="852" y="370" class="small">ledger.js · credit balances and settlements</text>
+  <rect x="1100" y="288" width="250" height="114" rx="12" class="box module"/>
+  <text x="1122" y="318" class="name">Invoice &amp; reports</text><text x="1122" y="344" class="small">invoice.js · printable invoice figures and HTML</text><text x="1122" y="370" class="small">reports.js · dashboard and reconciliation</text>
+  <text x="830" y="456" class="section">CONFIGURATION &amp; DATA</text>
+  <rect x="830" y="474" width="250" height="88" rx="12" class="box data"/>
+  <text x="852" y="507" class="name">config.js</text><text x="852" y="533" class="small">shop, HSN slabs, coupons, inventory defaults</text>
+  <rect x="1100" y="474" width="250" height="88" rx="12" class="box data"/>
+  <text x="1122" y="507" class="name">data/db.json</text><text x="1122" y="533" class="small">products, customers, orders, settlements</text>
+  <text x="60" y="384" class="section">ORDER CREATION · POST /api/orders</text>
+  <rect x="60" y="404" width="310" height="160" rx="14" class="box"/>
+  <text x="84" y="436" class="name">1 · Select items and quantities</text><text x="84" y="464" class="small">Cart sends product IDs, quantities, coupon,</text><text x="84" y="486" class="small">customer, and payment mode.</text><text x="84" y="528" class="tiny">Response returns order and checkout totals.</text>
+  <path d="M370 224H430V292H450" class="line"/><text x="382" y="214" class="tiny">UI / API</text>
+  <path d="M370 476H420V330H450" class="line"/><text x="380" y="466" class="tiny">POST order</text>
+  <path d="M750 300H804V208H830" class="line"/><path d="M1080 208H1100" class="support"/><path d="M950 266V288" class="support"/><path d="M1080 345H1100" class="support"/><path d="M750 360H790V520H830" class="support"/><path d="M1080 518H1100" class="line"/><path d="M1225 402V474" class="line"/><path d="M1225 266V288" class="support"/>
+  <rect x="60" y="620" width="1290" height="236" rx="16" fill="#edf4ef" stroke="#c2d2c7"/>
+  <text x="88" y="658" class="section">WHAT HAPPENS WHEN AN ORDER IS PLACED</text>
+  <rect x="88" y="686" width="188" height="112" rx="12" class="box"/><text x="106" y="716" class="name">1. Resolve items</text><text x="106" y="744" class="small">orders route reads the</text><text x="106" y="764" class="small">current product records</text>
+  <rect x="312" y="686" width="188" height="112" rx="12" class="box"/><text x="330" y="716" class="name">2. Check stock</text><text x="330" y="744" class="small">inventory validates the</text><text x="330" y="764" class="small">requested quantities</text>
+  <rect x="536" y="686" width="188" height="112" rx="12" class="box"/><text x="554" y="716" class="name">3. Price cart</text><text x="554" y="744" class="small">coupons + pricing + tax</text><text x="554" y="764" class="small">compute shared totals</text>
+  <rect x="760" y="686" width="188" height="112" rx="12" class="box"/><text x="778" y="716" class="name">4. Apply account</text><text x="778" y="744" class="small">ledger charges a Khata</text><text x="778" y="764" class="small">customer when selected</text>
+  <rect x="984" y="686" width="188" height="112" rx="12" class="box"/><text x="1002" y="716" class="name">5. Save order</text><text x="1002" y="744" class="small">orders adds record;</text><text x="1002" y="764" class="small">inventory reserves stock</text>
+  <rect x="1208" y="686" width="116" height="112" rx="12" class="box data"/><text x="1223" y="716" class="name">6. Write</text><text x="1223" y="744" class="small">store.js</text><text x="1223" y="764" class="small">to JSON</text>
+  <path d="M276 742H306M500 742H530M724 742H754M948 742H978M1172 742H1202" class="line"/>
+  <text x="88" y="828" class="tiny">Invoice viewing: server.js loads the saved order → lib/invoice.js renders it; lib/reports.js compares invoice and ledger amounts.</text>
+</svg>
