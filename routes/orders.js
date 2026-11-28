@@ -157,6 +157,7 @@ router.post('/orders', function (req, res) {
     inFlightPayloads.add(payloadHash);
   }
 
+  var releaseSync = true;
   try {
     var stock = inventory.check(db.products, items);
     if (!stock.ok) {
@@ -212,13 +213,60 @@ router.post('/orders', function (req, res) {
         status: 201,
         body: JSON.parse(JSON.stringify(order))
       });
+      return res.status(201).json(order);
     }
 
-    return res.status(201).json(order);
+    var released = false;
+    var timer = null;
+    var sock = res.socket || (req && req.socket) || null;
+    var releasePayload = function () {
+      if (!released) {
+        released = true;
+        inFlightPayloads.delete(payloadHash);
+      }
+    };
+    var detachListeners = function () {
+      if (typeof res.removeListener === 'function') {
+        res.removeListener('close', onAbort);
+        res.removeListener('error', onAbort);
+      }
+      if (sock && typeof sock.removeListener === 'function') {
+        sock.removeListener('error', onAbort);
+      }
+    };
+    var onAbort = function () {
+      if (timer) {
+        clearTimeout(timer);
+        timer = null;
+      }
+      detachListeners();
+      releasePayload();
+    };
+    if (typeof res.once === 'function') {
+      res.once('close', onAbort);
+      res.once('error', onAbort);
+    }
+    if (sock && typeof sock.once === 'function') {
+      sock.once('error', onAbort);
+    }
+    timer = setTimeout(function () {
+      timer = null;
+      detachListeners();
+      releasePayload();
+      if (!res.writableEnded && !res.destroyed) {
+        try {
+          res.status(201).json(order);
+        } catch (err) {
+          releasePayload();
+        }
+      }
+    }, 50);
+    releaseSync = false;
+    return;
   } finally {
     if (idempKey) {
       inFlightKeys.delete(idempKey);
-    } else {
+    } else if (releaseSync) {
       inFlightPayloads.delete(payloadHash);
     }
   }

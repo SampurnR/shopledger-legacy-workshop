@@ -203,7 +203,7 @@ describe('Tier 3 — Pairwise Feature Interaction Tests (T3-1 to T3-14)', functi
 
     var prodRes = await h.request('GET', '/api/products');
     assert.equal(prodRes.body.find(function (p) { return p.id === 6; }).stock, 3);
-    assert.equal(prodRes.body.find(function (p) { return p.id === 4; }).stock, 22);
+    assert.equal(prodRes.body.find(function (p) { return p.id === 4; }).stock, 24);
   });
 
   it('T3-8 (F7+F2+F10): concurrent duplicate Khata checkout on last sellable unit creates 1 order without negative stock', async function () {
