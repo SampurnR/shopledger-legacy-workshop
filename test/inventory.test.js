@@ -119,3 +119,73 @@ test('cancelling an order does not restock a productId-only line', () => {
   assert.equal(product.stock, 4);
   assert.equal(product.reserved, 3);
 });
+
+test('cancelling a Khata order restores available catalog items and reverses the debit', () => {
+  const product = { id: 2, stock: 4, reserved: 3 };
+  const customer = { id: 1, openingBalance: 50, totalBilled: 125, totalSettled: 25 };
+  const db = { products: [product], customers: [customer], orders: [], nextOrderId: 1007 };
+  const order = orders.add(db, {
+    status: 'pending',
+    paymentMode: 'khata',
+    customerId: customer.id,
+    total: 75,
+    items: [{ id: 99, qty: 1 }, { id: product.id, qty: 2 }]
+  });
+
+  assert.equal(orders.cancel(db, order.id).ok, true);
+  assert.equal(order.status, 'cancelled');
+  assert.equal(product.stock, 6);
+  assert.equal(product.reserved, 3);
+  assert.equal(customer.totalBilled, 50);
+  assert.equal(customer.balance, 75);
+});
+
+test('cancelling an unknown order leaves inventory intact', () => {
+  const product = { id: 2, stock: 4, reserved: 3 };
+  const db = { products: [product], orders: [] };
+
+  assert.deepEqual(orders.cancel(db, 1007), { ok: false, error: 'Order not found' });
+  assert.deepEqual(product, { id: 2, stock: 4, reserved: 3 });
+});
+
+test('inventory summary uses sellable units for alerts and physical units for valuation', () => {
+  const products = [
+    { stock: 3, reserved: 3, price: 10 },
+    { stock: 12, reserved: 2, price: 20 },
+    { stock: 5, reorderLevel: 3, price: 30 }
+  ];
+
+  assert.deepEqual(inventory.summarize(products), {
+    totalSkus: 3,
+    outOfStockCount: 1,
+    lowStockCount: 1,
+    totalValuation: 420
+  });
+});
+
+test('inventory rejects unknown SKUs and skips them during stock adjustments', () => {
+  const product = { id: 2, stock: 4, reserved: 3 };
+  const products = [product];
+  const items = [{ id: 99, qty: 1 }];
+
+  assert.deepEqual(inventory.check(products, items), { ok: false, msg: 'Unknown product 99' });
+  inventory.reserve(products, items);
+  inventory.release(products, [{ productId: 99, qty: 1 }]);
+  assert.deepEqual(product, { id: 2, stock: 4, reserved: 3 });
+});
+
+test('inventory treats omitted stock, reservations, and prices as zero', () => {
+  const product = { id: 2 };
+  assert.equal(inventory.getSellableStock(inventory.find([product], 99)), 0);
+  assert.deepEqual(inventory.summarize([product]), {
+    totalSkus: 1,
+    outOfStockCount: 1,
+    lowStockCount: 0,
+    totalValuation: 0
+  });
+
+  inventory.release([product], [{ productId: product.id, qty: 1 }]);
+  inventory.restock([product], [{ id: product.id, qty: 2 }]);
+  assert.equal(product.reserved, 0);
+  assert.equal(product.stock, 2);
+});
