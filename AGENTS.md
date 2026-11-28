@@ -25,3 +25,11 @@ ShopLedger is a wholesale and retail point-of-sale app with inventory, GST invoi
 - Limit production code changes to the module or modules covered by the chosen ticket.
 - Tests must never read or write the repository's `data/db.json`. Use in-memory fixtures or temporary test data.
 - Add no dependencies.
+
+## Before every push
+
+Review the outgoing commits and give the user a short report in chat before pushing. Cover the whole push in three bullets.
+
+- **Requested** — State the outcome the user asked for.
+- **Changed** — Describe what the outgoing commits deliver and give the relevant verification results.
+- **Assessment** — Say whether the approach fits the request, explain why, and flag any material limitation or outstanding check.
