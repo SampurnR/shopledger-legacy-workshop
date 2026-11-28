@@ -2,6 +2,7 @@ var express = require('express');
 var store = require('../lib/store');
 var inventory = require('../lib/inventory');
 var pricing = require('../lib/pricing');
+var tax = require('../lib/tax');
 var coupons = require('../lib/coupons');
 var orders = require('../lib/orders');
 var ledger = require('../lib/ledger');
@@ -49,6 +50,7 @@ router.post('/orders', function (req, res) {
       sku: p.sku,
       name: p.name,
       hsn: p.hsn,
+      gstRate: tax.getRateForItem(p),
       price: p.price,
       qty: q
     });
@@ -69,6 +71,9 @@ router.post('/orders', function (req, res) {
   }
 
   var totals = pricing.computeTotals(items, rawCoupon);
+  for (var lineIndex = 0; lineIndex < items.length; lineIndex++) {
+    items[lineIndex].lineTax = totals.lines[lineIndex].tax;
+  }
   var paymentMode = (body.paymentMode || 'cash').toLowerCase();
   var customerName = (body.customer || '').trim() || 'Walk-in';
   var customerId = body.customerId ? Number(body.customerId) : null;

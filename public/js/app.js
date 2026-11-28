@@ -65,9 +65,14 @@ function loadDashboardSummary() {
 
     if (s.reconciliationMismatchCount > 0) {
       alertBtn.className = 'alert-chip';
-      alertText.textContent = s.reconciliationMismatchCount + ' Invoice GST Mismatches (Δ ' + fmtMoney(s.reconciliationTotalDelta) + ')';
+      alertText.textContent = s.reconciliationMismatchCount + ' Invoice Mismatches: Open Audit';
       badgeAudit.className = 'tab-badge warn';
       badgeAudit.textContent = s.reconciliationMismatchCount;
+    } else if (s.reconciliationUnverifiedCount > 0) {
+      alertBtn.className = 'alert-chip';
+      alertText.textContent = s.reconciliationUnverifiedCount + ' Historical Orders: Line GST Not Recorded';
+      badgeAudit.className = 'tab-badge warn';
+      badgeAudit.textContent = s.reconciliationUnverifiedCount;
     } else {
       alertBtn.className = 'alert-chip ok';
       alertText.textContent = 'Invoices & Ledger Balanced';
@@ -390,7 +395,12 @@ function loadGstReconciliation() {
     var pill = document.getElementById('recon-summary-pill');
     if (data.mismatchCount > 0) {
       pill.className = 'status-pill cancelled';
-      pill.textContent = data.mismatchCount + ' of ' + data.totalChecked + ' Orders Mismatched (Δ ' + fmtMoney(data.totalDelta) + ')';
+      pill.textContent = data.mismatchCount + ' of ' + data.totalChecked + ' Orders Mismatched (Subtotal Δ ' +
+        fmtMoney(data.totalSubtotalDelta) + ', Total Δ ' + fmtMoney(data.totalDelta) +
+        ', GST Δ ' + fmtMoney(data.totalTaxDelta) + ')';
+    } else if (data.unverifiedCount > 0) {
+      pill.className = 'status-pill pending';
+      pill.textContent = data.unverifiedCount + ' Historical Orders: Line GST Not Recorded';
     } else {
       pill.className = 'status-pill completed';
       pill.textContent = 'All ' + data.totalChecked + ' Active Invoices Balanced';
@@ -399,9 +409,11 @@ function loadGstReconciliation() {
     var html = '';
     for (var i = 0; i < data.rows.length; i++) {
       var r = data.rows[i];
-      var badge = r.matched
-        ? '<span class="status-pill completed">Matched</span>'
-        : '<span class="status-pill cancelled">Mismatch</span>';
+      var badge = !r.matched
+        ? '<span class="status-pill cancelled">Mismatch</span>'
+        : r.taxVerified
+          ? '<span class="status-pill completed">Matched</span>'
+          : '<span class="status-pill pending">Total matched; GST unverified</span>';
 
       var deltaStr = (r.delta > 0 ? '+' : '') + fmtMoney(r.delta);
       var deltaStyle = r.matched ? 'color:#15803d' : 'color:#b91c1c;font-weight:700';
@@ -416,7 +428,7 @@ function loadGstReconciliation() {
         '<td class="r">' + fmtMoney(r.ledgerTax) + '</td>' +
         '<td class="r"><strong>' + fmtMoney(r.ledgerTotal) + '</strong></td>' +
         '<td class="r">-' + fmtMoney(r.invoiceDiscount) + '</td>' +
-        '<td class="r">' + fmtMoney(r.invoiceTax) + '</td>' +
+        '<td class="r">' + (r.taxVerified ? fmtMoney(r.invoiceTax) : 'Not recorded') + '</td>' +
         '<td class="r"><strong>' + fmtMoney(r.invoiceTotal) + '</strong></td>' +
         '<td class="r" style="' + deltaStyle + '">' + deltaStr + '</td>' +
         '<td>' + badge + '</td>' +

@@ -343,7 +343,7 @@
         <div class="panel-header">
           <div>
             <h2 class="panel-title">Accountant Invoice vs. Order Ledger Reconciliation</h2>
-            <p class="panel-desc">Compares stored Order Ledger totals (<code>lib/pricing.js</code>) against the Accountant Tax Invoice renderer (<code>lib/invoice.js</code>).</p>
+            <p class="panel-desc">Checks saved order figures against item amounts and recorded line GST. Historical orders without line GST are marked unverified.</p>
           </div>
           <div id="recon-summary-pill" class="status-pill cancelled">Checking...</div>
         </div>
@@ -361,8 +361,8 @@
                 <th class="r">Ledger GST</th>
                 <th class="r">Ledger Total</th>
                 <th class="r">Invoice Disc</th>
-                <th class="r">Invoice GST</th>
-                <th class="r">Invoice Total</th>
+                <th class="r">Line GST Check</th>
+                <th class="r">Arithmetic Total</th>
                 <th class="r">Variance (Δ)</th>
                 <th>Audit Status</th>
               </tr>
