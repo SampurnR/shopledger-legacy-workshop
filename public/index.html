@@ -54,8 +54,17 @@
     </section>
 
     <!-- Navigation Tabs -->
-    <nav class="tabs-bar" id="tabs">
-      <a href="#new" id="tab-new" class="tab-link active">
+    <section class="dashboard-heading" aria-labelledby="dashboard-title">
+      <div>
+        <p class="eyebrow">CORNER SHOP OPERATIONS</p>
+        <h1 id="dashboard-title">Shop floor overview</h1>
+        <p class="dashboard-intro">Sales, inventory, customer credit and invoice health at a glance.</p>
+      </div>
+      <div class="workspace-status"><span class="workspace-status-dot"></span>Local workspace</div>
+    </section>
+
+    <nav class="tabs-bar" id="tabs" aria-label="ShopLedger sections">
+      <a href="#new" id="tab-new" class="tab-link active" aria-current="page">
         New Order (POS)
       </a>
       <a href="#orders" id="tab-orders" class="tab-link">
@@ -155,10 +164,10 @@
                 <input id="coupon" type="text" placeholder="e.g. SAVE10, FLAT50">
               </div>
               <div class="promo-chips" id="promo-chips">
-                <span class="promo-chip" data-code="SAVE10" title="10% off above ₹500 (max ₹150)">SAVE10</span>
-                <span class="promo-chip" data-code="FLAT50" title="Flat ₹50 off above ₹300">FLAT50</span>
-                <span class="promo-chip" data-code="WELCOME" title="5% off welcome promo">WELCOME</span>
-                <span class="promo-chip" data-code="WHOLESALE15" title="15% off above ₹2000 (max ₹400)">WHOLESALE15</span>
+                <button type="button" class="promo-chip" data-code="SAVE10" title="10% off above ₹500 (max ₹150)">SAVE10</button>
+                <button type="button" class="promo-chip" data-code="FLAT50" title="Flat ₹50 off above ₹300">FLAT50</button>
+                <button type="button" class="promo-chip" data-code="WELCOME" title="5% off welcome promo">WELCOME</button>
+                <button type="button" class="promo-chip" data-code="WHOLESALE15" title="15% off above ₹2000 (max ₹400)">WHOLESALE15</button>
               </div>
               <div id="coupon-feedback" class="field-hint"></div>
             </div>
