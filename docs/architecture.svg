@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 610" role="img" aria-labelledby="title desc">
+<title id="title">ShopLedger architecture</title><desc id="desc">Express serves the POS and routes requests to modules that use configuration and JSON storage. The numbered steps show how an order is placed.</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#42637b"/></marker></defs>
+<rect width="960" height="610" fill="#eef4f8"/>
+<g font-family="system-ui,sans-serif" fill="#142f43">
+<text x="36" y="49" font-size="30" font-weight="700">ShopLedger architecture</text>
+<g fill="white" stroke="#abc3d3"><rect x="36" y="74" width="244" height="65" rx="10"/><rect x="337" y="74" width="280" height="65" rx="10"/><rect x="674" y="74" width="250" height="65" rx="10"/><rect x="36" y="179" width="432" height="205" rx="10"/><rect x="492" y="179" width="432" height="205" rx="10"/><rect x="36" y="414" width="888" height="166" rx="10"/></g>
+<g stroke="#42637b" stroke-width="2" marker-end="url(#arrow)"><path d="M282 108H333"/><path d="M477 140V161H251V176" fill="none"/><path d="M470 277H487"/><path d="M618 108H670"/></g>
+<g font-size="17" font-weight="700"><text x="52" y="101">public/</text><text x="353" y="101">server.js</text><text x="690" y="101">Printable invoice</text><text x="52" y="207">Express routers</text><text x="508" y="207">Application modules</text><text x="52" y="444">Placing an order</text></g>
+<g font-size="15"><text x="52" y="124">Static POS interface</text><text x="353" y="124">Express app and router mount</text><text x="690" y="124">lib/invoice.js</text>
+<text x="52" y="243">routes/products.js · catalog and inventory</text><text x="52" y="273">routes/orders.js · checkout and order history</text><text x="52" y="303">routes/customers.js · Khata accounts</text><text x="52" y="333">routes/reports.js · dashboard and GST audit</text>
+<text x="508" y="239">pricing.js · tax.js · coupons.js</text><text x="508" y="266">inventory.js · orders.js · ledger.js · dates.js</text><text x="508" y="293">reports.js · invoice.js</text><text x="508" y="320">store.js → data/db.json</text><text x="508" y="347">config.js → shop, GST, coupons and defaults</text>
+<text x="52" y="479">1. POS sends POST /api/orders. The orders router reads the database and checks product IDs and stock.</text><text x="52" y="511">2. Pricing validates the coupon and calculates GST. The ledger checks and records Khata credit when used.</text><text x="52" y="543">3. Inventory deducts stock. The router records the order and audit entry, writes the database, and returns 201.</text></g></g></svg>
