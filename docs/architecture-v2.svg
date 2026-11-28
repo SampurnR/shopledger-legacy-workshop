@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1360" height="748" viewBox="0 0 1360 748" role="img" aria-labelledby="title desc">
+<title id="title">ShopLedger architecture and order placement</title>
+<desc id="desc">A browser UI calls the Express entry point, which mounts four routers. The routers use grouped business modules and a JSON store. Teal identifies billing and GST modules in Ticket #1. A separate panel shows five order steps and an optional invoice request.</desc>
+<defs>
+  <style>
+    text{font-family:Arial;fill:#172b42}
+    .background{fill:#f2f5f8}.header{fill:#152a41}.panel{fill:#fff;stroke:#d2dde8}.card{fill:#f5f8fb;stroke:#d8e2ec}.accent{fill:#e6f4f2;stroke:#9bcac6}
+    .header-title{fill:white;font-size:37px;font-weight:700;letter-spacing:-.75px}.header-label{fill:#d6e3ef;font-size:13px;font-weight:700;letter-spacing:2px}.header-meta{fill:#e0eaf2;font-size:16px}
+    .section{font-size:23px;font-weight:700;letter-spacing:-.35px}.label{fill:#435c74;font-size:13px;font-weight:700;letter-spacing:1.2px}
+    .body{font-size:16px;fill:#40566c}.strong{font-size:17px;font-weight:700}.file{font-family:Menlo;font-size:16px;font-weight:600}
+    .accent-title{fill:#076a67;font-size:14px;font-weight:700;letter-spacing:.65px}.accent-file{fill:#075e5a;font-family:Menlo;font-size:17px;font-weight:700}
+    .connector-label{fill:#435c74;font-size:13px;font-weight:600}.arrow,.both{fill:none;stroke:#60758a;stroke-width:1.55}.spine{fill:none;stroke:#cad7e3;stroke-width:2}
+    .number-disc{fill:#233d58}.number{fill:white;font-size:15px;font-weight:700;text-anchor:middle}.optional{fill:#f7f9fc;stroke:#97abbe;stroke-dasharray:5 4}
+  </style>
+</defs>
+<rect x="0" y="0" width="1360" height="748" rx="0" class="background"/>
+<rect x="0" y="0" width="1360" height="100" rx="0" class="header"/>
+<text x="32" y="32" class="header-label">WORKSHOP  /  CP2</text>
+<text x="32" y="76" class="header-title">ShopLedger architecture</text>
+<text x="1033" y="65" class="header-meta">Billing · Inventory · Khata credit</text>
+<rect x="28" y="118" width="824" height="580" rx="15" class="panel"/>
+<text x="50" y="151" class="section">Application map</text>
+<rect x="50" y="167" width="780" height="80" rx="10" class="card"/>
+<text x="67" y="190" class="label">BROWSER UI</text>
+<text x="67" y="213" class="body">Dashboard  ·  Billing desk  ·  Order register  ·  Khata  ·  GST and stock audit</text>
+<text x="67" y="234" class="file">public/index.html   ·   public/js/app.js   ·   public/css/style.css</text>
+<path d="M440 249 V262" class="arrow"/>
+<path d="M435 257 L440 262 L445 257" class="arrow"/>
+<text x="454" y="261" class="connector-label">HTTP requests</text>
+<rect x="50" y="265" width="780" height="42" rx="10" class="card"/>
+<text x="67" y="291" class="file">server.js</text>
+<text x="186" y="291" class="body">Express serves the UI and mounts the /api routers</text>
+<path d="M440 309 V322" class="arrow"/>
+<path d="M435 317 L440 322 L445 317" class="arrow"/>
+<text x="454" y="321" class="connector-label">Route dispatch</text>
+<rect x="50" y="325" width="780" height="67" rx="10" class="card"/>
+<text x="67" y="348" class="label">API ROUTERS  /  routes/</text>
+<text x="67" y="376" class="file">products.js</text>
+<text x="253" y="376" class="file">orders.js</text>
+<text x="435" y="376" class="file">customers.js</text>
+<text x="630" y="376" class="file">reports.js</text>
+<path d="M440 394 V407" class="arrow"/>
+<path d="M435 402 L440 407 L445 402" class="arrow"/>
+<text x="454" y="406" class="connector-label">Business logic calls</text>
+<rect x="50" y="410" width="780" height="160" rx="10" class="card"/>
+<text x="67" y="433" class="label">BUSINESS LOGIC  /  lib/</text>
+<rect x="65" y="444" width="386" height="102" rx="8" class="accent"/>
+<text x="79" y="466" class="accent-title">BILLING &amp; GST  /  TICKET #1</text>
+<text x="79" y="495" class="accent-file">pricing.js</text>
+<text x="253" y="495" class="accent-file">coupons.js</text>
+<text x="79" y="522" class="accent-file">tax.js</text>
+<text x="253" y="522" class="accent-file">invoice.js</text>
+<text x="469" y="466" class="label">OPERATIONS &amp; SHARED LOGIC</text>
+<text x="469" y="495" class="file">orders.js</text>
+<text x="635" y="495" class="file">inventory.js</text>
+<text x="469" y="517" class="file">ledger.js</text>
+<text x="635" y="517" class="file">reports.js</text>
+<text x="469" y="539" class="file">dates.js</text>
+<path d="M830 365 H841 V581 H453 V603" class="arrow"/>
+<path d="M448 598 L453 603 L458 598" class="arrow"/>
+<text x="468" y="598" class="connector-label">Route handlers load and save shop data</text>
+<text x="50" y="596" class="label">CONFIGURATION &amp; PERSISTENCE</text>
+<rect x="50" y="606" width="271" height="67" rx="10" class="card"/>
+<text x="66" y="632" class="file">config.js</text>
+<text x="66" y="655" class="body">Shop settings and rules</text>
+<rect x="345" y="606" width="215" height="67" rx="10" class="card"/>
+<text x="361" y="632" class="file">lib/store.js</text>
+<text x="361" y="655" class="body">File access and audit</text>
+<path d="M565 640 H605" class="both"/>
+<path d="M570 635 L565 640 L570 645 M600 635 L605 640 L600 645" class="arrow"/>
+<rect x="610" y="606" width="220" height="67" rx="10" class="card"/>
+<text x="626" y="632" class="file">data/db.json</text>
+<text x="626" y="655" class="body">Saved shop records</text>
+<rect x="872" y="118" width="460" height="580" rx="15" class="panel"/>
+<text x="896" y="151" class="section">Place an order</text>
+<text x="896" y="176" class="file">POST /api/orders</text>
+<path d="M909 212 V479" class="spine"/>
+<circle cx="909" cy="212" r="13" class="number-disc"/>
+<text x="909" y="217" class="number">1</text>
+<text x="935" y="216" class="strong">Submit the cart</text>
+<text x="935" y="239" class="body">Send the cart, customer and payment mode.</text>
+<circle cx="909" cy="279" r="13" class="number-disc"/>
+<text x="909" y="284" class="number">2</text>
+<text x="935" y="283" class="strong">Validate the order</text>
+<text x="935" y="306" class="body">Load the catalog. Check stock and coupon.</text>
+<circle cx="909" cy="346" r="13" class="number-disc"/>
+<text x="909" y="351" class="number">3</text>
+<text x="935" y="350" class="strong">Calculate the bill</text>
+<text x="935" y="373" class="body">Apply the discount, then calculate GST.</text>
+<circle cx="909" cy="413" r="13" class="number-disc"/>
+<text x="909" y="418" class="number">4</text>
+<text x="935" y="417" class="strong">Apply credit and deduct stock</text>
+<text x="935" y="440" class="body">Charge khata if selected, then update stock.</text>
+<circle cx="909" cy="480" r="13" class="number-disc"/>
+<text x="909" y="485" class="number">5</text>
+<text x="935" y="484" class="strong">Save and confirm</text>
+<text x="935" y="507" class="body">Save the order and audit entry. Return HTTP 201.</text>
+<rect x="896" y="554" width="412" height="119" rx="10" class="optional"/>
+<text x="913" y="578" class="label">OPTIONAL  /  SEPARATE REQUEST</text>
+<text x="913" y="608" class="file">GET /orders/:id/invoice</text>
+<text x="913" y="634" class="body">Express reads the saved order and</text>
+<text x="913" y="654" class="body">renders printable HTML.</text>
+<path d="M30 723 H52" class="arrow"/>
+<path d="M47 718 L52 723 L47 728" class="arrow"/>
+<text x="62" y="728" class="body">Request, dispatch or call</text>
+<path d="M271 723 H298" class="both"/>
+<path d="M276 718 L271 723 L276 728 M293 718 L298 723 L293 728" class="arrow"/>
+<text x="308" y="728" class="body">File read / write</text>
+<rect x="457" y="714" width="16" height="16" rx="4" class="accent"/>
+<text x="482" y="728" class="body">Ticket #1 scope in current code</text>
+</svg>
