@@ -36,6 +36,18 @@ test('two lines for the last sellable unit are rejected together', () => {
   });
 });
 
+test('two lines for the same SKU can use exactly the sellable stock', () => {
+  const product = { id: 2, stock: 6, reserved: 3 };
+  const items = [{ id: product.id, qty: 1 }, { id: product.id, qty: 2 }];
+
+  assert.deepEqual(inventory.check([product], items), { ok: true });
+  inventory.reserve([product], items);
+
+  assert.equal(product.stock, 3);
+  assert.equal(product.reserved, 3);
+  assert.equal(inventory.getSellableStock(product), 0);
+});
+
 test('a sale below sellable stock deducts physical units and preserves reservations', () => {
   const product = { id: 2, name: 'Byadgi Chilli Powder', stock: 6, reserved: 3 };
   const items = [{ id: product.id, qty: 2 }];
@@ -65,6 +77,23 @@ test('cancelling pending order #1007 restores physical stock and preserves reser
   assert.equal(product.stock, 6);
   assert.equal(product.reserved, 3);
   assert.equal(inventory.getSellableStock(product), 3);
+});
+
+test('cancelling the same order twice restores its stock exactly once', () => {
+  const product = { id: 2, stock: 6, reserved: 3 };
+  const items = [{ id: product.id, qty: 2 }];
+  const db = { products: [product], orders: [], nextOrderId: 1007 };
+  inventory.reserve(db.products, items);
+  const order = orders.add(db, { status: 'pending', items });
+
+  assert.equal(orders.cancel(db, order.id).ok, true);
+  assert.equal(product.stock, 6);
+  assert.deepEqual(orders.cancel(db, order.id), {
+    ok: false,
+    error: 'Order #1007 is already cancelled'
+  });
+  assert.equal(product.stock, 6);
+  assert.equal(product.reserved, 3);
 });
 
 test('releasing a quote reduces reservations without adding physical stock', () => {
