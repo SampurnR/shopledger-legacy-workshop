@@ -172,6 +172,22 @@ test('invoice uses checkout line rounding and GST split', () => {
   assert.doesNotMatch(invoice.render(order), /Accountant Reconciliation Notice/);
 });
 
+test('GST Audit shows the printed historical amounts and flags the difference from checkout pricing', () => {
+  const order = {
+    id: 1, subtotal: 100, discount: 5, tax: 17, total: 112,
+    items: [{ name: 'Legacy item', price: 100, qty: 1 }]
+  };
+  const html = invoice.render(order);
+  assert.match(html, /Coupon Discount \(\)<\/td><td[^>]*>[^<]*5\.00<\/td>/);
+  assert.match(html, /Total GST\)<\/td><td[^>]*>[^<]*17\.00<\/td>/);
+  assert.match(html, /Invoice Total<\/td><td[^>]*>[^<]*112\.00<\/td>/);
+
+  const result = reports.getGstReconciliation({ orders: [order] });
+  const [row] = result.rows;
+  assert.deepEqual([row.invoiceDiscount, row.invoiceTax, row.invoiceTotal], [5, 17, 112]);
+  assert.deepEqual([row.matched, row.delta, result.mismatchCount, result.totalDelta], [false, 6, 1, 6]);
+});
+
 test('historical invoice displays recorded GST and flags a GST-only difference in its rows', () => {
   const order = {
     id: 1, subtotal: 100, discount: 0, tax: 17, total: 118,
@@ -180,7 +196,7 @@ test('historical invoice displays recorded GST and flags a GST-only difference i
   const result = reports.getGstReconciliation({ orders: [order] });
   assert.deepEqual([result.totalChecked, result.mismatchCount, result.totalDelta], [1, 1, 0]);
   const [row] = result.rows;
-  assert.deepEqual([row.ledgerTax, row.invoiceTax, row.delta, row.matched], [17, 18, 0, false]);
+  assert.deepEqual([row.ledgerTax, row.invoiceTax, row.delta, row.matched], [17, 17, 0, false]);
   const html = invoice.render(order);
   assert.match(html, /CGST \+ SGST \(Total GST\)<\/td><td class="r">[^<]*17\.00<\/td>/);
   assert.match(html, /Accountant Reconciliation Notice:<\/strong> Recalculated line GST adds up to ₹18\.00, while recorded GST is ₹17\.00/);
