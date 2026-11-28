@@ -1,0 +1,134 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" role="img" aria-labelledby="title description">
+  <title id="title">ShopLedger architecture and order flow</title>
+  <desc id="description">Verified current working tree after the invoice fix. Four Express routers, ten library modules, configuration and JSON storage. Invoice is highlighted and shares the checkout pricing calculation. The right panel traces placing an order in seven steps.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#64748b"/></marker>
+    <style>
+      text {font-family:Arial,Helvetica,sans-serif;font-size:14px;fill:#24344b}
+      .heading {font-size:28px;font-weight:700;fill:#112a46}
+      .section {font-size:16px;font-weight:700;fill:#112a46}
+      .file {font-size:15px;font-weight:700}
+      .muted {fill:#52647a}
+      .box {fill:#fff;stroke:#bac9d9;stroke-width:1.4}
+      .ticket {fill:#fff1d6;stroke:#c67b09;stroke-width:2}
+      .wire {fill:none;stroke:#64748b;stroke-width:1.6;marker-end:url(#arrow)}
+      .number {fill:#fff;font-size:14px;font-weight:700;text-anchor:middle}
+    </style>
+  </defs>
+  <rect width="1200" height="800" fill="#f3f7fb"/>
+  <text x="32" y="45" class="heading">ShopLedger</text>
+  <text x="220" y="44" class="section">Architecture + placing an order</text>
+  <text x="32" y="73" class="muted">Verified source • Current working tree after invoice fix • Node.js / Express / CommonJS / JSON file storage</text>
+
+  <!-- Browser and Express entry point -->
+  <rect x="32" y="108" width="220" height="102" rx="10" class="box"/>
+  <text x="48" y="134" class="file">Browser UI · public/</text>
+  <text x="48" y="158">index.html · css/style.css</text>
+  <text x="48" y="181">js/app.js · cart, Khata, reports</text>
+  <text x="48" y="201" class="muted">1. POST /api/orders</text>
+  <path d="M142 210V248" class="wire"/>
+  <text x="154" y="234" class="muted">HTTP / JSON</text>
+  <rect x="32" y="250" width="220" height="140" rx="10" class="box"/>
+  <text x="48" y="277" class="file">server.js</text>
+  <text x="48" y="302">Express + bodyParser.json()</text>
+  <text x="48" y="325">Serves public/ statically</text>
+  <text x="48" y="348">Mounts routers at /api</text>
+  <text x="48" y="373">GET /orders/:id/invoice</text>
+  <path d="M252 274H265V142H280" class="wire"/>
+
+  <!-- All routers, with paths relative to the /api mount -->
+  <text x="280" y="100" class="section">routes/ · all mounted under /api</text>
+  <rect x="280" y="112" width="250" height="68" rx="8" class="box"/>
+  <text x="294" y="136" class="file">products.js</text>
+  <text x="294" y="159">GET /products · GET /coupons</text>
+  <rect x="550" y="112" width="250" height="68" rx="8" class="box"/>
+  <text x="564" y="136" class="file">customers.js</text>
+  <text x="564" y="159">List customers · settle Khata</text>
+  <rect x="280" y="196" width="250" height="68" rx="8" class="box"/>
+  <text x="294" y="220" class="file">orders.js</text>
+  <text x="294" y="243">List / get / create / cancel orders</text>
+  <rect x="550" y="196" width="250" height="68" rx="8" class="box"/>
+  <text x="564" y="220" class="file">reports.js</text>
+  <text x="564" y="243">Reports · preview · keyed export</text>
+  <path d="M405 264V313" class="wire"/>
+  <text x="420" y="286" class="muted">4. checkout pricing</text>
+
+  <!-- All library modules. Selected connections only, not a full import graph. -->
+  <text x="550" y="307" class="section">lib/ · business logic</text>
+  <rect x="280" y="316" width="250" height="56" rx="8" class="box"/>
+  <text x="294" y="339" class="file">pricing.js</text>
+  <text x="294" y="360">computeTotals() · subtotal()</text>
+  <rect x="550" y="316" width="250" height="56" rx="8" class="ticket"/>
+  <text x="564" y="339" class="file">invoice.js · TICKET</text>
+  <text x="564" y="360">computeInvoiceFigures() · render()</text>
+  <path d="M550 344H532" class="wire"/>
+  <rect x="280" y="380" width="250" height="56" rx="8" class="box"/>
+  <text x="294" y="403" class="file">coupons.js</text>
+  <text x="294" y="424">validate() · calculateDiscount()</text>
+  <rect x="550" y="380" width="250" height="56" rx="8" class="box"/>
+  <text x="564" y="403" class="file">orders.js</text>
+  <text x="564" y="424">add() · get() · list() · cancel()</text>
+  <rect x="280" y="444" width="250" height="56" rx="8" class="box"/>
+  <text x="294" y="467" class="file">tax.js</text>
+  <text x="294" y="488">getRateForItem() · splitCgstSgst()</text>
+  <rect x="550" y="444" width="250" height="56" rx="8" class="box"/>
+  <text x="564" y="467" class="file">inventory.js</text>
+  <text x="564" y="488">check() · reserve() · release()</text>
+  <rect x="280" y="508" width="250" height="56" rx="8" class="box"/>
+  <text x="294" y="531" class="file">ledger.js</text>
+  <text x="294" y="552">chargeOrderToKhata()</text>
+  <rect x="550" y="508" width="250" height="56" rx="8" class="box"/>
+  <text x="564" y="531" class="file">dates.js</text>
+  <text x="564" y="552">today() · normalizeDateKey()</text>
+  <rect x="280" y="572" width="250" height="56" rx="8" class="box"/>
+  <text x="294" y="595" class="file">reports.js</text>
+  <text x="294" y="616">Dashboard + GST reconciliation</text>
+  <rect x="550" y="572" width="250" height="56" rx="8" class="box"/>
+  <text x="564" y="595" class="file">store.js</text>
+  <text x="564" y="616">read() · write() · appendAudit()</text>
+
+  <rect x="32" y="444" width="220" height="96" rx="10" class="box"/>
+  <text x="48" y="470" class="file">config.js</text>
+  <text x="48" y="494">Port · shop · GST HSN slabs</text>
+  <text x="48" y="517">Coupons · stock · admin key</text>
+  <path d="M252 472H278" class="wire" stroke-dasharray="5 4"/>
+  <text x="32" y="565" class="muted">Shared settings; selected edge shown</text>
+  <rect x="32" y="586" width="220" height="66" rx="10" class="box"/>
+  <text x="48" y="611" class="file">data/db.json</text>
+  <text x="48" y="634">JSON data · sync file I/O</text>
+  <path d="M675 628V670H142V654" class="wire"/>
+  <text x="290" y="661" class="muted">7. store.write(db) persists the complete object</text>
+
+  <!-- Numbered route-to-library-to-storage trace -->
+  <rect x="832" y="108" width="336" height="564" rx="12" fill="#e7eef7" stroke="#c1cfdf"/>
+  <text x="850" y="137" class="section">Place an order · numbered flow</text>
+  <circle cx="863" cy="171" r="12" fill="#204c7c"/><text x="863" y="176" class="number">1</text>
+  <text x="885" y="168">public/js/app.js sends cart</text><text x="885" y="189">POST /api/orders → server.js</text>
+  <circle cx="863" cy="224" r="12" fill="#204c7c"/><text x="863" y="229" class="number">2</text>
+  <text x="885" y="221">routes/orders.js handler:</text><text x="885" y="242">store.read(); inventory.find()</text>
+  <circle cx="863" cy="277" r="12" fill="#204c7c"/><text x="863" y="282" class="number">3</text>
+  <text x="885" y="274">Build lines; inventory.check()</text><text x="885" y="295">coupons.normalizeCode(), validate()</text>
+  <circle cx="863" cy="330" r="12" fill="#204c7c"/><text x="863" y="335" class="number">4</text>
+  <text x="885" y="327">pricing.computeTotals()</text><text x="885" y="348">Capped discount → allocate per line</text>
+  <text x="885" y="369">tax.getRateForItem() → line GST</text><text x="885" y="390">tax.splitCgstSgst() → final total</text>
+  <circle cx="863" cy="425" r="12" fill="#204c7c"/><text x="863" y="430" class="number">5</text>
+  <text x="885" y="422">If Khata: ledger.findCustomer()</text><text x="885" y="443">ledger.chargeOrderToKhata()</text>
+  <circle cx="863" cy="478" r="12" fill="#204c7c"/><text x="863" y="483" class="number">6</text>
+  <text x="885" y="475">inventory.reserve(); orders.add()</text><text x="885" y="496">dates.today() supplies order date</text>
+  <circle cx="863" cy="531" r="12" fill="#204c7c"/><text x="863" y="536" class="number">7</text>
+  <text x="885" y="528">store.appendAudit(); write(db)</text><text x="885" y="549">Save order, stock, ledger, IDs, audit</text>
+  <text x="885" y="570">Return HTTP 201 + order JSON</text>
+  <line x1="850" y1="589" x2="1150" y2="589" stroke="#bac9d9"/>
+  <text x="850" y="611" class="file">Print later · server.js invoice route</text>
+  <text x="850" y="633">store.read() → orders.get() → invoice.render()</text>
+  <text x="850" y="655">Invoice uses pricing.computeTotals()</text>
+
+  <line x1="32" y1="700" x2="1168" y2="700" stroke="#bac9d9"/>
+  <rect x="32" y="722" width="20" height="16" rx="3" class="ticket"/>
+  <text x="62" y="736">Ticket change: lib/invoice.js</text>
+  <rect x="320" y="722" width="20" height="16" rx="3" class="box"/>
+  <text x="350" y="736">Existing module · tax.js unchanged</text>
+  <path d="M680 731H720" class="wire"/>
+  <text x="734" y="736">Selected calls / data flow; not every import</text>
+  <text x="32" y="773" class="muted">Checkout and printable invoice now share pricing: HSN slab + capped pre-tax coupon + identical per-line GST rounding.</text>
+</svg>
