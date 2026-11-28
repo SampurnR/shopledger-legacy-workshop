@@ -24,26 +24,40 @@ const mixedSlabOrder = {
   ],
 };
 
-test('CURRENT BEHAVIOUR: invoice discounts the tax-inclusive amount and ignores HSN', () => {
+test('invoice #1002 matches the amount billed and shows post-discount line GST', () => {
   const figures = invoice.computeInvoiceFigures(discountedOrder);
   assert.equal(figures.subtotal, 1020);
-  assert.equal(figures.discount, 120.36);
-  assert.equal(figures.tax, 183.60);
-  assert.equal(figures.total, 1083.24);
-  assert.match(invoice.render(discountedOrder), /Accountant Reconciliation Notice/);
+  assert.equal(figures.discount, 102);
+  assert.equal(figures.total, 963.90);
+  assert.equal(figures.tax, 45.90);
+  assert.equal(figures.cgst, 22.95);
+  assert.equal(figures.sgst, 22.95);
+  assert.deepEqual(figures.rows.map(row => [row.gstPercent, row.lineTax]), [[5, 28.80], [5, 17.10]]);
+
+  const html = invoice.render(discountedOrder);
+  assert.match(html, /₹963\.90/);
+  assert.match(html, /₹45\.90/);
+  assert.doesNotMatch(html, /Accountant Reconciliation Notice/);
 });
 
-test('CURRENT BEHAVIOUR: invoice exceeds the SAVE10 discount cap', () => {
+test('invoice still warns when its total differs from the stored ledger amount', () => {
+  const html = invoice.render({ ...discountedOrder, total: 964 });
+  assert.match(html, /Accountant Reconciliation Notice/);
+  assert.match(html, /-₹0\.10/);
+});
+
+test('invoice applies the SAVE10 cap before calculating GST', () => {
   const figures = invoice.computeInvoiceFigures(cappedOrder);
-  assert.equal(figures.discount, 264.32);
-  assert.equal(figures.total, 2378.88);
+  assert.equal(figures.discount, 150);
+  assert.equal(figures.tax, 104.50);
+  assert.equal(figures.total, 2194.50);
 });
 
-test('CURRENT BEHAVIOUR: invoice uses 18% for lower HSN slabs without a coupon', () => {
+test('invoice uses each HSN slab without a coupon', () => {
   const figures = invoice.computeInvoiceFigures(mixedSlabOrder);
-  assert.deepEqual(figures.rows.map(row => row.gstPercent), [18, 18]);
-  assert.equal(figures.tax, 230.40);
-  assert.equal(figures.total, 1510.40);
+  assert.deepEqual(figures.rows.map(row => [row.gstPercent, row.lineTax]), [[12, 108], [5, 19]]);
+  assert.equal(figures.tax, 127);
+  assert.equal(figures.total, 1407);
 });
 
 test('invoice matches a full-rate sale without a coupon, including a legacy line without HSN', () => {
