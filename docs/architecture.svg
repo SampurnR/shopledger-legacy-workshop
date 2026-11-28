@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="820" viewBox="0 0 1200 820" role="img" aria-labelledby="title desc">
+  <title id="title">ShopLedger architecture and order placement</title>
+  <desc id="desc">Browser UI sends API requests through Express routes to ShopLedger library modules, which read and write the JSON store. Order placement validates products and coupons, computes tax and totals, updates inventory and optional Khata ledger, then saves and returns the order.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#334155"/></marker>
+    <style>
+      text{font-family:Segoe UI,Arial,sans-serif;fill:#0f172a}.title{font-size:26px;font-weight:700}.subtitle{font-size:14px;fill:#475569}.head{font-size:16px;font-weight:700}.label{font-size:13px}.small{font-size:12px;fill:#334155}.box{fill:#fff;stroke:#64748b;stroke-width:1.5;rx:10}.ui{fill:#eff6ff;stroke:#2563eb}.route{fill:#f5f3ff;stroke:#7c3aed}.lib{fill:#ecfdf5;stroke:#059669}.data{fill:#fff7ed;stroke:#ea580c}.flow{fill:none;stroke:#334155;stroke-width:2;marker-end:url(#arrow)}.dashed{stroke-dasharray:6 5}
+    </style>
+  </defs>
+  <rect width="1200" height="820" fill="#f8fafc"/>
+  <text x="40" y="48" class="title">ShopLedger: order placement architecture</text>
+  <text x="40" y="74" class="subtitle">Browser UI → Express routes → lib modules → JSON data store</text>
+
+  <rect x="40" y="118" width="250" height="92" class="box ui"/>
+  <text x="60" y="148" class="head">Browser UI</text>
+  <text x="60" y="172" class="label">public/index.html</text>
+  <text x="60" y="192" class="label">public/js/app.js · public/css/style.css</text>
+
+  <rect x="360" y="118" width="300" height="92" class="box route"/>
+  <text x="380" y="148" class="head">Express server</text>
+  <text x="380" y="172" class="label">server.js · static files + route mounting</text>
+  <text x="380" y="192" class="label">config.js · port, shop, GST slabs, coupons</text>
+  <path d="M290 164H360" class="flow"/>
+
+  <rect x="730" y="118" width="420" height="92" class="box route"/>
+  <text x="750" y="148" class="head">HTTP handlers in routes/</text>
+  <text x="750" y="173" class="label">products.js · orders.js · customers.js · reports.js</text>
+  <text x="750" y="193" class="small">GET /orders/:id/invoice is served by server.js</text>
+  <path d="M660 164H730" class="flow"/>
+
+  <rect x="360" y="270" width="300" height="162" class="box lib"/>
+  <text x="380" y="300" class="head">Order and calculation modules</text>
+  <text x="380" y="326" class="label">orders.js · inventory.js · ledger.js</text>
+  <text x="380" y="350" class="label">pricing.js · coupons.js · tax.js</text>
+  <text x="380" y="374" class="label">invoice.js · dates.js · reports.js · store.js</text>
+  <text x="380" y="405" class="small">Invoice route: orders.get → invoice.render</text>
+  <path d="M845 210V242H510V270" class="flow"/>
+
+  <rect x="40" y="274" width="250" height="115" class="box data"/>
+  <text x="60" y="304" class="head">Persistent data</text>
+  <text x="60" y="331" class="label">data/db.json</text>
+  <text x="60" y="354" class="small">products · orders · customers</text>
+  <text x="60" y="374" class="small">settlements · audit log</text>
+  <path d="M360 352H290" class="flow"/>
+  <text x="297" y="341" class="small">read/write</text>
+
+  <rect x="730" y="270" width="420" height="162" class="box"/>
+  <text x="750" y="300" class="head">Order placement flow · POST /api/orders</text>
+  <text x="750" y="326" class="label">1. Load data; validate items and sellable stock</text>
+  <text x="750" y="350" class="label">2. Validate coupon and minimum order</text>
+  <text x="750" y="374" class="label">3. pricing.computeTotals: discount, HSN GST, total</text>
+  <text x="750" y="398" class="label">4. Charge Khata if selected; reserve stock; add order</text>
+  <text x="750" y="420" class="small">5. Append audit entry, save data, return created order</text>
+  <path d="M660 350H730" class="flow"/>
+
+  <rect x="40" y="500" width="1110" height="248" class="box"/>
+  <text x="64" y="535" class="head">Other existing library modules</text>
+  <text x="64" y="570" class="label">lib/reports.js</text>
+  <text x="64" y="594" class="small">GST audit and reporting helpers</text>
+  <text x="330" y="570" class="label">lib/ledger.js</text>
+  <text x="330" y="594" class="small">Customer credit and settlements</text>
+  <text x="610" y="570" class="label">lib/dates.js</text>
+  <text x="610" y="594" class="small">Date parsing and normalization</text>
+  <text x="870" y="570" class="label">lib/store.js</text>
+  <text x="870" y="594" class="small">JSON file persistence</text>
+  <text x="64" y="670" class="small">The server also exposes printable invoice HTML using the stored order and the invoice calculation module.</text>
+  <path d="M510 432V475H95V500" class="flow dashed"/>
+</svg>
