@@ -54,7 +54,7 @@ totalDelta: 0
 Committed on `fix/shop` and pushed to the configured GitHub fork.
 
 - Commit: `0461ab1 Fix invoice GST and coupon calculations`
-- Pull request: https://github.com/ChetanMehra1/shopledger-legacy-workshop/pull/1
+- Pull request: https://github.com/SampurnR/shopledger-legacy-workshop/pull/593
 - Base branch: `main`
 - The pull request is open and was not merged.
 
