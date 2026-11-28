@@ -19,7 +19,7 @@ test('CURRENT BEHAVIOUR: rejects selling exactly the remaining sellable unit', f
   });
 });
 
-test('CURRENT BEHAVIOUR: cancelling an order with id-based items does not restore stock', function () {
+test('cancelling an order restores stock for its id-based items', function () {
   var db = {
     orders: [{
       id: 1007,
@@ -34,6 +34,6 @@ test('CURRENT BEHAVIOUR: cancelling an order with id-based items does not restor
 
   assert.equal(result.ok, true);
   assert.equal(result.order.status, 'cancelled');
-  assert.equal(db.products[0].stock, 0);
+  assert.equal(db.products[0].stock, 1);
   assert.equal(db.products[0].reserved, 0);
 });
