@@ -4,29 +4,32 @@ const assert = require('node:assert/strict');
 const inventory = require('../lib/inventory');
 const orders = require('../lib/orders');
 
-test('CURRENT BEHAVIOUR: exact last physical unit is rejected as out of stock', () => {
+test('exact last physical unit is sellable', () => {
   const products = [
     { id: 6, name: 'A2 Gir Cow Ghee 500ml', stock: 1, reserved: 0 }
   ];
 
-  assert.deepEqual(inventory.check(products, [{ id: 6, qty: 1 }]), {
-    ok: false,
-    msg: 'A2 Gir Cow Ghee 500ml is out of stock (1 sellable available)'
-  });
+  assert.deepEqual(inventory.check(products, [{ id: 6, qty: 1 }]), { ok: true });
 });
 
-test('CURRENT BEHAVIOUR: exact last sellable unit is rejected when other stock is reserved', () => {
+test('exact last sellable unit is available when other stock is reserved', () => {
   const products = [
     { id: 11, name: 'Byadgi Kashmiri Chilli Powder 500g', stock: 4, reserved: 3 }
   ];
 
-  assert.deepEqual(inventory.check(products, [{ id: 11, qty: 1 }]), {
+  assert.deepEqual(inventory.check(products, [{ id: 11, qty: 1 }]), { ok: true });
+});
+
+test('duplicate lines cannot exceed their combined sellable stock', () => {
+  const products = [{ id: 6, name: 'Ghee', stock: 3, reserved: 0 }];
+
+  assert.deepEqual(inventory.check(products, [{ id: 6, qty: 2 }, { id: 6, qty: 2 }]), {
     ok: false,
-    msg: 'Byadgi Kashmiri Chilli Powder 500g is out of stock (1 sellable available)'
+    msg: 'Ghee is out of stock (3 sellable available)'
   });
 });
 
-test('CURRENT BEHAVIOUR: cancelling Pending Order 1007 does not restore deducted stock', () => {
+test('cancelling Pending Order 1007 restores deducted stock and reverses Khata', () => {
   const db = {
     products: [
       { id: 6, name: 'A2 Gir Cow Ghee 500ml', stock: 1, reserved: 0 },
@@ -54,9 +57,20 @@ test('CURRENT BEHAVIOUR: cancelling Pending Order 1007 does not restore deducted
 
   assert.equal(result.ok, true);
   assert.equal(result.order.status, 'cancelled');
-  assert.equal(db.products[0].stock, 1);
-  assert.equal(db.products[1].stock, 22);
+  assert.equal(db.products[0].stock, 3);
+  assert.equal(db.products[0].reserved, 0);
+  assert.equal(db.products[1].stock, 24);
+  assert.equal(db.products[1].reserved, 4);
   assert.equal(db.customers[0].totalBilled, 0);
+});
+
+test('stock restoration accepts the legacy productId line-item shape', () => {
+  const products = [{ id: 6, name: 'Ghee', stock: 1, reserved: 0 }];
+
+  inventory.release(products, [{ productId: 6, qty: 2 }]);
+
+  assert.equal(products[0].stock, 3);
+  assert.equal(products[0].reserved, 0);
 });
 
 test('reserve deducts committed quantities from physical stock', () => {
