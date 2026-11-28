@@ -1,6 +1,7 @@
 var express = require('express');
 var config = require('../config');
 var store = require('../lib/store');
+var inventory = require('../lib/inventory');
 var reports = require('../lib/reports');
 var pricing = require('../lib/pricing');
 var coupons = require('../lib/coupons');
@@ -25,24 +26,22 @@ router.get('/reports/gst-reconciliation', function (req, res) {
 router.post('/pricing/preview', function (req, res) {
   var db = store.read();
   var body = req.body || {};
-  var rawItems = body.items || [];
+  var rawItems = Array.isArray(body.items) ? body.items : [];
   var resolved = [];
 
   for (var i = 0; i < rawItems.length; i++) {
-    var p = null;
-    for (var j = 0; j < db.products.length; j++) {
-      if (db.products[j].id == rawItems[i].id) {
-        p = db.products[j];
-        break;
-      }
-    }
-    if (p && rawItems[i].qty > 0) {
+    var entry = rawItems[i];
+    if (!entry || entry.id == null) continue;
+    var p = inventory.find(db.products, entry.id);
+    var qty = parseInt(entry.qty, 10);
+    if (p && qty > 0) {
       resolved.push({
         id: p.id,
+        sku: p.sku,
         name: p.name,
         hsn: p.hsn,
         price: p.price,
-        qty: Number(rawItems[i].qty)
+        qty: qty
       });
     }
   }

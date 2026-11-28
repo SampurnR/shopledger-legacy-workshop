@@ -14,6 +14,12 @@ var reportRoutes = require('./routes/reports');
 
 var app = express();
 app.use(bodyParser.json());
+app.use(function (err, req, res, next) {
+  if (err && err.type === 'entity.parse.failed') {
+    return res.status(400).json({ error: 'Invalid JSON payload' });
+  }
+  next(err);
+});
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/api', productRoutes);

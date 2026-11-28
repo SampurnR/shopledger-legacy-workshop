@@ -12,16 +12,22 @@ router.get('/customers', function (req, res) {
   });
 });
 
+var ALLOWED_SETTLEMENT_MODES = { upi: true, cash: true, neft: true };
+
 router.post('/customers/:id/settle', function (req, res) {
   var db = store.read();
   var body = req.body || {};
+  var mode = String(body.mode || 'upi').trim().toLowerCase();
 
-  // Pass amount directly from request payload
+  if (!ALLOWED_SETTLEMENT_MODES[mode]) {
+    return res.status(400).json({ error: 'Unsupported settlement mode: ' + mode });
+  }
+
   var result = ledger.recordSettlement(
     db,
     req.params.id,
     body.amount,
-    body.mode || 'upi',
+    mode,
     body.note || ''
   );
 
@@ -32,7 +38,7 @@ router.post('/customers/:id/settle', function (req, res) {
   store.appendAudit(
     db,
     'KHATA_SETTLEMENT',
-    result.customer.name + ' settled ₹' + body.amount + ' via ' + (body.mode || 'upi').toUpperCase()
+    result.customer.name + ' settled ₹' + result.settlement.amount.toFixed(2) + ' via ' + result.settlement.mode.toUpperCase()
   );
   store.write(db);
 

@@ -1,4 +1,5 @@
 var express = require('express');
+var config = require('../config');
 var store = require('../lib/store');
 var inventory = require('../lib/inventory');
 var tax = require('../lib/tax');
@@ -24,7 +25,7 @@ router.get('/products', function (req, res) {
       stock: p.stock,
       reserved: p.reserved || 0,
       sellable: inventory.getSellableStock(p),
-      reorderLevel: p.reorderLevel || 10
+      reorderLevel: p.reorderLevel != null ? p.reorderLevel : config.inventory.defaultReorderLevel
     };
   });
 

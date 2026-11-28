@@ -2,9 +2,13 @@ var express = require('express');
 var store = require('../lib/store');
 var inventory = require('../lib/inventory');
 var pricing = require('../lib/pricing');
+var tax = require('../lib/tax');
 var coupons = require('../lib/coupons');
 var orders = require('../lib/orders');
 var ledger = require('../lib/ledger');
+
+var ALLOWED_PAYMENT_MODES = { cash: true, upi: true, khata: true };
+var ALLOWED_CREATE_STATUSES = { completed: true, pending: true };
 
 var router = express.Router();
 
@@ -31,24 +35,30 @@ router.post('/orders', function (req, res) {
   var body = req.body || {};
   var items = [];
 
-  if (!body.items || !body.items.length) {
+  if (!Array.isArray(body.items) || !body.items.length) {
     return res.status(400).json({ error: 'Pick at least one item to place an order' });
   }
 
   for (var i = 0; i < body.items.length; i++) {
-    var p = inventory.find(db.products, body.items[i].id);
-    if (!p) {
-      return res.status(400).json({ error: 'Unknown product ID ' + body.items[i].id });
+    var reqItem = body.items[i];
+    if (!reqItem || reqItem.id == null) {
+      return res.status(400).json({ error: 'Each line item must include a product ID' });
     }
-    var q = parseInt(body.items[i].qty, 10);
-    if (!q || q < 1) q = 1;
+    var p = inventory.find(db.products, reqItem.id);
+    if (!p) {
+      return res.status(400).json({ error: 'Unknown product ID ' + reqItem.id });
+    }
+    var q = Number(reqItem.qty);
+    if (!Number.isInteger(q) || q < 1) {
+      return res.status(400).json({ error: 'Invalid quantity for ' + p.name });
+    }
 
-    // Note: hsn is stored on line items; tax slab is resolved via lib/tax.js
     items.push({
       id: p.id,
       sku: p.sku,
       name: p.name,
       hsn: p.hsn,
+      gstRate: tax.getSlabPercent(p),
       price: p.price,
       qty: q
     });
@@ -68,16 +78,29 @@ router.post('/orders', function (req, res) {
     }
   }
 
-  var totals = pricing.computeTotals(items, rawCoupon);
-  var paymentMode = (body.paymentMode || 'cash').toLowerCase();
-  var customerName = (body.customer || '').trim() || 'Walk-in';
-  var customerId = body.customerId ? Number(body.customerId) : null;
+  var paymentMode = String(body.paymentMode || 'cash').trim().toLowerCase();
+  if (!ALLOWED_PAYMENT_MODES[paymentMode]) {
+    return res.status(400).json({ error: 'Unsupported payment mode: ' + paymentMode });
+  }
 
-  if (customerId) {
-    var custObj = ledger.findCustomer(db, customerId);
-    if (custObj) {
-      customerName = custObj.name;
+  var orderStatus = String(body.status || 'completed').trim().toLowerCase();
+  if (!ALLOWED_CREATE_STATUSES[orderStatus]) {
+    return res.status(400).json({ error: 'Invalid initial order status: ' + orderStatus });
+  }
+
+  var totals = pricing.computeTotals(items, rawCoupon);
+  var customerName = (body.customer || '').trim() || 'Walk-in';
+  var customerId = (body.customerId != null && body.customerId !== '') ? Number(body.customerId) : null;
+
+  if (customerId !== null) {
+    if (!isFinite(customerId)) {
+      return res.status(400).json({ error: 'Invalid customer ID' });
     }
+    var custObj = ledger.findCustomer(db, customerId);
+    if (!custObj) {
+      return res.status(400).json({ error: 'Unknown customer ID ' + customerId });
+    }
+    customerName = custObj.name;
   }
 
   if (paymentMode === 'khata') {
@@ -96,7 +119,7 @@ router.post('/orders', function (req, res) {
     customer: customerName,
     customerId: customerId,
     paymentMode: paymentMode,
-    status: body.status || 'completed',
+    status: orderStatus,
     items: items,
     coupon: rawCoupon,
     subtotal: totals.subtotal,
@@ -113,6 +136,9 @@ router.post('/orders', function (req, res) {
 
 router.post('/orders/:id/cancel', function (req, res) {
   var db = store.read();
+  if (!orders.get(db, req.params.id)) {
+    return res.status(404).json({ error: 'Order not found' });
+  }
   var reason = (req.body && req.body.reason) ? req.body.reason : 'Cancelled from order desk';
   var result = orders.cancel(db, req.params.id, reason);
 
