@@ -2,6 +2,7 @@ var allProducts = [];
 var cartQuantities = {}; // productId -> qty
 var activeCategory = 'all';
 var customersList = [];
+var previewRevision = 0;
 
 function get(url, cb) {
   var x = new XMLHttpRequest();
@@ -16,10 +17,15 @@ function get(url, cb) {
   x.send();
 }
 
-function post(url, data, cb) {
+function post(url, data, cb, submissionKey) {
   var x = new XMLHttpRequest();
   x.open('POST', url);
   x.setRequestHeader('Content-Type', 'application/json');
+  if (submissionKey) x.setRequestHeader('Idempotency-Key', submissionKey);
+  x.timeout = 15000;
+  x.onerror = x.ontimeout = function () {
+    cb(0, { error: 'No response from the shop server. Please retry.' });
+  };
   x.onload = function () {
     var parsed = {};
     try {
@@ -30,6 +36,24 @@ function post(url, data, cb) {
     cb(x.status, parsed);
   };
   x.send(JSON.stringify(data));
+}
+
+function submit(button, url, data, cb) {
+  if (button.disabled) return;
+  var request = url + JSON.stringify(data);
+  if (button.lastRequest !== request) {
+    var bytes = window.crypto.getRandomValues(new Uint8Array(16));
+    button.submissionKey = Array.from(bytes, function (byte) {
+      return byte.toString(16).padStart(2, '0');
+    }).join('');
+    button.lastRequest = request;
+  }
+  button.disabled = true;
+  post(url, data, function (status, result) {
+    button.disabled = false;
+    if (status >= 200 && status < 500) button.lastRequest = null;
+    cb(status, result);
+  }, button.submissionKey);
 }
 
 function fmtMoney(n) {
@@ -161,6 +185,7 @@ function getSelectedCartItems() {
 }
 
 function updateCartPreview() {
+  var revision = ++previewRevision;
   var items = getSelectedCartItems();
   var countEl = document.getElementById('cart-count');
   var listEl = document.getElementById('cart-items-list');
@@ -195,8 +220,17 @@ function updateCartPreview() {
   listEl.className = '';
   listEl.innerHTML = miniHtml;
 
+  feedbackEl.textContent = '';
+  ['subtotal', 'discount', 'tax', 'total'].forEach(function (field) {
+    document.getElementById('preview-' + field).textContent = '—';
+  });
   post('/api/pricing/preview', { items: items, coupon: couponCode }, function (status, res) {
-    if (!res || !res.totals) return;
+    if (revision !== previewRevision) return;
+    if (!res || !res.totals) {
+      feedbackEl.className = 'field-hint err';
+      feedbackEl.textContent = res && res.error ? res.error : 'Could not calculate cart totals';
+      return;
+    }
     var t = res.totals;
     document.getElementById('preview-subtotal').textContent = fmtMoney(t.subtotal);
     document.getElementById('preview-discount').textContent = '-' + fmtMoney(t.discount);
@@ -274,6 +308,9 @@ function loadOrders() {
       var cancelBtn = st !== 'cancelled'
         ? ' <button type="button" class="btn btn-danger-outline" onclick="cancelOrder(' + o.id + ')">Cancel</button>'
         : '';
+      var dispatchBtn = st === 'pending'
+        ? ' <button type="button" class="btn btn-ghost" onclick="dispatchOrder(' + o.id + ')">Mark dispatched</button>'
+        : '';
 
       html += '<tr>' +
         '<td><strong>#' + o.id + '</strong></td>' +
@@ -289,7 +326,7 @@ function loadOrders() {
         '<td><span class="status-pill ' + st + '">' + st + '</span></td>' +
         '<td class="r" style="white-space:nowrap">' +
         '<a class="btn-link" href="/orders/' + o.id + '/invoice" target="_blank">Invoice &nearr;</a>' +
-        cancelBtn +
+        dispatchBtn + cancelBtn +
         '</td>' +
         '</tr>';
     }
@@ -301,6 +338,19 @@ function loadOrders() {
     document.querySelector('#orders tbody').innerHTML = html;
   });
 }
+
+window.dispatchOrder = function (orderId) {
+  var msg = document.getElementById('orders-action-msg');
+  post('/api/orders/' + orderId + '/dispatch', {}, function (status, result) {
+    msg.className = status === 200 ? 'ok' : 'err';
+    msg.textContent = status === 200 ? 'Order #' + orderId + ' marked dispatched.' :
+      (result.error || 'Could not dispatch the order');
+    if (status === 200) {
+      loadOrders();
+      loadDashboardSummary();
+    }
+  });
+};
 
 window.cancelOrder = function (orderId) {
   var msgEl = document.getElementById('orders-action-msg');
@@ -517,7 +567,7 @@ document.getElementById('place').onclick = function () {
     coupon: document.getElementById('coupon').value
   };
 
-  post('/api/orders', payload, function (status, res) {
+  submit(this, '/api/orders', payload, function (status, res) {
     if (status === 201) {
       cartQuantities = {};
       msg.className = 'ok';
@@ -529,7 +579,7 @@ document.getElementById('place').onclick = function () {
       loadCustomersDropdown();
     } else {
       msg.className = 'err';
-      msg.innerHTML = (res && res.error) ? res.error : 'Order failed';
+      msg.textContent = (res && res.error) ? res.error : 'Order failed';
     }
   });
 };
@@ -553,7 +603,7 @@ document.getElementById('btn-record-settlement').onclick = function () {
   var note = document.getElementById('settle-note').value;
   var khataMsg = document.getElementById('khata-msg');
 
-  post('/api/customers/' + custId + '/settle', {
+  submit(this, '/api/customers/' + custId + '/settle', {
     amount: amount,
     mode: mode,
     note: note

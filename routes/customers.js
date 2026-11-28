@@ -12,8 +12,7 @@ router.get('/customers', function (req, res) {
   });
 });
 
-router.post('/customers/:id/settle', function (req, res) {
-  var db = store.read();
+router.post('/customers/:id/settle', store.mutation(function (req, res, db, save) {
   var body = req.body || {};
 
   // Pass amount directly from request payload
@@ -32,11 +31,9 @@ router.post('/customers/:id/settle', function (req, res) {
   store.appendAudit(
     db,
     'KHATA_SETTLEMENT',
-    result.customer.name + ' settled ₹' + body.amount + ' via ' + (body.mode || 'upi').toUpperCase()
+    result.customer.name + ' settled ₹' + result.settlement.amount.toFixed(2) + ' via ' + (body.mode || 'upi').toUpperCase()
   );
-  store.write(db);
-
-  res.status(201).json(result);
-});
+  return save(result);
+}, true));
 
 module.exports = router;
