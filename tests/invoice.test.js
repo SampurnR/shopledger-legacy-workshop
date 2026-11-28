@@ -56,3 +56,21 @@ test('Invoice applies the HSN 12% rate for an order without a coupon', function 
   assert.equal(figures.tax, 108);
   assert.equal(figures.total, 1008);
 });
+
+test('Invoice preserves the stored discount for a historical order with an inactive coupon', function () {
+  var figures = invoice.computeInvoiceFigures({
+    id: 1011,
+    coupon: 'DIWALI20',
+    subtotal: 1000,
+    discount: 200,
+    tax: 40,
+    total: 840,
+    items: [
+      { id: 1, sku: 'GRN-001', name: 'Indrayani Basmati Rice 5kg', hsn: '1006', price: 1000, qty: 1 }
+    ]
+  });
+
+  assert.equal(figures.discount, 200);
+  assert.equal(figures.tax, 40);
+  assert.equal(figures.total, 840);
+});
