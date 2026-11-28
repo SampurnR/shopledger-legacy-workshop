@@ -40,7 +40,7 @@ test('invoice and billed totals agree for a whole-rupee default-rate sale withou
   assert.doesNotMatch(invoice.render(order), /Accountant Reconciliation Notice/);
 });
 
-test('CURRENT BEHAVIOUR: mixed HSN slabs and a flat coupon produce different billed and printed totals', () => {
+test('invoice uses the billed HSN rates and apportions a flat coupon before GST', () => {
   const { billed, order, charged } = billOrder([
     { name: 'Rice', hsn: '1006', price: 100, qty: 2 },
     { name: 'Ghee', hsn: '0405', price: 100, qty: 1 }
@@ -61,34 +61,28 @@ test('CURRENT BEHAVIOUR: mixed HSN slabs and a flat coupon produce different bil
 
   const { rows, ...figures } = invoice.computeInvoiceFigures(order);
   assert.deepEqual(figures, {
-    subtotal: 300, discount: 50, tax: 54, cgst: 27, sgst: 27, total: 304
+    subtotal: 300, discount: 50, tax: 18.33, cgst: 9.17, sgst: 9.16, total: 268.33
   });
   assert.deepEqual(rows.map(({ hsn, gstPercent, lineTax }) =>
     ({ hsn, gstPercent, lineTax })), [
-    { hsn: '1006', gstPercent: 18, lineTax: 36 },
-    { hsn: '0405', gstPercent: 18, lineTax: 18 }
+    { hsn: '1006', gstPercent: 5, lineTax: 8.33 },
+    { hsn: '0405', gstPercent: 12, lineTax: 10 }
   ]);
-
-  const html = invoice.render(order);
-  assert.match(html, /CGST \+ SGST \(Total GST\)<\/td><td class="r">₹54\.00/);
-  assert.match(html, /Invoice Total<\/td><td class="r">₹304\.00/);
-  assert.match(html, /Invoice computed total \(₹304\.00\) differs from Order Ledger recorded total \(₹268\.33\) by \+₹35\.67\./);
 });
 
-test('CURRENT BEHAVIOUR: invoice applies the percentage coupon after GST and ignores its cap', () => {
+test('invoice applies the capped percentage coupon before GST', () => {
   const { order } = billOrder([{ name: 'Tea', price: 2000, qty: 1 }], 'SAVE10');
   const figures = invoice.computeInvoiceFigures(order);
 
   assert.equal(order.discount, 150);
   assert.equal(order.tax, 333);
   assert.equal(order.total, 2183);
-  assert.equal(figures.discount, 236);
-  assert.equal(figures.tax, 360);
-  assert.equal(figures.total, 2124);
-  assert.match(invoice.render(order), /recorded total \(₹2183\.00\) by -₹59\.00\./);
+  assert.equal(figures.discount, 150);
+  assert.equal(figures.tax, 333);
+  assert.equal(figures.total, 2183);
 });
 
-test('CURRENT BEHAVIOUR: invoice and billing interpret explicit decimal and zero GST rates differently', () => {
+test('invoice uses the billing interpretation of explicit decimal and zero GST rates', () => {
   const { billed, order } = billOrder([
     { name: 'Decimal rate item', price: 100, qty: 1, gstRate: 0.05 },
     { name: 'Zero rate item', price: 100, qty: 1, gstRate: 0 }
@@ -99,13 +93,13 @@ test('CURRENT BEHAVIOUR: invoice and billing interpret explicit decimal and zero
     [5, 5], [0, 0]
   ]);
   assert.deepEqual(figures.rows.map(({ gstPercent, lineTax }) => [gstPercent, lineTax]), [
-    [0, 0.05], [18, 18]
+    [5, 5], [0, 0]
   ]);
   assert.equal(order.total, 205);
-  assert.equal(figures.total, 218.05);
+  assert.equal(figures.total, 205);
 });
 
-test('CURRENT BEHAVIOUR: rounded invoice line taxes can sum to more than the printed GST', () => {
+test('invoice sums rounded line GST the same way as billing', () => {
   const { order } = billOrder([
     { name: 'First item', price: 0.03, qty: 1 },
     { name: 'Second item', price: 0.03, qty: 1 }
@@ -115,9 +109,74 @@ test('CURRENT BEHAVIOUR: rounded invoice line taxes can sum to more than the pri
   assert.equal(order.tax, 0.02);
   assert.equal(order.total, 0.08);
   assert.deepEqual(figures.rows.map(({ lineTax }) => lineTax), [0.01, 0.01]);
-  assert.equal(figures.tax, 0.01);
+  assert.equal(figures.tax, 0.02);
   assert.equal(figures.cgst, 0.01);
-  assert.equal(figures.sgst, 0);
-  assert.equal(figures.total, 0.07);
-  assert.match(invoice.render(order), /recorded total \(₹0\.08\) by -₹0\.01\./);
+  assert.equal(figures.sgst, 0.01);
+  assert.equal(figures.total, 0.08);
+});
+
+test('printed invoice matches the recorded charge and GST on a discounted mixed-rate order', () => {
+  const { order } = billOrder([
+    { name: 'Rice', hsn: '1006', price: 100, qty: 2 },
+    { name: 'Ghee', hsn: '0405', price: 100, qty: 1 }
+  ], 'FLAT50');
+
+  const html = invoice.render(order);
+  assert.match(html, /Invoice Total<\/td><td class="r">₹268\.33/);
+  assert.match(html, /CGST \+ SGST \(Total GST\)<\/td><td class="r">₹18\.33/);
+  assert.doesNotMatch(html, /Accountant Reconciliation Notice/);
+});
+
+test('invoice preserves recorded amounts on an order with an expired coupon', () => {
+  const figures = invoice.computeInvoiceFigures({
+    items: [{ name: 'Tea', price: 1000, qty: 1 }],
+    coupon: 'DIWALI20',
+    subtotal: 1000,
+    discount: 200,
+    tax: 144,
+    total: 944
+  });
+
+  assert.equal(figures.subtotal, 1000);
+  assert.equal(figures.discount, 200);
+  assert.equal(figures.tax, 144);
+  assert.equal(figures.total, 944);
+  assert.equal(figures.cgst, 72);
+  assert.equal(figures.sgst, 72);
+  assert.equal(figures.rows[0].lineTax, 144);
+});
+
+test('printed invoice flags line GST that differs from recorded GST', () => {
+  const html = invoice.render({
+    items: [{ name: 'Ghee', hsn: '0405', price: 100, qty: 1 }],
+    subtotal: 100,
+    discount: 0,
+    tax: 5,
+    total: 105
+  });
+
+  assert.match(html, /Recalculated line GST \(₹12\.00\) differs from recorded GST \(₹5\.00\)/);
+  assert.match(html, /Invoice Total<\/td><td class="r">₹105\.00/);
+});
+
+test('printed invoice flags a recorded total that differs from the displayed amounts', () => {
+  const { order } = billOrder([{ name: 'Tea', price: 100, qty: 1 }]);
+  order.total = 117;
+
+  const html = invoice.render(order);
+  assert.match(html, /Subtotal less discount plus GST \(₹118\.00\) differs from recorded total \(₹117\.00\)/);
+  assert.match(html, /Invoice Total<\/td><td class="r">₹117\.00/);
+});
+
+test('invoice derives missing GST and total using the recorded discount', () => {
+  const figures = invoice.computeInvoiceFigures({
+    items: [{ name: 'Tea', price: 1000, qty: 1 }],
+    coupon: 'DIWALI20',
+    subtotal: 1000,
+    discount: 200
+  });
+
+  assert.equal(figures.rows[0].lineTax, 144);
+  assert.equal(figures.tax, 144);
+  assert.equal(figures.total, 944);
 });
