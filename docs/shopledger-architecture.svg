@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1160" viewBox="0 0 1600 1160" role="img" aria-labelledby="title desc">
+  <title id="title">ShopLedger application architecture</title>
+  <desc id="desc">Architecture diagram verified from the ShopLedger repository. Shows browser assets, Express server and routers, business logic modules, configuration, JSON persistence, and the complete order placement path.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#52647a"/></marker>
+    <marker id="flowArrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#1769aa"/></marker>
+    <style>
+      text{font-family:Inter,Segoe UI,Arial,sans-serif;fill:#142337}.title{font-size:30px;font-weight:700}.subtitle{font-size:14px;fill:#52647a}.section{font-size:17px;font-weight:700}.file{font-size:14px;font-weight:650}.small{font-size:12px;fill:#52647a}.flowText{font-size:12px;font-weight:650;fill:#14588d}.box{stroke-width:1.4}.ui{fill:#eef6ff;stroke:#87b5e2}.server{fill:#f1f5fa;stroke:#9aaabd}.router{fill:#f0f8f6;stroke:#8cb8a9}.logic{fill:#fbf6eb;stroke:#c9ae72}.config{fill:#f5f0fb;stroke:#ae99cd}.data{fill:#fff3ee;stroke:#d2a28e}.flow{fill:none;stroke:#1769aa;stroke-width:3;marker-end:url(#flowArrow)}.rel{fill:none;stroke:#718198;stroke-width:1.7;marker-end:url(#arrow)}.dash{stroke-dasharray:6 5}.panel{fill:#fff;stroke:#d5dee8;stroke-width:1.5}
+    </style>
+  </defs>
+  <rect width="1600" height="1160" fill="#f7f9fc"/>
+  <text x="48" y="52" class="title">ShopLedger | Existing application architecture</text>
+  <text x="48" y="78" class="subtitle">Repository-verified modules and connections · order creation path highlighted in blue</text>
+
+  <!-- Browser -->
+  <rect x="40" y="112" width="330" height="405" rx="14" class="panel"/>
+  <text x="62" y="145" class="section">Browser UI</text>
+  <rect x="62" y="168" width="286" height="58" rx="8" class="box ui"/><text x="78" y="193" class="file">public/index.html</text><text x="78" y="212" class="small">Page structure and POS views</text>
+  <rect x="62" y="244" width="286" height="72" rx="8" class="box ui"/><text x="78" y="270" class="file">public/js/app.js</text><text x="78" y="290" class="small">Product selection, quantities, API calls</text><text x="78" y="306" class="small">and screen rendering</text>
+  <rect x="62" y="334" width="286" height="58" rx="8" class="box ui"/><text x="78" y="359" class="file">public/css/style.css</text><text x="78" y="378" class="small">Layout and visual styling</text>
+  <text x="62" y="432" class="small">Express serves the public/ directory</text>
+  <text x="62" y="454" class="small">via express.static (server.js).</text>
+  <rect x="62" y="474" width="286" height="27" rx="6" fill="#dceeff" stroke="#7fb0de"/><text x="75" y="493" class="flowText">Select products + quantities → POST order</text>
+
+  <!-- Server / routers -->
+  <rect x="410" y="112" width="455" height="405" rx="14" class="panel"/>
+  <text x="432" y="145" class="section">Express server and API</text>
+  <rect x="432" y="166" width="410" height="58" rx="8" class="box server"/><text x="450" y="192" class="file">server.js</text><text x="450" y="211" class="small">JSON middleware · static files · mounts routers at /api</text>
+  <text x="432" y="251" class="small">Actual router files mounted by server.js:</text>
+  <rect x="432" y="266" width="195" height="66" rx="8" class="box router"/><text x="446" y="291" class="file">routes/orders.js</text><text x="446" y="312" class="small">POST /orders · order lifecycle</text>
+  <rect x="647" y="266" width="195" height="66" rx="8" class="box router"/><text x="661" y="291" class="file">routes/products.js</text><text x="661" y="312" class="small">GET /products, /coupons</text>
+  <rect x="432" y="347" width="195" height="66" rx="8" class="box router"/><text x="446" y="372" class="file">routes/customers.js</text><text x="446" y="393" class="small">Customers and settlements</text>
+  <rect x="647" y="347" width="195" height="66" rx="8" class="box router"/><text x="661" y="372" class="file">routes/reports.js</text><text x="661" y="393" class="small">Reports, preview, export</text>
+  <text x="432" y="451" class="small">Also handles GET /orders/:id/invoice using</text><text x="432" y="470" class="small">lib/orders.js and lib/invoice.js.</text>
+
+  <!-- Business modules -->
+  <rect x="905" y="112" width="655" height="405" rx="14" class="panel"/>
+  <text x="927" y="145" class="section">Business logic (lib/)</text>
+  <rect x="927" y="166" width="184" height="69" rx="8" class="box logic"/><text x="941" y="192" class="file">lib/pricing.js</text><text x="941" y="213" class="small">Subtotal/totals; uses tax + coupons</text>
+  <rect x="1120" y="166" width="184" height="69" rx="8" class="box logic"/><text x="1134" y="192" class="file">lib/coupons.js</text><text x="1134" y="213" class="small">Coupon rules; uses config</text>
+  <rect x="1313" y="166" width="224" height="69" rx="8" class="box logic"/><text x="1327" y="192" class="file">lib/tax.js</text><text x="1327" y="213" class="small">HSN GST slabs; uses config</text>
+  <rect x="927" y="252" width="184" height="69" rx="8" class="box logic"/><text x="941" y="278" class="file">lib/inventory.js</text><text x="941" y="299" class="small">Stock rules; uses config</text>
+  <rect x="1120" y="252" width="184" height="69" rx="8" class="box logic"/><text x="1134" y="278" class="file">lib/ledger.js</text><text x="1134" y="299" class="small">Khata balances; uses dates</text>
+  <rect x="1313" y="252" width="224" height="69" rx="8" class="box logic"/><text x="1327" y="278" class="file">lib/orders.js</text><text x="1327" y="299" class="small">Create/cancel; uses dates, inventory, ledger</text>
+  <rect x="927" y="338" width="184" height="69" rx="8" class="box logic"/><text x="941" y="364" class="file">lib/store.js</text><text x="941" y="385" class="small">Read/write JSON data</text>
+  <rect x="1120" y="338" width="184" height="69" rx="8" class="box logic"/><text x="1134" y="364" class="file">lib/reports.js</text><text x="1134" y="385" class="small">Dashboard; uses inventory, ledger, invoice</text>
+  <rect x="1313" y="338" width="224" height="69" rx="8" class="box logic"/><text x="1327" y="364" class="file">lib/invoice.js</text><text x="1327" y="385" class="small">Invoice figures and HTML</text>
+  <rect x="927" y="424" width="184" height="52" rx="8" class="box logic"/><text x="941" y="455" class="file">lib/dates.js</text>
+  <text x="1130" y="452" class="small">All ten actual lib modules shown</text>
+
+  <!-- Config and persistent data -->
+  <rect x="40" y="561" width="330" height="180" rx="14" class="panel"/>
+  <text x="62" y="594" class="section">Configuration</text>
+  <rect x="62" y="615" width="286" height="88" rx="8" class="box config"/><text x="78" y="643" class="file">config.js</text><text x="78" y="664" class="small">Port, shop details, GST slabs,</text><text x="78" y="682" class="small">inventory defaults and coupons</text>
+  <rect x="1230" y="561" width="330" height="180" rx="14" class="panel"/>
+  <text x="1252" y="594" class="section">Persistent data</text>
+  <rect x="1252" y="615" width="286" height="88" rx="8" class="box data"/><text x="1268" y="643" class="file">data/db.json</text><text x="1268" y="664" class="small">Products, orders, customers,</text><text x="1268" y="682" class="small">settlements and audit log</text>
+
+  <!-- Complete order flow -->
+  <rect x="40" y="790" width="1520" height="318" rx="16" fill="#f0f7ff" stroke="#9dc4e7" stroke-width="1.5"/>
+  <text x="66" y="829" class="section">Order placement flow (POST /api/orders)</text>
+  <text x="66" y="854" class="subtitle">Solid blue arrows show the request and data path; dotted links show supporting module dependencies.</text>
+  <rect x="70" y="897" width="205" height="94" rx="10" class="box ui"/><text x="88" y="925" class="file">1 · Browser</text><text x="88" y="949" class="small">Select products</text><text x="88" y="968" class="small">and quantities</text>
+  <rect x="322" y="897" width="205" height="94" rx="10" class="box ui"/><text x="340" y="925" class="file">2 · app.js</text><text x="340" y="949" class="small">Sends POST /api/orders</text><text x="340" y="968" class="small">with cart and options</text>
+  <rect x="574" y="897" width="205" height="94" rx="10" class="box server"/><text x="592" y="925" class="file">3 · server.js</text><text x="592" y="949" class="small">Express JSON middleware</text><text x="592" y="968" class="small">routes request to orders</text>
+  <rect x="826" y="897" width="205" height="94" rx="10" class="box router"/><text x="844" y="925" class="file">4 · routes/orders.js</text><text x="844" y="949" class="small">Validates products, stock,</text><text x="844" y="968" class="small">coupon and payment mode</text>
+  <rect x="1078" y="897" width="205" height="94" rx="10" class="box logic"/><text x="1096" y="925" class="file">5 · Business rules</text><text x="1096" y="949" class="small">Pricing, coupons, GST, stock</text><text x="1096" y="968" class="small">and khata where applicable</text>
+  <rect x="1330" y="897" width="205" height="94" rx="10" class="box data"/><text x="1348" y="925" class="file">6 · Persistence</text><text x="1348" y="949" class="small">lib/store.js writes</text><text x="1348" y="968" class="small">data/db.json</text>
+  <path d="M275 944H316" class="flow"/><path d="M527 944H568" class="flow"/><path d="M779 944H820" class="flow"/><path d="M1031 944H1072" class="flow"/><path d="M1283 944H1324" class="flow"/>
+  <text x="70" y="1042" class="small">Order router calls inventory.find/check/reserve, pricing.subtotal/computeTotals, coupons.normalizeCode/validate, ledger.findCustomer/chargeOrderToKhata (khata only), orders.add and store.appendAudit/write.</text>
+  <path d="M180 517V784" class="rel dash"/><text x="190" y="760" class="small">UI/API</text>
+  <path d="M639 517V784" class="rel dash"/><text x="649" y="760" class="small">route orchestration</text>
+  <path d="M1230 741V784" class="rel dash"/><text x="1240" y="770" class="small">JSON file</text>
+
+</svg>
