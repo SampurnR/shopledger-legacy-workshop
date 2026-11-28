@@ -22,7 +22,7 @@
 
 ## Commands
 - Start the app: `npm start` (runs `node server.js`).
-- Run tests: `node --test` (no test/spec files are currently present in the repository).
+- Run tests: `node --test`.
 
 ## Rules
 1. Write characterization tests before changing behaviour.
