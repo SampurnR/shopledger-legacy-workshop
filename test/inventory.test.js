@@ -67,12 +67,26 @@ test('cancelling pending order #1007 restores physical stock and preserves reser
   assert.equal(inventory.getSellableStock(product), 3);
 });
 
-test('release also restores physical stock for lines with productId', () => {
+test('releasing a quote reduces reservations without adding physical stock', () => {
   const product = { id: 2, stock: 4, reserved: 3 };
 
   inventory.release([product], [{ productId: product.id, qty: 2 }]);
 
-  assert.equal(product.stock, 6);
-  assert.equal(product.reserved, 3);
+  assert.equal(product.stock, 4);
+  assert.equal(product.reserved, 1);
   assert.equal(inventory.getSellableStock(product), 3);
+});
+
+test('cancelling an order does not restock a productId-only line', () => {
+  const product = { id: 2, stock: 4, reserved: 3 };
+  const db = { products: [product], orders: [], nextOrderId: 1007 };
+  const order = orders.add(db, {
+    status: 'pending',
+    items: [{ productId: product.id, qty: 2 }]
+  });
+
+  assert.deepEqual(orders.cancel(db, order.id), { ok: true, order });
+  assert.equal(order.status, 'cancelled');
+  assert.equal(product.stock, 4);
+  assert.equal(product.reserved, 3);
 });
