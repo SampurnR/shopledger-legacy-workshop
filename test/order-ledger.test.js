@@ -35,44 +35,47 @@ function khataDb() {
   };
 }
 
-test('CURRENT BEHAVIOUR: order history sorts DD/MM/YYYY values lexically', () => {
+test('order history sorts newest calendar date first', () => {
   const result = orders.list({ orders: orderDates() }, {});
 
-  assert.deepEqual(result.map((order) => order.id), [1004, 1001, 1006, 1008, 1003, 1002, 1007, 1005]);
+  assert.deepEqual(result.map((order) => order.id), [1008, 1007, 1006, 1005, 1004, 1003, 1002, 1001]);
 });
 
-test('CURRENT BEHAVIOUR: February to March date filter returns orders outside the range', () => {
+test('date filter is inclusive and excludes orders outside February to March', () => {
   const result = orders.list(
     { orders: orderDates() },
     { from: '2022-02-01', to: '2022-03-31' }
   );
 
-  assert.deepEqual(result.map((order) => order.id), [1004, 1001, 1006, 1008, 1003, 1002, 1007, 1005]);
+  assert.deepEqual(result.map((order) => order.id), [1008, 1007, 1006, 1005]);
 });
 
-test('CURRENT BEHAVIOUR: ISO filter date normalizes back to display order', () => {
-  assert.equal(dates.normalizeDateKey('2022-03-15'), '15/03/2022');
+test('display and ISO dates normalize to the same sortable key', () => {
+  assert.equal(dates.normalizeDateKey('2022-03-15'), '2022-03-15');
+  assert.equal(dates.normalizeDateKey('15/03/2022'), '2022-03-15');
 });
 
-test('CURRENT BEHAVIOUR: string settlement concatenates onto total settled', () => {
+test('string settlement updates total settled arithmetically', () => {
   const db = khataDb();
 
   const result = ledger.recordSettlement(db, 1, '500', 'upi', 'Characterization test');
 
   assert.equal(result.ok, true);
-  assert.equal(result.customer.totalSettled, '1200500');
-  assert.equal(result.customer.balance, -1198067.99);
+  assert.equal(result.customer.totalSettled, 1700);
+  assert.equal(result.customer.balance, 732.01);
   assert.equal(result.settlement.amount, 500);
 });
 
-test('CURRENT BEHAVIOUR: non-numeric settlement is accepted and corrupts the balance', () => {
+test('non-numeric settlement is rejected before ledger mutation', () => {
   const db = khataDb();
 
   const result = ledger.recordSettlement(db, 1, 'abc', 'cash', 'Characterization test');
 
-  assert.equal(result.ok, true);
-  assert.equal(result.customer.totalSettled, '1200abc');
-  assert.equal(Number.isNaN(result.customer.balance), true);
+  assert.deepEqual(result, { ok: false, error: 'Settlement amount must be a positive number' });
+  assert.equal(db.customers[0].totalSettled, 1200);
+  assert.equal(db.customers[0].balance, 1232.01);
+  assert.equal(db.nextSettlementId, 505);
+  assert.deepEqual(db.settlements, []);
 });
 
 test('numeric settlement already updates the balance arithmetically', () => {
