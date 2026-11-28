@@ -1,26 +1,4 @@
-# Dependencies
 node_modules/
-
-# Local environment and logs
-.env
-.env.*
-!.env.example
-*.log
-npm-debug.log*
-
-# Generated test output
-coverage/
-
-# Temporary files
+.DS_Store
 *.bak
 data/*.tmp.json
-.tmp-*/
-
-# Operating system files
-.DS_Store
-Thumbs.db
-Desktop.ini
-
-# Editor settings
-.vscode/
-.idea/
