@@ -407,7 +407,7 @@ function loadGstReconciliation() {
       var deltaStyle = r.matched ? 'color:#15803d' : 'color:#b91c1c;font-weight:700';
 
       html += '<tr>' +
-        '<td><a class="btn-link" href="/orders/' + r.orderId + '/invoice" target="_blank">#' + r.orderId + ' &nearr;</a></td>' +
+        '<td><a class="btn-link recon-order-link" href="/orders/' + r.orderId + '/invoice" target="_blank">#' + r.orderId + ' &nearr;</a></td>' +
         '<td>' + r.date + '</td>' +
         '<td>' + r.customer + '</td>' +
         '<td>' + (r.coupon ? '<span class="gst-badge">' + r.coupon + '</span>' : '-') + '</td>' +
