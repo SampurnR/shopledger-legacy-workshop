@@ -2,6 +2,21 @@ var allProducts = [];
 var cartQuantities = {}; // productId -> qty
 var activeCategory = 'all';
 var customersList = [];
+var isPlacingOrder = false;
+var checkoutIdempotencyKey = null;
+
+function createIdempotencyKey() {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID();
+  }
+  return 'ck-' + Date.now() + '-' + Math.random().toString(36).slice(2, 10);
+}
+
+function resetCheckoutIdempotencyKey() {
+  if (!isPlacingOrder) {
+    checkoutIdempotencyKey = null;
+  }
+}
 
 function get(url, cb) {
   var x = new XMLHttpRequest();
@@ -16,10 +31,16 @@ function get(url, cb) {
   x.send();
 }
 
-function post(url, data, cb) {
+function post(url, data, cb, headers) {
   var x = new XMLHttpRequest();
   x.open('POST', url);
   x.setRequestHeader('Content-Type', 'application/json');
+  if (headers) {
+    var keys = Object.keys(headers);
+    for (var i = 0; i < keys.length; i++) {
+      x.setRequestHeader(keys[i], headers[keys[i]]);
+    }
+  }
   x.onload = function () {
     var parsed = {};
     try {
@@ -28,6 +49,12 @@ function post(url, data, cb) {
       parsed = { error: x.responseText || 'Request failed' };
     }
     cb(x.status, parsed);
+  };
+  x.onerror = function () {
+    cb(0, { error: 'Network error. Please try again.' });
+  };
+  x.onabort = function () {
+    cb(0, { error: 'Request aborted. Please try again.' });
   };
   x.send(JSON.stringify(data));
 }
@@ -131,6 +158,7 @@ window.stepQty = function (productId, delta) {
   var current = parseInt(cartQuantities[productId] || 0, 10);
   var next = Math.max(0, current + delta);
   cartQuantities[productId] = next;
+  resetCheckoutIdempotencyKey();
   var input = document.getElementById('qty-' + productId);
   if (input) input.value = next;
   updateCartPreview();
@@ -140,6 +168,7 @@ window.onQtyInput = function (productId, rawVal) {
   var val = parseInt(rawVal, 10);
   if (isNaN(val) || val < 0) val = 0;
   cartQuantities[productId] = val;
+  resetCheckoutIdempotencyKey();
   updateCartPreview();
 };
 
@@ -331,7 +360,7 @@ function renderKhataTable(customers, settlements) {
       '<td class="r">' + fmtMoney(c.creditLimit) + '</td>' +
       '<td class="r">' + fmtMoney(c.openingBalance) + '</td>' +
       '<td class="r">' + fmtMoney(c.totalBilled) + '</td>' +
-      '<td class="r">' + String(c.totalSettled) + '</td>' +
+      '<td class="r">' + fmtMoney(c.totalSettled) + '</td>' +
       '<td class="r"><strong style="color:' + balColor + '">' + fmtMoney(c.balance) + '</strong></td>' +
       '<td class="r"><button type="button" class="btn btn-ghost btn-sm" onclick="prefillSettlement(' + c.id + ')">Settle</button></td>' +
       '</tr>';
@@ -468,76 +497,122 @@ var promoChips = document.querySelectorAll('#promo-chips .promo-chip');
 for (var pIdx = 0; pIdx < promoChips.length; pIdx++) {
   promoChips[pIdx].onclick = function () {
     document.getElementById('coupon').value = this.getAttribute('data-code');
+    resetCheckoutIdempotencyKey();
     updateCartPreview();
   };
 }
 
-document.getElementById('coupon').oninput = function () {
-  updateCartPreview();
-};
-
-document.getElementById('customer-select').onchange = function () {
-  var val = this.value;
-  var walkinGroup = document.getElementById('walkin-name-group');
-  if (val) {
-    walkinGroup.style.display = 'none';
-  } else {
-    walkinGroup.style.display = '';
-  }
-};
-
-document.getElementById('clear-cart').onclick = function () {
-  cartQuantities = {};
-  document.getElementById('coupon').value = '';
-  document.getElementById('customer').value = '';
-  document.getElementById('customer-select').value = '';
-  document.getElementById('walkin-name-group').style.display = '';
-  document.getElementById('msg').className = '';
-  document.getElementById('msg').innerHTML = '';
-  renderCatalogTable();
-  updateCartPreview();
-};
-
-document.getElementById('place').onclick = function () {
-  var placeBtn = document.getElementById('place');
-  if (placeBtn.disabled) return;
-  var items = getSelectedCartItems();
-  var msg = document.getElementById('msg');
-  if (!items.length) {
-    msg.className = 'err';
-    msg.innerHTML = 'Pick at least one item from the catalog';
-    return;
-  }
-
-  placeBtn.disabled = true;
-
-  var selectedCustId = document.getElementById('customer-select').value;
-  var payload = {
-    items: items,
-    customerId: selectedCustId ? Number(selectedCustId) : null,
-    customer: document.getElementById('customer').value,
-    paymentMode: document.getElementById('payment-mode').value,
-    status: document.getElementById('order-status').value,
-    coupon: document.getElementById('coupon').value
+var couponInput = document.getElementById('coupon');
+if (couponInput) {
+  couponInput.oninput = function () {
+    resetCheckoutIdempotencyKey();
+    updateCartPreview();
   };
+}
 
-  post('/api/orders', payload, function (status, res) {
-    placeBtn.disabled = false;
-    if (status === 201) {
-      cartQuantities = {};
-      msg.className = 'ok';
-      msg.innerHTML = '<strong>Order #' + res.id + ' placed!</strong> Ledger Total: ' + fmtMoney(res.total) +
-        ' &middot; <a href="/orders/' + res.id + '/invoice" target="_blank">Open GST Invoice &nearr;</a>';
-      loadProducts();
-      updateCartPreview();
-      loadDashboardSummary();
-      loadCustomersDropdown();
-    } else {
-      msg.className = 'err';
-      msg.innerHTML = (res && res.error) ? res.error : 'Order failed';
+var customerSelectEl = document.getElementById('customer-select');
+if (customerSelectEl) {
+  customerSelectEl.onchange = function () {
+    var val = this.value;
+    var walkinGroup = document.getElementById('walkin-name-group');
+    if (walkinGroup) {
+      walkinGroup.style.display = val ? 'none' : '';
     }
-  });
-};
+    resetCheckoutIdempotencyKey();
+  };
+}
+
+var customerNameInput = document.getElementById('customer');
+if (customerNameInput) {
+  customerNameInput.oninput = function () {
+    resetCheckoutIdempotencyKey();
+  };
+}
+
+var paymentModeSelect = document.getElementById('payment-mode');
+if (paymentModeSelect) {
+  paymentModeSelect.onchange = function () {
+    resetCheckoutIdempotencyKey();
+  };
+}
+
+var orderStatusSelect = document.getElementById('order-status');
+if (orderStatusSelect) {
+  orderStatusSelect.onchange = function () {
+    resetCheckoutIdempotencyKey();
+  };
+}
+
+var clearCartBtn = document.getElementById('clear-cart');
+if (clearCartBtn) {
+  clearCartBtn.onclick = function () {
+    cartQuantities = {};
+    resetCheckoutIdempotencyKey();
+    document.getElementById('coupon').value = '';
+    document.getElementById('customer').value = '';
+    document.getElementById('customer-select').value = '';
+    document.getElementById('walkin-name-group').style.display = '';
+    document.getElementById('msg').className = '';
+    document.getElementById('msg').innerHTML = '';
+    renderCatalogTable();
+    updateCartPreview();
+  };
+}
+
+var placeBtnEl = document.getElementById('place');
+if (placeBtnEl) {
+  placeBtnEl.onclick = function () {
+    var placeBtn = document.getElementById('place');
+    if (isPlacingOrder || placeBtn.disabled) return;
+    var items = getSelectedCartItems();
+    var msg = document.getElementById('msg');
+    if (!items.length) {
+      msg.className = 'err';
+      msg.innerHTML = 'Pick at least one item from the catalog';
+      return;
+    }
+
+    isPlacingOrder = true;
+    placeBtn.disabled = true;
+    if (!checkoutIdempotencyKey) {
+      checkoutIdempotencyKey = createIdempotencyKey();
+    }
+    var reqKey = checkoutIdempotencyKey;
+
+    var selectedCustId = document.getElementById('customer-select').value;
+    var payload = {
+      items: items,
+      customerId: selectedCustId ? Number(selectedCustId) : null,
+      customer: document.getElementById('customer').value,
+      paymentMode: document.getElementById('payment-mode').value,
+      status: document.getElementById('order-status').value,
+      coupon: document.getElementById('coupon').value,
+      idempotencyKey: reqKey
+    };
+
+    post('/api/orders', payload, function (status, res) {
+      isPlacingOrder = false;
+      placeBtn.disabled = false;
+      if (status === 201) {
+        checkoutIdempotencyKey = null;
+        cartQuantities = {};
+        msg.className = 'ok';
+        msg.innerHTML = '<strong>Order #' + res.id + ' placed!</strong> Ledger Total: ' + fmtMoney(res.total) +
+          ' &middot; <a href="/orders/' + res.id + '/invoice" target="_blank">Open GST Invoice &nearr;</a>';
+        loadProducts();
+        updateCartPreview();
+        loadDashboardSummary();
+        loadCustomersDropdown();
+      } else {
+        if (status >= 400 && status < 500) {
+          checkoutIdempotencyKey = null;
+        }
+        msg.className = 'err';
+        msg.innerHTML = (res && res.error) ? res.error : 'Order failed';
+      }
+    }, { 'Idempotency-Key': reqKey });
+  };
+}
 
 document.getElementById('btn-filter-orders').onclick = function () {
   loadOrders();

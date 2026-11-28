@@ -26,13 +26,14 @@ router.post('/customers/:id/settle', function (req, res) {
   );
 
   if (!result.ok) {
-    return res.status(400).json({ error: result.error });
+    var status = result.error === 'Customer not found' ? 404 : 400;
+    return res.status(status).json({ error: result.error });
   }
 
   store.appendAudit(
     db,
     'KHATA_SETTLEMENT',
-    result.customer.name + ' settled ₹' + body.amount + ' via ' + (body.mode || 'upi').toUpperCase()
+    result.customer.name + ' settled ₹' + result.settlement.amount.toFixed(2) + ' via ' + (result.settlement.mode || 'upi').toUpperCase()
   );
   store.write(db);
 
