@@ -1,64 +1,63 @@
 # ShopLedger
 
-ShopLedger is a small Express application for retail and wholesale billing, inventory, customer credit (khata), GST calculations, and printable invoices. It serves a browser POS and stores records in a local JSON file.
+**A lightweight point of sale and back-office ledger for a neighborhood shop.**
 
-## Screenshots
+ShopLedger brings checkout, stock, GST invoices, customer credit, and daily reconciliation into one small Express application. This fork keeps the legacy workshop app focused and documents the fixes made to its billing and inventory flows.
 
-Captured from the seeded local application:
+![Node.js](https://img.shields.io/badge/Node.js-CommonJS-43853d?logo=node.js&logoColor=white)
+![Express](https://img.shields.io/badge/Express-4.x-222222?logo=express&logoColor=white)
+![Tests](https://img.shields.io/badge/tests-node%3Atest-315fce)
+
+## Product preview
 
 ### Point of sale
 
-![ShopLedger product catalog and point-of-sale screen](docs/screenshots/catalog-pos.png)
+![ShopLedger point-of-sale screen with catalog and current bill](docs/screenshots/catalog-pos.png)
 
-### Order history and dispatch
+### Orders and invoices
 
-![ShopLedger order history with dispatch actions](docs/screenshots/order-history.png)
+![ShopLedger order history and dispatch register](docs/screenshots/order-history.png)
 
-### GST invoice
+![Corrected GST invoice for order 1002](docs/screenshots/invoice-1002.png)
 
-![Corrected invoice for order 1002](docs/screenshots/invoice-1002.png)
+## What it does
 
-## Features
-
-- Product catalog with sellable and reserved stock, HSN GST slabs, and reorder indicators.
-- POS checkout with coupons, cash/UPI/khata payment modes, and immediate or pending fulfillment.
-- Order history with date filters, cancellation, dispatch completion, and printable invoices.
-- Customer balances, credit limits, and settlement tracking.
-- Dashboard and GST reconciliation reports.
-- Request retry protection and atomic, serialized writes to the JSON store.
+- **Sell:** browse and filter products, build a bill, apply coupons, and record cash, UPI, or khata payments.
+- **Fulfill:** track pending dispatches, complete orders, or cancel orders and restore stock.
+- **Reconcile:** compare saved order totals with printed invoices and review GST variances.
+- **Manage credit:** track customer limits, balances, and cash, UPI, or NEFT settlements.
+- **Protect records:** validate checkout requests, support safe retries, and serialize writes to the JSON store.
 
 ## Run locally
 
-Requirements: Node.js and npm.
+Requires Node.js and npm.
 
 ```sh
 npm install
 npm start
 ```
 
-Open [http://localhost:3000](http://localhost:3000). Set `PORT` to use another port. Run the regression suite with:
+Open [http://localhost:3000](http://localhost:3000). To use another port, set `PORT` before starting the app. Run the built-in regression suite with:
 
 ```sh
 npm test
 ```
 
-There is no separate build command. The application uses CommonJS, Express 4, `body-parser`, and browser-native JavaScript/CSS.
+There is no separate build step. The UI uses browser-native JavaScript and CSS; the server uses CommonJS, Express, and `body-parser`.
 
 ## Project map
 
-- `server.js` mounts the static UI and API routes.
-- `routes/` contains product, order, customer, and report endpoints.
-- `lib/` contains inventory, pricing, tax, coupon, order, ledger, invoice, report, date, and storage logic.
-- `public/` contains the browser UI; `data/db.json` is the local data store.
-- `test/` contains `node:test` regression coverage.
-- [Architecture diagram](docs/shopledger-architecture.svg) shows the main modules and order flow.
+| Path | Purpose |
+| --- | --- |
+| `server.js` | Express setup and route mounting |
+| `routes/` | Product, order, customer, and report endpoints |
+| `lib/` | Inventory, pricing, tax, coupons, orders, ledger, invoices, reports, dates, and JSON storage |
+| `public/` | Point-of-sale and back-office interface |
+| `data/db.json` | Seeded local application records |
+| `test/` | Node.js built-in regression tests |
 
-## Data and security notes
+See the [architecture diagram](docs/shopledger-architecture.svg), [contributor guide](AGENTS.md), and [issue evidence pack](docs/codex-evidence-pack.md) for more detail.
 
-`data/db.json` contains the seeded records and is modified by normal app writes. Back it up before local experiments; tests use isolated data. The admin export currently relies on a hard-coded key in `config.js`, so replace it and review access controls before exposing this app to an untrusted network.
+## Data and deployment notes
 
-## Contributor and agent notes
-
-Read [AGENTS.md](AGENTS.md) before changing code. GitHub issue and domain documentation live in [`docs/agents/`](docs/agents/). Keep changes focused, add characterization tests before behavior changes, and do not add dependencies.
-
-For issue-to-test traceability, screenshots, and reproduction notes, see the [Codex evidence pack](docs/codex-evidence-pack.md).
+This repository is a local workshop application, not a production deployment. Normal app writes modify `data/db.json`; back it up before experiments. Tests use isolated data. Before exposing the app to an untrusted network, replace the hard-coded admin export key in `config.js` and add authentication and access controls.

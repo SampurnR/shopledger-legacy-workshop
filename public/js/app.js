@@ -463,7 +463,13 @@ function showTab(which) {
   for (var i = 0; i < tabs.length; i++) {
     var t = tabs[i];
     document.getElementById('view-' + t).style.display = (t === which) ? '' : 'none';
-    document.getElementById('tab-' + t).className = (t === which) ? 'tab-link active' : 'tab-link';
+    var tabLink = document.getElementById('tab-' + t);
+    tabLink.className = (t === which) ? 'tab-link active' : 'tab-link';
+    if (t === which) {
+      tabLink.setAttribute('aria-current', 'page');
+    } else {
+      tabLink.removeAttribute('aria-current');
+    }
   }
   if (which === 'orders') loadOrders();
   if (which === 'khata') loadCustomersDropdown();

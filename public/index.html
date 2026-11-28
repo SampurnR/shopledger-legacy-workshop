@@ -54,8 +54,17 @@
     </section>
 
     <!-- Navigation Tabs -->
-    <nav class="tabs-bar" id="tabs">
-      <a href="#new" id="tab-new" class="tab-link active">
+    <section class="dashboard-heading" aria-labelledby="dashboard-title">
+      <div>
+        <p class="eyebrow">CORNER SHOP OPERATIONS</p>
+        <h1 id="dashboard-title">Shop floor overview</h1>
+        <p class="dashboard-intro">Sales, inventory, customer credit and invoice health at a glance.</p>
+      </div>
+      <div class="workspace-status"><span class="workspace-status-dot"></span>Local workspace</div>
+    </section>
+
+    <nav class="tabs-bar" id="tabs" aria-label="ShopLedger sections">
+      <a href="#new" id="tab-new" class="tab-link active" aria-current="page">
         New Order (POS)
       </a>
       <a href="#orders" id="tab-orders" class="tab-link">
