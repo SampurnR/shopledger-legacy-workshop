@@ -83,3 +83,70 @@ test('GST reconciliation matches invoice figures to in-memory order pricing', fu
   assert.equal(reconciliation.rows[0].invoiceTotal, 1050);
   assert.equal(reconciliation.rows[0].matched, true);
 });
+
+test('historical invoice keeps recorded billed totals and flags differences from current pricing', function () {
+  var order = {
+    id: 1002,
+    subtotal: 100,
+    discount: 0,
+    tax: 6,
+    total: 106,
+    items: [
+      { id: 4, name: 'Historical rice', hsn: '1006', price: 100, qty: 1 }
+    ]
+  };
+  var invoiceFigures = invoice.computeInvoiceFigures(order);
+  var html = invoice.render(order);
+  var reconciliation = reports.getGstReconciliation({ orders: [order] });
+
+  assert.deepEqual([
+    invoiceFigures.subtotal,
+    invoiceFigures.discount,
+    invoiceFigures.tax,
+    invoiceFigures.cgst,
+    invoiceFigures.sgst,
+    invoiceFigures.total
+  ], [100, 0, 6, 3, 3, 106]);
+  assert.deepEqual([invoiceFigures.rows[0].gstPercent, invoiceFigures.rows[0].lineTax], [5, 5]);
+  assert.match(html, /CGST \+ SGST \(Total GST\)<\/td><td class="r">[^<]*6\.00<\/td>/);
+  assert.match(html, /Invoice Total<\/td><td class="r">[^<]*106\.00<\/td>/);
+  assert.match(html, /Recalculated total \(₹105\.00\) differs from recorded total \(₹106\.00\)/);
+  assert.match(html, /Recalculated line GST adds up to ₹5\.00, while recorded GST is ₹6\.00/);
+
+  assert.equal(reconciliation.mismatchCount, 1);
+  assert.equal(reconciliation.totalDelta, 1);
+  assert.deepEqual([
+    reconciliation.rows[0].ledgerTax,
+    reconciliation.rows[0].invoiceTax,
+    reconciliation.rows[0].ledgerTotal,
+    reconciliation.rows[0].invoiceTotal,
+    reconciliation.rows[0].matched
+  ], [6, 5, 106, 105, false]);
+});
+
+test('historical invoice keeps recorded subtotal and discount when current pricing differs', function () {
+  var order = {
+    id: 1003,
+    subtotal: 100,
+    discount: 10,
+    tax: 4.5,
+    total: 94.5,
+    coupon: 'SAVE10',
+    items: [
+      { id: 5, name: 'Historical rice', hsn: '1006', price: 100, qty: 1 }
+    ]
+  };
+  var invoiceFigures = invoice.computeInvoiceFigures(order);
+  var html = invoice.render(order);
+
+  assert.deepEqual([
+    invoiceFigures.subtotal,
+    invoiceFigures.discount,
+    invoiceFigures.tax,
+    invoiceFigures.total
+  ], [100, 10, 4.5, 94.5]);
+  assert.match(html, /Gross Subtotal<\/td><td class="r">[^<]*100\.00<\/td>/);
+  assert.match(html, /Coupon Discount \(SAVE10\)<\/td><td class="r"[^>]*>-₹10\.00<\/td>/);
+  assert.match(html, /Invoice Total<\/td><td class="r">[^<]*94\.50<\/td>/);
+  assert.match(html, /Recalculated subtotal and discount are ₹100\.00 and ₹0\.00, while recorded amounts are ₹100\.00 and ₹10\.00/);
+});
