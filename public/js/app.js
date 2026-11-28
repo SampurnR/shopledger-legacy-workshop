@@ -2,6 +2,14 @@ var allProducts = [];
 var cartQuantities = {}; // productId -> qty
 var activeCategory = 'all';
 var customersList = [];
+var previewSequence = 0;
+var orderSubmission = { requestId: '', fingerprint: '' };
+var settlementSubmission = { requestId: '', fingerprint: '' };
+
+function newRequestId() {
+  if (window.crypto && window.crypto.randomUUID) return window.crypto.randomUUID();
+  return Date.now().toString(36) + '-' + Math.random().toString(36).slice(2);
+}
 
 function get(url, cb) {
   var x = new XMLHttpRequest();
@@ -19,6 +27,7 @@ function get(url, cb) {
 function post(url, data, cb) {
   var x = new XMLHttpRequest();
   x.open('POST', url);
+  x.timeout = 15000;
   x.setRequestHeader('Content-Type', 'application/json');
   x.onload = function () {
     var parsed = {};
@@ -29,6 +38,8 @@ function post(url, data, cb) {
     }
     cb(x.status, parsed);
   };
+  x.onerror = function () { cb(0, { error: 'Network error. Check the connection and retry.' }); };
+  x.ontimeout = function () { cb(0, { error: 'The request timed out. Retry to check its saved result.' }); };
   x.send(JSON.stringify(data));
 }
 
@@ -161,6 +172,7 @@ function getSelectedCartItems() {
 }
 
 function updateCartPreview() {
+  var sequence = ++previewSequence;
   var items = getSelectedCartItems();
   var countEl = document.getElementById('cart-count');
   var listEl = document.getElementById('cart-items-list');
@@ -196,6 +208,7 @@ function updateCartPreview() {
   listEl.innerHTML = miniHtml;
 
   post('/api/pricing/preview', { items: items, coupon: couponCode }, function (status, res) {
+    if (sequence !== previewSequence) return;
     if (!res || !res.totals) return;
     var t = res.totals;
     document.getElementById('preview-subtotal').textContent = fmtMoney(t.subtotal);
@@ -274,6 +287,9 @@ function loadOrders() {
       var cancelBtn = st !== 'cancelled'
         ? ' <button type="button" class="btn btn-danger-outline" onclick="cancelOrder(' + o.id + ')">Cancel</button>'
         : '';
+      var completeBtn = st === 'pending'
+        ? ' <button type="button" class="btn btn-secondary btn-sm" onclick="completeOrder(' + o.id + ')">Mark dispatched</button>'
+        : '';
 
       html += '<tr>' +
         '<td><strong>#' + o.id + '</strong></td>' +
@@ -289,6 +305,7 @@ function loadOrders() {
         '<td><span class="status-pill ' + st + '">' + st + '</span></td>' +
         '<td class="r" style="white-space:nowrap">' +
         '<a class="btn-link" href="/orders/' + o.id + '/invoice" target="_blank">Invoice &nearr;</a>' +
+        completeBtn +
         cancelBtn +
         '</td>' +
         '</tr>';
@@ -315,6 +332,21 @@ window.cancelOrder = function (orderId) {
     } else {
       msgEl.className = 'err';
       msgEl.textContent = (res && res.error) ? res.error : 'Failed to cancel order';
+    }
+  });
+};
+
+window.completeOrder = function (orderId) {
+  var msgEl = document.getElementById('orders-action-msg');
+  post('/api/orders/' + orderId + '/complete', {}, function (status, res) {
+    if (status === 200) {
+      msgEl.className = 'ok';
+      msgEl.textContent = 'Order #' + orderId + ' has been marked as dispatched.';
+      loadOrders();
+      loadDashboardSummary();
+    } else {
+      msgEl.className = 'err';
+      msgEl.textContent = (res && res.error) ? res.error : 'Failed to update dispatch status';
     }
   });
 };
@@ -499,6 +531,8 @@ document.getElementById('clear-cart').onclick = function () {
 };
 
 document.getElementById('place').onclick = function () {
+  var placeButton = document.getElementById('place');
+  if (placeButton.disabled) return;
   var items = getSelectedCartItems();
   var msg = document.getElementById('msg');
   if (!items.length) {
@@ -516,9 +550,17 @@ document.getElementById('place').onclick = function () {
     status: document.getElementById('order-status').value,
     coupon: document.getElementById('coupon').value
   };
+  var fingerprint = JSON.stringify(payload);
+  if (orderSubmission.fingerprint !== fingerprint) {
+    orderSubmission = { requestId: newRequestId(), fingerprint: fingerprint };
+  }
+  payload.requestId = orderSubmission.requestId;
+  placeButton.disabled = true;
 
   post('/api/orders', payload, function (status, res) {
-    if (status === 201) {
+    placeButton.disabled = false;
+    if (status === 201 || status === 200) {
+      orderSubmission = { requestId: '', fingerprint: '' };
       cartQuantities = {};
       msg.className = 'ok';
       msg.innerHTML = '<strong>Order #' + res.id + ' placed!</strong> Ledger Total: ' + fmtMoney(res.total) +
@@ -529,7 +571,7 @@ document.getElementById('place').onclick = function () {
       loadCustomersDropdown();
     } else {
       msg.className = 'err';
-      msg.innerHTML = (res && res.error) ? res.error : 'Order failed';
+      msg.textContent = (res && res.error) ? res.error : 'Order failed';
     }
   });
 };
@@ -547,18 +589,29 @@ document.getElementById('btn-reset-orders').onclick = function () {
 };
 
 document.getElementById('btn-record-settlement').onclick = function () {
+  var settleButton = document.getElementById('btn-record-settlement');
+  if (settleButton.disabled) return;
   var custId = document.getElementById('settle-customer').value;
-  var amount = document.getElementById('settle-amount').value; // string from input
+  var amount = document.getElementById('settle-amount').value;
   var mode = document.getElementById('settle-mode').value;
   var note = document.getElementById('settle-note').value;
   var khataMsg = document.getElementById('khata-msg');
-
-  post('/api/customers/' + custId + '/settle', {
+  var payload = {
     amount: amount,
     mode: mode,
     note: note
-  }, function (status, res) {
-    if (status === 201) {
+  };
+  var fingerprint = JSON.stringify({ customerId: custId, payload: payload });
+  if (settlementSubmission.fingerprint !== fingerprint) {
+    settlementSubmission = { requestId: newRequestId(), fingerprint: fingerprint };
+  }
+  payload.requestId = settlementSubmission.requestId;
+  settleButton.disabled = true;
+
+  post('/api/customers/' + custId + '/settle', payload, function (status, res) {
+    settleButton.disabled = false;
+    if (status === 201 || status === 200) {
+      settlementSubmission = { requestId: '', fingerprint: '' };
       khataMsg.className = 'ok';
       khataMsg.textContent = 'Recorded settlement for ' + res.customer.name + '. Updated balance: ' + fmtMoney(res.customer.balance);
       document.getElementById('settle-amount').value = '';
