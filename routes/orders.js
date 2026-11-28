@@ -8,6 +8,14 @@ var ledger = require('../lib/ledger');
 
 var router = express.Router();
 
+var recentSubmissions = new Map();
+setInterval(function () {
+  var now = Date.now();
+  recentSubmissions.forEach(function (ts, key) {
+    if (now - ts > 5000) recentSubmissions.delete(key);
+  });
+}, 10000).unref();
+
 router.get('/orders', function (req, res) {
   var db = store.read();
   var filters = {
@@ -31,6 +39,10 @@ router.post('/orders', function (req, res) {
   var body = req.body || {};
   var items = [];
 
+  if (body.status && body.status !== 'completed' && body.status !== 'pending') {
+    return res.status(400).json({ error: 'Invalid initial order status: ' + body.status });
+  }
+
   if (!body.items || !body.items.length) {
     return res.status(400).json({ error: 'Pick at least one item to place an order' });
   }
@@ -41,18 +53,28 @@ router.post('/orders', function (req, res) {
       return res.status(400).json({ error: 'Unknown product ID ' + body.items[i].id });
     }
     var q = parseInt(body.items[i].qty, 10);
-    if (!q || q < 1) q = 1;
+    if (isNaN(q) || q < 1) {
+      return res.status(400).json({ error: 'Quantity must be at least 1' });
+    }
 
-    // Note: hsn is stored on line items; tax slab is resolved via lib/tax.js
+    // Note: hsn and explicit gstRate are preserved on line items
     items.push({
       id: p.id,
       sku: p.sku,
       name: p.name,
       hsn: p.hsn,
       price: p.price,
+      gstRate: p.gstRate,
       qty: q
     });
   }
+
+  var subKey = (body.customerId || body.customer || 'walkin') + ':' + (body.paymentMode || 'cash') + ':' + JSON.stringify(body.items);
+  var now = Date.now();
+  if (recentSubmissions.has(subKey) && (now - recentSubmissions.get(subKey) < 2000)) {
+    return res.status(409).json({ error: 'Duplicate checkout submission detected' });
+  }
+  recentSubmissions.set(subKey, now);
 
   var stock = inventory.check(db.products, items);
   if (!stock.ok) {

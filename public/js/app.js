@@ -499,6 +499,8 @@ document.getElementById('clear-cart').onclick = function () {
 };
 
 document.getElementById('place').onclick = function () {
+  var placeBtn = document.getElementById('place');
+  if (placeBtn.disabled) return;
   var items = getSelectedCartItems();
   var msg = document.getElementById('msg');
   if (!items.length) {
@@ -506,6 +508,8 @@ document.getElementById('place').onclick = function () {
     msg.innerHTML = 'Pick at least one item from the catalog';
     return;
   }
+
+  placeBtn.disabled = true;
 
   var selectedCustId = document.getElementById('customer-select').value;
   var payload = {
@@ -518,6 +522,7 @@ document.getElementById('place').onclick = function () {
   };
 
   post('/api/orders', payload, function (status, res) {
+    placeBtn.disabled = false;
     if (status === 201) {
       cartQuantities = {};
       msg.className = 'ok';
@@ -547,6 +552,10 @@ document.getElementById('btn-reset-orders').onclick = function () {
 };
 
 document.getElementById('btn-record-settlement').onclick = function () {
+  var settleBtn = document.getElementById('btn-record-settlement');
+  if (settleBtn.disabled) return;
+  settleBtn.disabled = true;
+
   var custId = document.getElementById('settle-customer').value;
   var amount = document.getElementById('settle-amount').value; // string from input
   var mode = document.getElementById('settle-mode').value;
@@ -558,6 +567,7 @@ document.getElementById('btn-record-settlement').onclick = function () {
     mode: mode,
     note: note
   }, function (status, res) {
+    settleBtn.disabled = false;
     if (status === 201) {
       khataMsg.className = 'ok';
       khataMsg.textContent = 'Recorded settlement for ' + res.customer.name + '. Updated balance: ' + fmtMoney(res.customer.balance);
