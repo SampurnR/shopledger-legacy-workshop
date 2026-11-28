@@ -797,3 +797,65 @@ body {
     grid-template-columns: 1fr;
   }
 }
+
+/* The counter register uses ruled sections and a separate receipt surface. */
+:root { --paper:#f6f4ec; --ink:#21382f; --rule:#cecec0; --green:#244e3c; }
+body { background:var(--paper); color:var(--ink); font-variant-numeric:tabular-nums; }
+.topbar { position:relative; padding:20px 24px; background:#203c30; border:0; }
+.brand-title,.panel-title,.kpi-value { font-family:Georgia,"Times New Roman",serif; font-weight:normal; }
+.brand-title { font-size:32px; letter-spacing:-.055em; line-height:1.1; }
+.brand-logo { background:transparent; border:1px solid #b9c8a9; border-radius:2px; color:#e1e7c3; box-shadow:none; font-size:28px; }
+.brand-sub { color:#d1dbce; }
+.meta-chip,.alert-chip.ok { background:transparent; color:#e0e8d7; border:0; }
+.container { margin-top:26px; }
+.kpi-grid { gap:0; border-block:1px solid var(--rule); }
+.kpi-card { padding:16px 20px; background:none; border:0; border-radius:0; box-shadow:none; border-inline-start:1px solid var(--rule); }
+.kpi-card:first-child { border:0; padding-inline-start:0; }
+.kpi-label { letter-spacing:.09em; font-size:10px; color:#546253; }
+.kpi-value { font-size:clamp(26px,2.6vw,39px); color:var(--ink); }
+.tabs-bar { border-color:var(--rule); overflow-x:auto; }
+.tab-link { white-space:nowrap; }
+.tab-link.active,.tab-link:hover { color:var(--green); background:#e6eadf; border-color:var(--green); }
+.panel { background:#fffef8; border:1px solid var(--rule); border-radius:3px; box-shadow:none; min-width:0; }
+.panel-header { background:transparent; padding:20px; border-color:var(--rule); }
+.panel-title { color:var(--ink); font-size:27px; letter-spacing:-.045em; }
+.pos-layout > .panel:last-child { border-top:4px solid var(--green); }
+.category-pills { background:transparent; }
+.cat-pill { border-radius:3px; }
+.cat-pill.active,.btn-primary { background:var(--green); border-color:var(--green); color:white; }
+.btn-primary:hover { background:#183928; }
+.data-table th { background:#eceee3; color:#47594c; }
+.data-table td { border-color:#e1e1d6; }
+.data-table tbody tr:hover { background:#f3f4ea; }
+.hsn-badge,.gst-badge,.sku-code { background:transparent; color:#58675c; padding-inline:0; }
+.cart-preview-box { background:#f6f4ea; border-radius:2px; border:1px dashed #b8bcae; }
+:focus-visible { outline:3px solid #ac7027; outline-offset:2px; }
+@media(max-width:720px) {
+  .topbar-inner,.panel-header { flex-wrap:wrap; }
+  .topbar { padding:14px 16px; }
+  .container { padding-inline:12px; }
+  .kpi-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .kpi-card,.kpi-card:first-child { padding:12px; }
+  .tabs-bar { flex-wrap:nowrap; }
+  .pos-layout,.khata-layout { grid-template-columns:minmax(0,1fr); }
+  .table-wrap { overflow-x:auto; }
+}
+
+.workspace-summary {
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px 32px;
+  border-bottom:1px solid var(--rule);
+  margin-bottom:20px;
+  padding-bottom:14px;
+}
+.workspace-summary .kpi-card { padding:0; border:0; }
+.workspace-summary .kpi-value { font-size:26px; }
+.bill-shortcut { display:none; }
+.drawer-body > .cart-preview-box:first-child { margin:0 0 16px; }
+@media(max-width:1024px) {
+  .bill-shortcut { display:inline-flex; align-items:center; min-height:40px; color:var(--green); }
+  .pos-layout .search-box { flex:1 1 100%; }
+  .pos-layout .search-box input { width:100%; }
+  #current-bill { scroll-margin-top:16px; }
+}

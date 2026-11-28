@@ -31,17 +31,21 @@ router.post('/orders', function (req, res) {
   var body = req.body || {};
   var items = [];
 
-  if (!body.items || !body.items.length) {
+  if (!Array.isArray(body.items) || !body.items.length) {
     return res.status(400).json({ error: 'Pick at least one item to place an order' });
   }
 
   for (var i = 0; i < body.items.length; i++) {
-    var p = inventory.find(db.products, body.items[i].id);
+    var item = body.items[i];
+    if (!item || !['number', 'string'].includes(typeof item.qty) ||
+        !Number.isSafeInteger(Number(item.qty)) || Number(item.qty) < 1) {
+      return res.status(400).json({ error: 'Each order quantity must be a positive whole number' });
+    }
+    var p = inventory.find(db.products, item.id);
     if (!p) {
       return res.status(400).json({ error: 'Unknown product ID ' + body.items[i].id });
     }
-    var q = parseInt(body.items[i].qty, 10);
-    if (!q || q < 1) q = 1;
+    var q = Number(item.qty);
 
     // Note: hsn is stored on line items; tax slab is resolved via lib/tax.js
     items.push({
