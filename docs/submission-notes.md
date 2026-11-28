@@ -49,9 +49,16 @@ mismatchCount: 0
 totalDelta: 0
 ```
 
-## CP5 status
+## CP5 output
 
-The local work is ready to commit and push, but no fork URL, GitHub authentication, or explicit permission to create a remote branch and pull request was available. The intended pull-request body is below.
+Committed on `fix/shop` and pushed to the configured GitHub fork.
+
+- Commit: `0461ab1 Fix invoice GST and coupon calculations`
+- Pull request: https://github.com/ChetanMehra1/shopledger-legacy-workshop/pull/1
+- Base branch: `main`
+- The pull request is open and was not merged.
+
+Pull-request body:
 
 ```md
 Fixes #1
