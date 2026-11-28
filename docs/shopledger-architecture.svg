@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1040" viewBox="0 0 1600 1040" role="img" aria-labelledby="title desc">
+  <title id="title">ShopLedger architecture and order placement flow</title>
+  <desc id="desc">The browser UI sends requests to the Express server. Product, order, customer, and reports routes use the listed library modules. Orders use pricing, inventory, ledger, and store modules. Store reads and writes data db json. Printable invoices use invoice, pricing, tax, coupons, and config.</desc>
+  <defs>
+    <style>
+      text{font-family:Arial,sans-serif;fill:#102a43}.title{font-size:34px;font-weight:700}.subtitle{font-size:17px;fill:#486581}.label{font-size:18px;font-weight:700}.small{font-size:15px}.tiny{font-size:13px;fill:#486581}.box{stroke:#486581;stroke-width:2;rx:12;ry:12}.route{fill:#e6fffa}.lib{fill:#ebf8ff}.data{fill:#fff5d6}.core{fill:#e9d8fd}.ui{fill:#edf2f7}.arrow{stroke:#2c7a7b;stroke-width:3;fill:none;marker-end:url(#arrow)}.flow{stroke:#c05621;stroke-width:4;fill:none;marker-end:url(#flowarrow)}
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L10,3 L0,6Z" fill="#2c7a7b"/></marker>
+    <marker id="flowarrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L10,3 L0,6Z" fill="#c05621"/></marker>
+  </defs>
+  <rect width="1600" height="1040" fill="#f7fafc"/>
+  <text x="70" y="65" class="title">ShopLedger architecture</text>
+  <text x="70" y="95" class="subtitle">Existing components and the flow for placing an order</text>
+  <rect x="70" y="155" width="250" height="120" class="box ui"/>
+  <text x="95" y="195" class="label">Browser UI</text><text x="95" y="223" class="small">public/index.html</text><text x="95" y="248" class="small">public/js/app.js</text>
+  <rect x="450" y="145" width="260" height="140" class="box core"/>
+  <text x="478" y="190" class="label">Express server</text><text x="478" y="218" class="small">server.js</text><text x="478" y="245" class="tiny">static UI, API mounting, invoice view</text>
+  <path d="M320 215 H450" class="arrow"/><text x="342" y="202" class="tiny">HTTP</text>
+  <text x="830" y="140" class="label">Routes</text>
+  <g>
+    <rect x="800" y="165" width="270" height="68" class="box route"/><text x="825" y="205" class="label">routes/products.js</text>
+    <rect x="800" y="250" width="270" height="68" class="box route"/><text x="825" y="290" class="label">routes/orders.js</text>
+    <rect x="800" y="335" width="270" height="68" class="box route"/><text x="825" y="375" class="label">routes/customers.js</text>
+    <rect x="800" y="420" width="270" height="68" class="box route"/><text x="825" y="460" class="label">routes/reports.js</text>
+  </g>
+  <path d="M710 215 H800" class="arrow"/><path d="M710 215 H760 V284 H800" class="arrow"/><path d="M710 215 H745 V369 H800" class="arrow"/><path d="M710 215 H730 V454 H800" class="arrow"/>
+  <text x="1185" y="140" class="label">Library modules</text>
+  <g>
+    <rect x="1150" y="165" width="330" height="50" class="box lib"/><text x="1170" y="197" class="small">lib/store.js</text>
+    <rect x="1150" y="230" width="330" height="50" class="box lib"/><text x="1170" y="262" class="small">lib/inventory.js</text>
+    <rect x="1150" y="295" width="330" height="50" class="box lib"/><text x="1170" y="327" class="small">lib/orders.js</text>
+    <rect x="1150" y="360" width="330" height="50" class="box lib"/><text x="1170" y="392" class="small">lib/pricing.js · lib/tax.js · lib/coupons.js</text>
+    <rect x="1150" y="425" width="330" height="50" class="box lib"/><text x="1170" y="457" class="small">lib/ledger.js · lib/dates.js</text>
+    <rect x="1150" y="490" width="330" height="50" class="box lib"/><text x="1170" y="522" class="small">lib/reports.js · lib/invoice.js</text>
+  </g>
+  <path d="M1070 284 H1150" class="arrow"/><path d="M1070 199 H1130 V190 H1150" class="arrow"/><path d="M1070 369 H1120 V450 H1150" class="arrow"/><path d="M1070 454 H1150" class="arrow"/>
+  <rect x="1150" y="590" width="330" height="74" class="box data"/><text x="1170" y="625" class="label">data/db.json</text><text x="1170" y="650" class="tiny">products, orders, customers, settlements, audit log</text>
+  <rect x="70" y="750" width="1410" height="210" fill="#fffaf0" stroke="#c05621" stroke-width="2" rx="12"/>
+  <text x="100" y="795" class="label">Order placement flow</text>
+  <text x="100" y="835" class="small">1. UI posts selected product IDs, quantities, coupon, payment mode, and customer.</text>
+  <text x="100" y="870" class="small">2. routes/orders.js resolves products, checks inventory, validates the coupon, and calculates totals.</text>
+  <text x="100" y="905" class="small">3. It charges Khata when selected, reserves stock, creates the order, appends an audit event, then stores the database.</text>
+  <path d="M1330 540 V590" class="arrow"/><text x="1342" y="574" class="tiny">read / write</text>
+  <path d="M200 700 H420" class="flow"/><path d="M510 700 H730" class="flow"/><path d="M820 700 H1040" class="flow"/><path d="M1130 700 H1350" class="flow"/>
+  <text x="120" y="720" class="tiny">UI request</text><text x="500" y="720" class="tiny">order route</text><text x="780" y="720" class="tiny">libraries</text><text x="1180" y="720" class="tiny">persist</text>
+</svg>
