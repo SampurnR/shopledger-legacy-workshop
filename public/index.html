@@ -10,10 +10,10 @@
   <header class="topbar">
     <div class="topbar-inner">
       <div class="brand">
-        <div class="brand-logo">SL</div>
+        <div class="brand-logo" aria-hidden="true">▤</div>
         <div>
           <div class="brand-title">
-            ShopLedger <span class="version-pill">v0.8.4</span>
+            ShopLedger
           </div>
           <div class="brand-sub" id="shop-subtitle">Corner Shop Kirana &amp; Wholesale &middot; Sadashiv Peth, Pune</div>
         </div>
@@ -29,40 +29,16 @@
   </header>
 
   <main class="container">
-    <!-- KPI Summary Row -->
-    <section class="kpi-grid" id="kpi-strip">
-      <div class="kpi-card">
-        <div class="kpi-label">Gross Order Revenue</div>
-        <div class="kpi-value" id="kpi-revenue">₹0.00</div>
-        <div class="kpi-foot" id="kpi-tax">GST Collected: ₹0.00 &middot; Discounts: ₹0.00</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-label">Orders Desk</div>
-        <div class="kpi-value" id="kpi-orders">0</div>
-        <div class="kpi-foot" id="kpi-orders-sub">0 active &middot; 0 pending &middot; 0 cancelled</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-label">Khata Receivables (Credit Due)</div>
-        <div class="kpi-value" id="kpi-khata">₹0.00</div>
-        <div class="kpi-foot">Across registered retail &amp; wholesale accounts</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-label">Stock &amp; Invoice Audit</div>
-        <div class="kpi-value" id="kpi-stock">0 SKUs</div>
-        <div class="kpi-foot" id="kpi-stock-sub">0 out of stock &middot; 0 low stock</div>
-      </div>
-    </section>
-
     <!-- Navigation Tabs -->
     <nav class="tabs-bar" id="tabs">
       <a href="#new" id="tab-new" class="tab-link active">
-        New Order (POS)
+        New order
       </a>
       <a href="#orders" id="tab-orders" class="tab-link">
         Order History <span class="tab-badge" id="badge-orders">0</span>
       </a>
       <a href="#khata" id="tab-khata" class="tab-link">
-        Customer Khata (Credit)
+        Customer khata
       </a>
       <a href="#audit" id="tab-audit" class="tab-link">
         Inventory &amp; GST Audit <span class="tab-badge warn" id="badge-audit">!</span>
@@ -76,9 +52,10 @@
         <div class="panel">
           <div class="panel-header">
             <div>
-              <h2 class="panel-title">Product Catalog &amp; Stock</h2>
-              <p class="panel-desc">Select quantities to add items to the current bill. GST is calculated per HSN slab.</p>
+              <h2 class="panel-title">Product register</h2>
+              <p class="panel-desc">Choose quantities to build the bill.</p>
             </div>
+            <a class="bill-shortcut" href="#current-bill">Go to bill ↓</a>
             <div class="search-box">
               <input type="text" id="pos-search" placeholder="Search item, SKU, or HSN...">
             </div>
@@ -109,16 +86,22 @@
         </div>
 
         <!-- Right: Billing Drawer -->
-        <aside class="panel pos-drawer">
+        <aside class="panel pos-drawer" id="current-bill" tabindex="-1">
           <div class="panel-header">
             <div>
-              <h2 class="panel-title">Current Bill Desk</h2>
+              <h2 class="panel-title">Current bill</h2>
               <p class="panel-desc">Configure customer, promo code, and payment mode</p>
             </div>
             <button type="button" class="btn btn-ghost btn-sm" id="clear-cart">Clear</button>
           </div>
 
           <div class="drawer-body">
+            <div class="cart-preview-box">
+              <div class="cart-preview-title">Selected Line Items (<span id="cart-count">0</span>)</div>
+              <div id="cart-items-list" class="cart-items-empty">No items selected yet. Adjust quantities in the catalog table.</div>
+
+            </div>
+
             <div class="form-group">
               <label for="customer-select">Customer Account (Khata Directory)</label>
               <select id="customer-select">
@@ -164,9 +147,6 @@
             </div>
 
             <div class="cart-preview-box">
-              <div class="cart-preview-title">Selected Line Items (<span id="cart-count">0</span>)</div>
-              <div id="cart-items-list" class="cart-items-empty">No items selected yet. Adjust quantities in the catalog table.</div>
-
               <div class="cart-totals">
                 <div class="cart-row">
                   <span>Gross Subtotal</span>
@@ -199,10 +179,22 @@
 
     <!-- TAB 2: ORDER HISTORY -->
     <section id="view-orders" class="tab-view" style="display:none">
+      <div class="workspace-summary">
+        <div class="kpi-card">
+        <div class="kpi-label">Gross revenue</div>
+        <div class="kpi-value" id="kpi-revenue">₹0.00</div>
+        <div class="kpi-foot" id="kpi-tax">GST Collected: ₹0.00 &middot; Discounts: ₹0.00</div>
+      </div>
+        <div class="kpi-card">
+        <div class="kpi-label">Orders</div>
+        <div class="kpi-value" id="kpi-orders">0</div>
+        <div class="kpi-foot" id="kpi-orders-sub">0 active &middot; 0 pending &middot; 0 cancelled</div>
+      </div>
+      </div>
       <div class="panel">
         <div class="panel-header">
           <div>
-            <h2 class="panel-title">Order History &amp; Dispatch Register</h2>
+            <h2 class="panel-title">Order history</h2>
             <p class="panel-desc">Sorted newest first. Click "Invoice" to open the accountant's printable GST tax invoice.</p>
           </div>
         </div>
@@ -263,11 +255,18 @@
 
     <!-- TAB 3: CUSTOMER KHATA -->
     <section id="view-khata" class="tab-view" style="display:none">
+      <div class="workspace-summary">
+        <div class="kpi-card">
+        <div class="kpi-label">Outstanding credit</div>
+        <div class="kpi-value" id="kpi-khata">₹0.00</div>
+        <div class="kpi-foot">Across registered retail &amp; wholesale accounts</div>
+      </div>
+      </div>
       <div class="khata-layout">
         <div class="panel">
           <div class="panel-header">
             <div>
-              <h2 class="panel-title">Customer Khata (Credit Accounts)</h2>
+              <h2 class="panel-title">Customer accounts</h2>
               <p class="panel-desc">Track wholesale and retail credit limits, cumulative billing, and payment settlements.</p>
             </div>
           </div>
@@ -296,7 +295,7 @@
         <aside class="panel">
           <div class="panel-header">
             <div>
-              <h2 class="panel-title">Record Khata Settlement</h2>
+              <h2 class="panel-title">Record a payment</h2>
               <p class="panel-desc">Log a customer payment received via Cash, UPI, or NEFT</p>
             </div>
           </div>
@@ -339,10 +338,17 @@
 
     <!-- TAB 4: INVENTORY & GST AUDIT -->
     <section id="view-audit" class="tab-view" style="display:none">
+      <div class="workspace-summary">
+        <div class="kpi-card">
+        <div class="kpi-label">Inventory</div>
+        <div class="kpi-value" id="kpi-stock">0 SKUs</div>
+        <div class="kpi-foot" id="kpi-stock-sub">0 out of stock &middot; 0 low stock</div>
+      </div>
+      </div>
       <div class="panel" style="margin-bottom: 20px;">
         <div class="panel-header">
           <div>
-            <h2 class="panel-title">Accountant Invoice vs. Order Ledger Reconciliation</h2>
+            <h2 class="panel-title">Invoice reconciliation</h2>
             <p class="panel-desc">Compares stored Order Ledger totals (<code>lib/pricing.js</code>) against the Accountant Tax Invoice renderer (<code>lib/invoice.js</code>).</p>
           </div>
           <div id="recon-summary-pill" class="status-pill cancelled">Checking...</div>
@@ -375,7 +381,7 @@
       <div class="panel">
         <div class="panel-header">
           <div>
-            <h2 class="panel-title">Warehouse Stock &amp; Wholesale Reservation Matrix</h2>
+            <h2 class="panel-title">Stock and reservations</h2>
             <p class="panel-desc">Physical stock on shelves versus units held in wholesale reservations and net sellable units.</p>
           </div>
         </div>

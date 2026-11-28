@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="440" viewBox="0 0 980 440" role="img" aria-labelledby="title desc">
+<title id="title">ShopLedger architecture</title><desc id="desc">The browser calls Express routers. Order placement reads the store, validates stock and coupons, prices the cart, updates credit and inventory, and writes the order and audit event.</desc>
+<style>text{font:16px sans-serif;fill:#203c30}.title{font:bold 28px Georgia}.head{font:bold 18px sans-serif}.small{font:14px sans-serif}rect{fill:#fffef8;stroke:#c0c8b9}</style>
+<rect width="980" height="440" style="fill:#f6f4ec"/>
+<text x="28" y="43" class="title">ShopLedger · from counter to ledger</text>
+<text x="28" y="82">Browser · public/index.html and public/js/app.js</text>
+<text x="28" y="114">↓ HTTP requests to server.js · Express</text>
+<rect x="28" y="135" width="260" height="190"/><rect x="320" y="135" width="625" height="190"/>
+<text x="45" y="166" class="head">Routes</text><text x="340" y="166" class="head">Business logic in lib/</text>
+<g><text x="45" y="202">products.js →</text><text x="340" y="202">inventory, tax, coupons</text>
+<text x="45" y="236">orders.js →</text><text x="340" y="236">inventory, pricing, tax, coupons, ledger, orders, dates</text>
+<text x="45" y="270">customers.js →</text><text x="340" y="270">ledger, dates</text>
+<text x="45" y="304">reports.js →</text><text x="340" y="304">reports, invoice, pricing, inventory, ledger</text></g>
+<text x="28" y="357">Place order → check stock → price items → apply Khata debit if needed → deduct stock → save order</text>
+<text x="28" y="389">Persistence · lib/store.js reads and writes data/db.json, including the order audit log.</text>
+<text x="28" y="418" class="small">config.js supplies shop details, tax slabs and coupon rules. The printable invoice route in server.js uses lib/invoice.js.</text>
+</svg>
