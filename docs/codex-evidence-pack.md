@@ -55,8 +55,6 @@ node --test
 - [GitHub issue workflow](agents/issue-tracker.md)
 - [Domain documentation rules](agents/domain.md)
 
-The repository's Jules issue-automation fleet is not enabled. It requires a `JULES_API_KEY` GitHub Actions secret, plus review of scheduled issue dispatch and automated PR merging, before those workflows should be added or activated.
-
 ## Skills applied
 
 | Skill/workflow | Evidence in this repository or task |
@@ -70,4 +68,3 @@ The repository's Jules issue-automation fleet is not enabled. It requires a `JUL
 | Matt Pocock setup | Added `AGENTS.md`, issue-tracker guidance, and domain-doc guidance. |
 | Ponytail build guidance | Followed for small, module-focused changes; no build script exists in this project. |
 | Karpathy perspective | Skill instructions loaded; no perspective-specific repository artifact applies to this app. |
-| Jules issue automation | Not configured; requires the API secret and can dispatch agents and merge their PRs. |

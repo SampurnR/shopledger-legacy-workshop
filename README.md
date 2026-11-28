@@ -62,5 +62,3 @@ There is no separate build command. The application uses CommonJS, Express 4, `b
 Read [AGENTS.md](AGENTS.md) before changing code. GitHub issue and domain documentation live in [`docs/agents/`](docs/agents/). Keep changes focused, add characterization tests before behavior changes, and do not add dependencies.
 
 For issue-to-test traceability, screenshots, and reproduction notes, see the [Codex evidence pack](docs/codex-evidence-pack.md).
-
-The Jules issue-automation fleet is not configured in this repository. Its setup requires GitHub Actions workflows, a `JULES_API_KEY` repository secret, and review of its scheduled dispatch and PR-merge behavior. Do not assume the automation is active.
