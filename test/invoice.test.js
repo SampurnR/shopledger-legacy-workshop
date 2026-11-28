@@ -21,18 +21,19 @@ function order(overrides) {
   }, overrides || {});
 }
 
-test('CURRENT BEHAVIOUR: invoice applies default 18% GST instead of HSN slabs', function () {
+test('invoice applies HSN GST slabs', function () {
   var figures = invoice.computeInvoiceFigures(order({ coupon: '' }));
-  assert.equal(figures.tax, 183.6);
+  assert.equal(figures.tax, 51);
 });
 
-test('CURRENT BEHAVIOUR: SAVE10 is calculated on subtotal plus tax', function () {
+test('SAVE10 is calculated on the pre-tax subtotal', function () {
   var figures = invoice.computeInvoiceFigures(order());
-  assert.equal(figures.discount, 120.36);
-  assert.equal(figures.total, 1083.24);
+  assert.equal(figures.discount, 102);
+  assert.equal(figures.tax, 45.9);
+  assert.equal(figures.total, 963.9);
 });
 
-test('CURRENT BEHAVIOUR: invoice ignores the SAVE10 maximum discount cap', function () {
+test('invoice respects the SAVE10 maximum discount cap', function () {
   var figures = invoice.computeInvoiceFigures(order({
     id: 1004,
     items: [
@@ -43,7 +44,7 @@ test('CURRENT BEHAVIOUR: invoice ignores the SAVE10 maximum discount cap', funct
     tax: 104.5,
     total: 2194.5
   }));
-  assert.equal(figures.discount, 264.32);
-  assert.equal(figures.tax, 403.2);
-  assert.equal(figures.total, 2378.88);
+  assert.equal(figures.discount, 150);
+  assert.equal(figures.tax, 104.5);
+  assert.equal(figures.total, 2194.5);
 });
