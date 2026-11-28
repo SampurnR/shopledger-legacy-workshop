@@ -2,3 +2,7 @@ node_modules/
 .DS_Store
 *.bak
 data/*.tmp.json
+AGENTS.md
+.agents/skills/caveman/README.md
+.agents/skills/caveman/SKILL.md
+.agents/skills/find-skills/SKILL.md
