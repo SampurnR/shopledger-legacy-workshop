@@ -672,6 +672,10 @@ body {
   font-weight: 600;
 }
 
+.recon-order-link {
+  white-space: nowrap;
+}
+
 .btn-link:hover {
   background: #dbeafe;
 }
