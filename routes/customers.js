@@ -16,7 +16,10 @@ router.post('/customers/:id/settle', function (req, res) {
   var db = store.read();
   var body = req.body || {};
 
-  // Pass amount directly from request payload
+  if ((body.mode != null && !['upi', 'cash', 'neft'].includes(body.mode)) ||
+      (body.note != null && typeof body.note !== 'string')) {
+    return res.status(400).json({ error: 'Invalid settlement mode or note' });
+  }
   var result = ledger.recordSettlement(
     db,
     req.params.id,
@@ -32,7 +35,7 @@ router.post('/customers/:id/settle', function (req, res) {
   store.appendAudit(
     db,
     'KHATA_SETTLEMENT',
-    result.customer.name + ' settled ₹' + body.amount + ' via ' + (body.mode || 'upi').toUpperCase()
+    result.customer.name + ' settled ₹' + result.settlement.amount + ' via ' + (body.mode || 'upi').toUpperCase()
   );
   store.write(db);
 

@@ -2,6 +2,13 @@ var allProducts = [];
 var cartQuantities = {}; // productId -> qty
 var activeCategory = 'all';
 var customersList = [];
+var pendingOrderSubmission;
+
+function escapeHtml(value) {
+  return String(value == null ? '' : value).replace(/[&<>"']/g, function (character) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[character];
+  });
+}
 
 function get(url, cb) {
   var x = new XMLHttpRequest();
@@ -16,10 +23,17 @@ function get(url, cb) {
   x.send();
 }
 
-function post(url, data, cb) {
+function post(url, data, cb, requestKey) {
   var x = new XMLHttpRequest();
   x.open('POST', url);
   x.setRequestHeader('Content-Type', 'application/json');
+  if (requestKey) x.setRequestHeader('Idempotency-Key', requestKey);
+  x.timeout = 30000;
+  x.onerror = x.ontimeout = function () {
+    cb(0, { error: requestKey
+      ? 'No response received. Retry the same order to check whether it was saved.'
+      : 'No response received. Check whether the change was saved before retrying.' });
+  };
   x.onload = function () {
     var parsed = {};
     try {
@@ -101,20 +115,20 @@ function renderCatalogTable() {
       stockBadge = '<span class="stock-pill in">' + sellable + ' Available</span>';
     }
 
-    var reservedNote = p.reserved ? '<div class="prod-cat">Physical: ' + p.stock + ' · Reserved: ' + p.reserved + '</div>' : '';
+    var reservedNote = p.reserved ? '<div class="prod-cat">Physical: ' + Number(p.stock) + ' · Reserved: ' + Number(p.reserved) + '</div>' : '';
     var curQty = cartQuantities[p.id] || 0;
 
     html += '<tr>' +
-      '<td><div><span class="sku-code">' + p.sku + '</span><span class="prod-name">' + p.name + '</span></div>' +
-      '<div class="prod-cat">' + p.category + ' · per ' + (p.unit || 'unit') + '</div></td>' +
-      '<td><span class="hsn-badge">HSN ' + p.hsn + '</span><span class="gst-badge">' + p.gstPercent + '% GST</span></td>' +
+      '<td><div><span class="sku-code">' + escapeHtml(p.sku) + '</span><span class="prod-name">' + escapeHtml(p.name) + '</span></div>' +
+      '<div class="prod-cat">' + escapeHtml(p.category) + ' · per ' + escapeHtml((p.unit || 'unit')) + '</div></td>' +
+      '<td><span class="hsn-badge">HSN ' + escapeHtml(p.hsn) + '</span><span class="gst-badge">' + Number(p.gstPercent) + '% GST</span></td>' +
       '<td class="r"><strong>' + fmtMoney(p.price) + '</strong></td>' +
       '<td class="r">' + stockBadge + reservedNote + '</td>' +
       '<td class="c">' +
       '<div class="qty-stepper">' +
-      '<button type="button" class="qty-btn" onclick="stepQty(' + p.id + ', -1)">-</button>' +
-      '<input type="number" min="0" value="' + curQty + '" id="qty-' + p.id + '" onchange="onQtyInput(' + p.id + ', this.value)">' +
-      '<button type="button" class="qty-btn" onclick="stepQty(' + p.id + ', 1)">+</button>' +
+      '<button type="button" class="qty-btn" onclick="stepQty(' + Number(p.id) + ', -1)">-</button>' +
+      '<input type="number" min="0" value="' + curQty + '" id="qty-' + Number(p.id) + '" onchange="onQtyInput(' + Number(p.id) + ', this.value)">' +
+      '<button type="button" class="qty-btn" onclick="stepQty(' + Number(p.id) + ', 1)">+</button>' +
       '</div>' +
       '</td>' +
       '</tr>';
@@ -188,7 +202,7 @@ function updateCartPreview() {
   for (var j = 0; j < items.length; j++) {
     var it = items[j];
     miniHtml += '<div class="cart-mini-item">' +
-      '<span>' + it.name + ' &times; ' + it.qty + '</span>' +
+      '<span>' + escapeHtml(it.name) + ' &times; ' + Number(it.qty) + '</span>' +
       '<strong>' + fmtMoney(it.price * it.qty) + '</strong>' +
       '</div>';
   }
@@ -239,8 +253,8 @@ function loadCustomersDropdown() {
 
     for (var i = 0; i < customersList.length; i++) {
       var c = customersList[i];
-      posOpts += '<option value="' + c.id + '">' + c.name + ' (' + c.type + ' · Due: ' + fmtMoney(c.balance) + ')</option>';
-      settleOpts += '<option value="' + c.id + '">' + c.name + ' (Due: ' + fmtMoney(c.balance) + ')</option>';
+      posOpts += '<option value="' + Number(c.id) + '">' + escapeHtml(c.name) + ' (' + escapeHtml(c.type) + ' · Due: ' + fmtMoney(c.balance) + ')</option>';
+      settleOpts += '<option value="' + Number(c.id) + '">' + escapeHtml(c.name) + ' (Due: ' + fmtMoney(c.balance) + ')</option>';
     }
 
     posSelect.innerHTML = posOpts;
@@ -267,28 +281,34 @@ function loadOrders() {
     for (var i = 0; i < data.length; i++) {
       var o = data[i];
       var itemSummary = (o.items || []).map(function (it) {
-        return it.name + ' (' + it.qty + ')';
+        return escapeHtml(it.name) + ' (' + Number(it.qty) + ')';
       }).join(', ');
 
       var st = o.status || 'completed';
       var cancelBtn = st !== 'cancelled'
-        ? ' <button type="button" class="btn btn-danger-outline" onclick="cancelOrder(' + o.id + ')">Cancel</button>'
+        ? ' <button type="button" class="btn btn-danger-outline" onclick="cancelOrder(' + Number(o.id) + ')">Cancel</button>'
         : '';
 
+      var invoiceOrComplete = o.heldForDispatch ? '' :
+        '<a class="btn-link" href="/orders/' + Number(o.id) + '/invoice" target="_blank">Invoice &nearr;</a>';
+      if (st === 'pending') {
+        invoiceOrComplete += ' <button type="button" class="btn btn-ghost" onclick="completeOrder(' + Number(o.id) + ')">Complete</button>';
+      }
+
       html += '<tr>' +
-        '<td><strong>#' + o.id + '</strong></td>' +
-        '<td>' + o.date + '</td>' +
-        '<td><strong>' + (o.customer || 'Walk-in') + '</strong></td>' +
+        '<td><strong>#' + Number(o.id) + '</strong></td>' +
+        '<td>' + escapeHtml(o.date) + '</td>' +
+        '<td><strong>' + escapeHtml((o.customer || 'Walk-in')) + '</strong></td>' +
         '<td style="max-width:260px;font-size:12px;color:#475569">' + itemSummary + '</td>' +
-        '<td><span class="sku-code">' + (o.paymentMode || 'cash').toUpperCase() + '</span></td>' +
-        '<td>' + (o.coupon ? '<span class="gst-badge">' + o.coupon + '</span>' : '<span style="color:#94a3b8">-</span>') + '</td>' +
+        '<td><span class="sku-code">' + escapeHtml(String(o.paymentMode || 'cash').toUpperCase()) + '</span></td>' +
+        '<td>' + (o.coupon ? '<span class="gst-badge">' + escapeHtml(o.coupon) + '</span>' : '<span style="color:#94a3b8">-</span>') + '</td>' +
         '<td class="r">' + fmtMoney(o.subtotal) + '</td>' +
         '<td class="r" style="color:#15803d">' + (o.discount ? '-' + fmtMoney(o.discount) : '₹0.00') + '</td>' +
         '<td class="r">' + fmtMoney(o.tax) + '</td>' +
         '<td class="r"><strong>' + fmtMoney(o.total) + '</strong></td>' +
-        '<td><span class="status-pill ' + st + '">' + st + '</span></td>' +
+        '<td><span class="status-pill ' + escapeHtml(st) + '">' + escapeHtml(st) + '</span></td>' +
         '<td class="r" style="white-space:nowrap">' +
-        '<a class="btn-link" href="/orders/' + o.id + '/invoice" target="_blank">Invoice &nearr;</a>' +
+        invoiceOrComplete +
         cancelBtn +
         '</td>' +
         '</tr>';
@@ -301,6 +321,19 @@ function loadOrders() {
     document.querySelector('#orders tbody').innerHTML = html;
   });
 }
+
+window.completeOrder = function (orderId) {
+  var msg = document.getElementById('orders-action-msg');
+  post('/api/orders/' + orderId + '/complete', {}, function (status, result) {
+    msg.textContent = status === 200 ? 'Order #' + orderId + ' completed.' : result.error;
+    if (status === 200) {
+      loadOrders();
+      loadProducts();
+      loadDashboardSummary();
+      loadCustomersDropdown();
+    }
+  });
+};
 
 window.cancelOrder = function (orderId) {
   var msgEl = document.getElementById('orders-action-msg');
@@ -325,15 +358,15 @@ function renderKhataTable(customers, settlements) {
     var c = customers[i];
     var balColor = c.balance > 0 ? '#b91c1c' : '#15803d';
     html += '<tr>' +
-      '<td><strong>' + c.name + '</strong><div class="prod-cat">' + c.phone + '</div></td>' +
-      '<td><span class="sku-code">' + c.type + '</span>' +
-      (c.gstin ? '<div class="prod-cat">' + c.gstin + '</div>' : '') + '</td>' +
+      '<td><strong>' + escapeHtml(c.name) + '</strong><div class="prod-cat">' + escapeHtml(c.phone) + '</div></td>' +
+      '<td><span class="sku-code">' + escapeHtml(c.type) + '</span>' +
+      (c.gstin ? '<div class="prod-cat">' + escapeHtml(c.gstin) + '</div>' : '') + '</td>' +
       '<td class="r">' + fmtMoney(c.creditLimit) + '</td>' +
       '<td class="r">' + fmtMoney(c.openingBalance) + '</td>' +
       '<td class="r">' + fmtMoney(c.totalBilled) + '</td>' +
-      '<td class="r">' + String(c.totalSettled) + '</td>' +
+      '<td class="r">' + escapeHtml(String(c.totalSettled)) + '</td>' +
       '<td class="r"><strong style="color:' + balColor + '">' + fmtMoney(c.balance) + '</strong></td>' +
-      '<td class="r"><button type="button" class="btn btn-ghost btn-sm" onclick="prefillSettlement(' + c.id + ')">Settle</button></td>' +
+      '<td class="r"><button type="button" class="btn btn-ghost btn-sm" onclick="prefillSettlement(' + Number(c.id) + ')">Settle</button></td>' +
       '</tr>';
   }
   document.querySelector('#customers-table tbody').innerHTML = html;
@@ -342,8 +375,8 @@ function renderKhataTable(customers, settlements) {
   for (var j = 0; j < settlements.length; j++) {
     var s = settlements[j];
     feedHtml += '<div class="settlement-card">' +
-      '<div class="settlement-card-top"><span>' + s.customerName + '</span><span style="color:#15803d">+' + fmtMoney(s.amount) + '</span></div>' +
-      '<div class="settlement-card-sub">' + s.date + ' · ' + String(s.mode).toUpperCase() + ' · ' + (s.note || '') + '</div>' +
+      '<div class="settlement-card-top"><span>' + escapeHtml(s.customerName) + '</span><span style="color:#15803d">+' + fmtMoney(s.amount) + '</span></div>' +
+      '<div class="settlement-card-sub">' + escapeHtml(s.date) + ' · ' + escapeHtml(String(s.mode).toUpperCase()) + ' · ' + escapeHtml((s.note || '')) + '</div>' +
       '</div>';
   }
   document.getElementById('settlements-list').innerHTML = feedHtml || '<div class="prod-cat">No settlements logged yet.</div>';
@@ -365,17 +398,17 @@ function renderInventoryAuditTable() {
     } else if (sellable <= 2) {
       health = '<span class="stock-pill low">Critical (1-2 Left)</span>';
     } else if (sellable <= p.reorderLevel) {
-      health = '<span class="stock-pill low">Below Reorder (' + p.reorderLevel + ')</span>';
+      health = '<span class="stock-pill low">Below Reorder (' + Number(p.reorderLevel) + ')</span>';
     }
 
     html += '<tr>' +
-      '<td><span class="sku-code">' + p.sku + '</span></td>' +
-      '<td><strong>' + p.name + '</strong></td>' +
-      '<td>' + p.category + '</td>' +
-      '<td><span class="hsn-badge">' + p.hsn + '</span></td>' +
-      '<td class="r">' + p.gstPercent + '%</td>' +
+      '<td><span class="sku-code">' + escapeHtml(p.sku) + '</span></td>' +
+      '<td><strong>' + escapeHtml(p.name) + '</strong></td>' +
+      '<td>' + escapeHtml(p.category) + '</td>' +
+      '<td><span class="hsn-badge">' + escapeHtml(p.hsn) + '</span></td>' +
+      '<td class="r">' + Number(p.gstPercent) + '%</td>' +
       '<td class="r">' + fmtMoney(p.price) + '</td>' +
-      '<td class="r">' + p.stock + '</td>' +
+      '<td class="r">' + Number(p.stock) + '</td>' +
       '<td class="r">' + (p.reserved || 0) + '</td>' +
       '<td class="r"><strong>' + sellable + '</strong></td>' +
       '<td>' + health + '</td>' +
@@ -407,10 +440,10 @@ function loadGstReconciliation() {
       var deltaStyle = r.matched ? 'color:#15803d' : 'color:#b91c1c;font-weight:700';
 
       html += '<tr>' +
-        '<td><a class="btn-link" href="/orders/' + r.orderId + '/invoice" target="_blank">#' + r.orderId + ' &nearr;</a></td>' +
-        '<td>' + r.date + '</td>' +
-        '<td>' + r.customer + '</td>' +
-        '<td>' + (r.coupon ? '<span class="gst-badge">' + r.coupon + '</span>' : '-') + '</td>' +
+        '<td><a class="btn-link" href="/orders/' + Number(r.orderId) + '/invoice" target="_blank">#' + Number(r.orderId) + ' &nearr;</a></td>' +
+        '<td>' + escapeHtml(r.date) + '</td>' +
+        '<td>' + escapeHtml(r.customer) + '</td>' +
+        '<td>' + (r.coupon ? '<span class="gst-badge">' + escapeHtml(r.coupon) + '</span>' : '-') + '</td>' +
         '<td class="r">' + fmtMoney(r.ledgerSubtotal) + '</td>' +
         '<td class="r">-' + fmtMoney(r.ledgerDiscount) + '</td>' +
         '<td class="r">' + fmtMoney(r.ledgerTax) + '</td>' +
@@ -487,6 +520,7 @@ document.getElementById('customer-select').onchange = function () {
 };
 
 document.getElementById('clear-cart').onclick = function () {
+  pendingOrderSubmission = null;
   cartQuantities = {};
   document.getElementById('coupon').value = '';
   document.getElementById('customer').value = '';
@@ -503,7 +537,7 @@ document.getElementById('place').onclick = function () {
   var msg = document.getElementById('msg');
   if (!items.length) {
     msg.className = 'err';
-    msg.innerHTML = 'Pick at least one item from the catalog';
+    msg.textContent = 'Pick at least one item from the catalog';
     return;
   }
 
@@ -517,21 +551,45 @@ document.getElementById('place').onclick = function () {
     coupon: document.getElementById('coupon').value
   };
 
+  var signature = JSON.stringify({
+    items: items.map(function (item) { return { id: item.id, qty: item.qty }; }),
+    customerId: payload.customerId,
+    customer: payload.customer,
+    paymentMode: payload.paymentMode,
+    status: payload.status,
+    coupon: payload.coupon
+  });
+  if (!pendingOrderSubmission || pendingOrderSubmission.signature !== signature) {
+    var key = Array.from(window.crypto.getRandomValues(new Uint8Array(16)), function (byte) {
+      return byte.toString(16).padStart(2, '0');
+    }).join('');
+    pendingOrderSubmission = { signature: signature, key: key };
+  }
+  var button = document.getElementById('place');
+  button.disabled = true;
   post('/api/orders', payload, function (status, res) {
+    button.disabled = false;
     if (status === 201) {
+      pendingOrderSubmission = null;
       cartQuantities = {};
       msg.className = 'ok';
-      msg.innerHTML = '<strong>Order #' + res.id + ' placed!</strong> Ledger Total: ' + fmtMoney(res.total) +
-        ' &middot; <a href="/orders/' + res.id + '/invoice" target="_blank">Open GST Invoice &nearr;</a>';
+      if (res.status === 'cancelled') {
+        msg.textContent = 'Order #' + res.id + ' was already saved and is now cancelled.';
+      } else if (res.heldForDispatch) {
+        msg.textContent = 'Order #' + res.id + ' is pending dispatch. Complete it in Order History to bill it.';
+      } else {
+        msg.innerHTML = '<strong>Order #' + Number(res.id) + ' placed!</strong> Ledger Total: ' + fmtMoney(res.total) +
+          ' &middot; <a href="/orders/' + Number(res.id) + '/invoice" target="_blank">Open GST Invoice &nearr;</a>';
+      }
       loadProducts();
       updateCartPreview();
       loadDashboardSummary();
       loadCustomersDropdown();
     } else {
       msg.className = 'err';
-      msg.innerHTML = (res && res.error) ? res.error : 'Order failed';
+      msg.textContent = (res && res.error) ? res.error : 'Order failed';
     }
-  });
+  }, pendingOrderSubmission.key);
 };
 
 document.getElementById('btn-filter-orders').onclick = function () {

@@ -1,9 +1,6 @@
 module.exports = {
   port: process.env.PORT || 3000,
 
-  // used by /api/admin/export and /api/admin/reset
-  adminKey: 'shopledger-admin-2021',
-
   shop: {
     name: 'Corner Shop Kirana & Wholesale',
     tagline: 'Est. 1998 • FMCG, Staples & Bulk Provisions',

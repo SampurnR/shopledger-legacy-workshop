@@ -1,4 +1,5 @@
 var express = require('express');
+var access = require('../lib/access');
 var config = require('../config');
 var store = require('../lib/store');
 var reports = require('../lib/reports');
@@ -58,8 +59,7 @@ router.post('/pricing/preview', function (req, res) {
   });
 });
 
-router.get('/admin/export', function (req, res) {
-  if (req.query.key != config.adminKey) return res.sendStatus(403);
+router.get('/admin/export', access.requireAdmin, function (req, res) {
   res.json(store.read());
 });
 
