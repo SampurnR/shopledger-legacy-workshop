@@ -105,6 +105,7 @@ router.post('/orders', function (req, res) {
     total: totals.total
   });
 
+  order.billedPricing = totals;
   store.appendAudit(db, 'ORDER_CREATED', 'Order #' + order.id + ' (' + customerName + ') ₹' + order.total.toFixed(2));
   store.write(db);
 
