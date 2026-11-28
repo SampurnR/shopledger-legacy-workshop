@@ -7,7 +7,7 @@ var pricing = require('../lib/pricing');
 var invoice = require('../lib/invoice');
 var reports = require('../lib/reports');
 
-test('CURRENT BEHAVIOUR: order pricing applies the HSN GST slab, while invoice uses the default rate', function () {
+test('invoice and order pricing use the HSN GST slab for rice', function () {
   var items = [{ id: 1, name: 'Rice', sku: 'RICE-1', hsn: '1006', price: 1000, qty: 1 }];
   var billed = pricing.computeTotals(items, '');
   var printed = invoice.computeInvoiceFigures({ items: items, coupon: '' });
@@ -18,12 +18,12 @@ test('CURRENT BEHAVIOUR: order pricing applies the HSN GST slab, while invoice u
   );
   assert.deepEqual(
     { subtotal: printed.subtotal, tax: printed.tax, cgst: printed.cgst, sgst: printed.sgst, total: printed.total },
-    { subtotal: 1000, tax: 180, cgst: 90, sgst: 90, total: 1180 }
+    { subtotal: 1000, tax: 50, cgst: 25, sgst: 25, total: 1050 }
   );
-  assert.equal(printed.rows[0].gstPercent, 18);
+  assert.equal(printed.rows[0].gstPercent, 5);
 });
 
-test('CURRENT BEHAVIOUR: invoice calculates SAVE10 on subtotal plus tax', function () {
+test('invoice and order pricing apply SAVE10 to the same discounted taxable subtotal', function () {
   var items = [{ id: 1, name: 'Rice', sku: 'RICE-1', hsn: '1006', price: 600, qty: 1 }];
   var billed = pricing.computeTotals(items, 'SAVE10');
   var printed = invoice.computeInvoiceFigures({ items: items, coupon: 'SAVE10' });
@@ -34,11 +34,11 @@ test('CURRENT BEHAVIOUR: invoice calculates SAVE10 on subtotal plus tax', functi
   );
   assert.deepEqual(
     { subtotal: printed.subtotal, discount: printed.discount, tax: printed.tax, total: printed.total },
-    { subtotal: 600, discount: 70.8, tax: 108, total: 637.2 }
+    { subtotal: 600, discount: 60, tax: 27, total: 567 }
   );
 });
 
-test('CURRENT BEHAVIOUR: SAVE10 pricing and invoice totals differ for a ₹2,240 subtotal', function () {
+test('invoice and order pricing apply the SAVE10 maximum discount consistently', function () {
   var items = [{ id: 5, name: 'Groundnut Oil', sku: 'OIL-002', hsn: '1508', price: 1120, qty: 2 }];
   var billed = pricing.computeTotals(items, 'SAVE10');
   var printed = invoice.computeInvoiceFigures({ items: items, coupon: 'SAVE10' });
@@ -49,11 +49,11 @@ test('CURRENT BEHAVIOUR: SAVE10 pricing and invoice totals differ for a ₹2,240
   );
   assert.deepEqual(
     { subtotal: printed.subtotal, discount: printed.discount, tax: printed.tax, total: printed.total },
-    { subtotal: 2240, discount: 264.32, tax: 403.2, total: 2378.88 }
+    { subtotal: 2240, discount: 150, tax: 104.5, total: 2194.5 }
   );
 });
 
-test('CURRENT BEHAVIOUR: GST reconciliation reports the calculated invoice mismatch against billed totals', function () {
+test('GST reconciliation reports matching invoice and billed totals', function () {
   var items = [{ id: 1, name: 'Rice', sku: 'RICE-1', hsn: '1006', price: 1000, qty: 1 }];
   var billed = pricing.computeTotals(items, '');
   var order = {
@@ -70,7 +70,7 @@ test('CURRENT BEHAVIOUR: GST reconciliation reports the calculated invoice misma
   var result = reports.getGstReconciliation({ orders: [order] });
 
   assert.equal(result.totalChecked, 1);
-  assert.equal(result.mismatchCount, 1);
+  assert.equal(result.mismatchCount, 0);
   assert.deepEqual(
     {
       ledgerTax: result.rows[0].ledgerTax,
@@ -80,11 +80,11 @@ test('CURRENT BEHAVIOUR: GST reconciliation reports the calculated invoice misma
       delta: result.rows[0].delta,
       matched: result.rows[0].matched
     },
-    { ledgerTax: 50, invoiceTax: 180, ledgerTotal: 1050, invoiceTotal: 1180, delta: 130, matched: false }
+    { ledgerTax: 50, invoiceTax: 50, ledgerTotal: 1050, invoiceTotal: 1050, delta: 0, matched: true }
   );
 });
 
-test('CURRENT BEHAVIOUR: rendered invoice displays its independently computed GST and mismatch notice', function () {
+test('rendered invoice displays the correct GST and preserves the notice for a genuine total difference', function () {
   var items = [{ id: 1, name: 'Rice', sku: 'RICE-1', hsn: '1006', price: 1000, qty: 1 }];
   var billed = pricing.computeTotals(items, '');
   var html = invoice.render({
@@ -94,12 +94,12 @@ test('CURRENT BEHAVIOUR: rendered invoice displays its independently computed GS
     paymentMode: 'cash',
     coupon: '',
     items: items,
-    total: billed.total
+    total: billed.total - 1
   });
 
-  assert.match(html, /18%/);
-  assert.match(html, /180\.00/);
+  assert.match(html, /5%/);
+  assert.match(html, /50\.00/);
   assert.match(html, /Invoice computed total/);
-  assert.match(html, /1,180\.00|1180\.00/);
   assert.match(html, /1,050\.00|1050\.00/);
+  assert.match(html, /1,049\.00|1049\.00/);
 });
