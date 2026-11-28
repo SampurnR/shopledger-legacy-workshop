@@ -6,7 +6,7 @@
 - Express 4 with `body-parser`.
 - Browser UI: static HTML, CSS, and vanilla JavaScript in `public/`.
 - File-backed data store: `data/db.json`.
-- No working test suite is configured today.
+- Node built-in tests live in `test/` and run with `node --test`.
 
 ## Module map
 
