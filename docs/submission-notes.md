@@ -81,4 +81,5 @@ The invoice calculation now uses `lib/pricing.js`, matching checkout totals, HSN
 
 - CP1 screenshot source: `docs/CP1-read-only-explanation.md`
 - CP2 diagram: `docs/shopledger-architecture.svg`
+- CP2 diagram preview: `docs/shopledger-architecture-diagram.png`
 - CP4 corrected invoice screenshot: `docs/evidence/cp4-invoice-1002.png`
