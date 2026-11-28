@@ -1,0 +1,333 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 960" width="1440" height="960" font-family="Segoe UI, Roboto, Arial, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#334155"/>
+    </marker>
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#2563eb"/>
+    </marker>
+    <marker id="arrow-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#059669"/>
+    </marker>
+    <filter id="shadow" x="-2%" y="-2%" width="104%" height="104%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0f172a" flood-opacity="0.08"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1440" height="960" fill="#f8fafc"/>
+
+  <!-- Header -->
+  <rect x="0" y="0" width="1440" height="72" fill="#0f172a"/>
+  <text x="36" y="34" fill="#ffffff" font-size="22" font-weight="700">ShopLedger v0.8.4 — System Architecture &amp; Order Placement Flow</text>
+  <text x="36" y="56" fill="#94a3b8" font-size="13">Node.js + Express (CommonJS) • Single-Page POS/Khata UI • Flat JSON Store (data/db.json)</text>
+
+  <!-- Legend -->
+  <rect x="980" y="18" width="424" height="36" rx="6" fill="#1e293b" stroke="#334155"/>
+  <line x1="998" y1="36" x2="1030" y2="36" stroke="#2563eb" stroke-width="2.5" marker-end="url(#arrow-blue)"/>
+  <text x="1038" y="40" fill="#e2e8f0" font-size="12" font-weight="600">Order Placement Flow (1–8)</text>
+  <line x1="1220" y1="36" x2="1252" y2="36" stroke="#334155" stroke-width="1.8" stroke-dasharray="5,3" marker-end="url(#arrow)"/>
+  <text x="1260" y="40" fill="#cbd5e1" font-size="12">Module Dependency</text>
+
+  <!-- Column 1: Frontend UI (public/) -->
+  <g filter="url(#shadow)">
+    <rect x="30" y="96" width="260" height="530" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+    <rect x="30" y="96" width="260" height="40" rx="10" fill="#1d4ed8"/>
+    <rect x="30" y="120" width="260" height="16" fill="#1d4ed8"/>
+    <text x="46" y="122" fill="#ffffff" font-size="15" font-weight="700">Client UI (public/)</text>
+
+    <rect x="46" y="152" width="228" height="72" rx="6" fill="#eff6ff" stroke="#bfdbfe"/>
+    <text x="58" y="174" fill="#1e3a8a" font-size="13" font-weight="700">public/index.html</text>
+    <text x="58" y="192" fill="#334155" font-size="11">4 KPI cards &amp; 4 tabs: New Order (POS),</text>
+    <text x="58" y="208" fill="#334155" font-size="11">Order History, Customer Khata, GST Audit</text>
+
+    <rect x="46" y="236" width="228" height="148" rx="6" fill="#eff6ff" stroke="#bfdbfe"/>
+    <text x="58" y="258" fill="#1e3a8a" font-size="13" font-weight="700">public/js/app.js</text>
+    <text x="58" y="276" fill="#334155" font-size="11">• XHR API client (get / post)</text>
+    <text x="58" y="293" fill="#334155" font-size="11">• stepQty / onQtyInput / updateCartPreview</text>
+    <text x="58" y="310" fill="#334155" font-size="11">• #place click → POST /api/orders</text>
+    <text x="58" y="327" fill="#334155" font-size="11">• loadOrders / cancelOrder</text>
+    <text x="58" y="344" fill="#334155" font-size="11">• renderKhataTable / settlement POST</text>
+    <text x="58" y="361" fill="#334155" font-size="11">• loadGstReconciliation / audit tables</text>
+    <text x="58" y="376" fill="#334155" font-size="11">• esc() XSS escaping helper</text>
+
+    <rect x="46" y="396" width="228" height="54" rx="6" fill="#f8fafc" stroke="#cbd5e1"/>
+    <text x="58" y="418" fill="#0f172a" font-size="13" font-weight="700">public/css/style.css</text>
+    <text x="58" y="436" fill="#475569" font-size="11">Layout, POS grid, tables, status pills</text>
+
+    <rect x="46" y="464" width="228" height="144" rx="6" fill="#fefce8" stroke="#fde047"/>
+    <text x="58" y="486" fill="#854d0e" font-size="12" font-weight="700">Order Placement UI Triggers</text>
+    <text x="58" y="505" fill="#713f12" font-size="11">Step 1: Adjust qty / coupon →</text>
+    <text x="68" y="520" fill="#1d4ed8" font-size="11" font-weight="600">POST /api/pricing/preview</text>
+    <text x="58" y="542" fill="#713f12" font-size="11">Step 2: Click "Place Order" →</text>
+    <text x="68" y="557" fill="#1d4ed8" font-size="11" font-weight="600">POST /api/orders</text>
+    <text x="58" y="579" fill="#713f12" font-size="11">Step 8b: On 201, reset cart &amp; refresh</text>
+    <text x="68" y="594" fill="#713f12" font-size="11">products, KPIs, Khata &amp; GST audit</text>
+  </g>
+
+  <!-- Column 2: Express Entry & Routers (server.js + routes/) -->
+  <g filter="url(#shadow)">
+    <rect x="330" y="96" width="320" height="530" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+    <rect x="330" y="96" width="320" height="40" rx="10" fill="#0f172a"/>
+    <rect x="330" y="120" width="320" height="16" fill="#0f172a"/>
+    <text x="346" y="122" fill="#ffffff" font-size="15" font-weight="700">Express Server &amp; Routers</text>
+
+    <rect x="346" y="150" width="288" height="82" rx="6" fill="#f1f5f9" stroke="#94a3b8"/>
+    <text x="358" y="170" fill="#0f172a" font-size="13" font-weight="700">server.js (Express app :3000)</text>
+    <text x="358" y="188" fill="#334155" font-size="11">• bodyParser.json() + JSON parse error handler</text>
+    <text x="358" y="204" fill="#334155" font-size="11">• express.static('public') + /api router mounts</text>
+    <text x="358" y="220" fill="#334155" font-size="11">• GET /orders/:id/invoice → lib/invoice.render</text>
+
+    <rect x="346" y="244" width="288" height="62" rx="6" fill="#f8fafc" stroke="#cbd5e1"/>
+    <text x="358" y="264" fill="#0f172a" font-size="13" font-weight="700">routes/products.js</text>
+    <text x="358" y="282" fill="#334155" font-size="11">GET /api/products (category, search, HSN, sellable)</text>
+    <text x="358" y="297" fill="#334155" font-size="11">GET /api/coupons (active promo codes)</text>
+
+    <rect x="346" y="318" width="288" height="106" rx="6" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.8"/>
+    <text x="358" y="338" fill="#1e3a8a" font-size="13" font-weight="700">routes/orders.js  [Order Lifecycle]</text>
+    <text x="358" y="356" fill="#1e293b" font-size="11">GET  /api/orders (status, search, from, to)</text>
+    <text x="358" y="372" fill="#1e293b" font-size="11">GET  /api/orders/:id</text>
+    <text x="358" y="388" fill="#1d4ed8" font-size="11" font-weight="700">POST /api/orders (create, validate, bill, reserve)</text>
+    <text x="358" y="404" fill="#1e293b" font-size="11">POST /api/orders/:id/cancel (restock &amp; reverse)</text>
+
+    <rect x="346" y="436" width="288" height="62" rx="6" fill="#f8fafc" stroke="#cbd5e1"/>
+    <text x="358" y="456" fill="#0f172a" font-size="13" font-weight="700">routes/customers.js</text>
+    <text x="358" y="474" fill="#334155" font-size="11">GET  /api/customers (accounts + 25 settlements)</text>
+    <text x="358" y="489" fill="#334155" font-size="11">POST /api/customers/:id/settle (record Khata pay)</text>
+
+    <rect x="346" y="510" width="288" height="100" rx="6" fill="#f8fafc" stroke="#cbd5e1"/>
+    <text x="358" y="530" fill="#0f172a" font-size="13" font-weight="700">routes/reports.js</text>
+    <text x="358" y="548" fill="#334155" font-size="11">GET  /api/reports/dashboard</text>
+    <text x="358" y="564" fill="#334155" font-size="11">GET  /api/reports/gst-reconciliation</text>
+    <text x="358" y="580" fill="#1d4ed8" font-size="11" font-weight="700">POST /api/pricing/preview (live POS cart totals)</text>
+    <text x="358" y="596" fill="#334155" font-size="11">GET  /api/admin/export?key=...</text>
+  </g>
+
+  <!-- Column 3: Domain Logic (lib/) -->
+  <g filter="url(#shadow)">
+    <rect x="690" y="96" width="440" height="530" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+    <rect x="690" y="96" width="440" height="40" rx="10" fill="#0f766e"/>
+    <rect x="690" y="120" width="440" height="16" fill="#0f766e"/>
+    <text x="706" y="122" fill="#ffffff" font-size="15" font-weight="700">Domain Modules (lib/)</text>
+
+    <!-- Left sub-column of lib/ -->
+    <rect x="706" y="150" width="198" height="78" rx="6" fill="#f0fdfa" stroke="#5eead4"/>
+    <text x="716" y="170" fill="#115e59" font-size="12.5" font-weight="700">lib/inventory.js</text>
+    <text x="716" y="187" fill="#334155" font-size="11">find, getSellableStock,</text>
+    <text x="716" y="202" fill="#1d4ed8" font-size="11" font-weight="600">check, reserve (stock -= qty),</text>
+    <text x="716" y="217" fill="#334155" font-size="11">release (stock += qty), summarize</text>
+
+    <rect x="706" y="240" width="198" height="78" rx="6" fill="#f0fdfa" stroke="#5eead4"/>
+    <text x="716" y="260" fill="#115e59" font-size="12.5" font-weight="700">lib/coupons.js</text>
+    <text x="716" y="277" fill="#334155" font-size="11">normalizeCode, getCoupon,</text>
+    <text x="716" y="292" fill="#1d4ed8" font-size="11" font-weight="600">validate, calculateDiscount,</text>
+    <text x="716" y="307" fill="#334155" font-size="11">listActive</text>
+
+    <rect x="706" y="330" width="198" height="78" rx="6" fill="#f0fdfa" stroke="#5eead4"/>
+    <text x="716" y="350" fill="#115e59" font-size="12.5" font-weight="700">lib/pricing.js</text>
+    <text x="716" y="367" fill="#334155" font-size="11">subtotal, discount,</text>
+    <text x="716" y="382" fill="#1d4ed8" font-size="11" font-weight="600">computeTotals (line discount</text>
+    <text x="716" y="397" fill="#1d4ed8" font-size="11" font-weight="600">apportionment + HSN tax)</text>
+
+    <rect x="706" y="420" width="198" height="78" rx="6" fill="#f0fdfa" stroke="#5eead4"/>
+    <text x="716" y="440" fill="#115e59" font-size="12.5" font-weight="700">lib/tax.js</text>
+    <text x="716" y="457" fill="#1d4ed8" font-size="11" font-weight="600">getRateForItem (HSN slabs),</text>
+    <text x="716" y="472" fill="#334155" font-size="11">getSlabPercent,</text>
+    <text x="716" y="487" fill="#334155" font-size="11">splitCgstSgst (50/50 split)</text>
+
+    <rect x="706" y="510" width="198" height="96" rx="6" fill="#f0fdfa" stroke="#5eead4"/>
+    <text x="716" y="530" fill="#115e59" font-size="12.5" font-weight="700">lib/ledger.js</text>
+    <text x="716" y="547" fill="#334155" font-size="11">findCustomer, listCustomers,</text>
+    <text x="716" y="562" fill="#1d4ed8" font-size="11" font-weight="600">chargeOrderToKhata (limit chk),</text>
+    <text x="716" y="577" fill="#334155" font-size="11">reverseOrderDebit,</text>
+    <text x="716" y="592" fill="#334155" font-size="11">recordSettlement</text>
+
+    <!-- Right sub-column of lib/ -->
+    <rect x="916" y="150" width="198" height="84" rx="6" fill="#f0fdfa" stroke="#5eead4"/>
+    <text x="926" y="170" fill="#115e59" font-size="12.5" font-weight="700">lib/orders.js</text>
+    <text x="926" y="187" fill="#1d4ed8" font-size="11" font-weight="600">add (nextOrderId++),</text>
+    <text x="926" y="202" fill="#334155" font-size="11">get, cancel (restock +</text>
+    <text x="926" y="217" fill="#334155" font-size="11">khata reversal), list</text>
+
+    <rect x="916" y="246" width="198" height="72" rx="6" fill="#f0fdfa" stroke="#5eead4"/>
+    <text x="926" y="266" fill="#115e59" font-size="12.5" font-weight="700">lib/dates.js</text>
+    <text x="926" y="283" fill="#1d4ed8" font-size="11" font-weight="600">today (DD/MM/YYYY),</text>
+    <text x="926" y="298" fill="#334155" font-size="11">normalizeDateKey, getFiscalYear</text>
+
+    <rect x="916" y="330" width="198" height="78" rx="6" fill="#f0fdfa" stroke="#5eead4"/>
+    <text x="926" y="350" fill="#115e59" font-size="12.5" font-weight="700">lib/invoice.js</text>
+    <text x="926" y="367" fill="#334155" font-size="11">computeInvoiceFigures</text>
+    <text x="926" y="382" fill="#334155" font-size="11">(via lib/pricing.js),</text>
+    <text x="926" y="397" fill="#334155" font-size="11">render (HTML tax invoice)</text>
+
+    <rect x="916" y="420" width="198" height="78" rx="6" fill="#f0fdfa" stroke="#5eead4"/>
+    <text x="926" y="440" fill="#115e59" font-size="12.5" font-weight="700">lib/reports.js</text>
+    <text x="926" y="457" fill="#334155" font-size="11">getDashboardSummary,</text>
+    <text x="926" y="472" fill="#334155" font-size="11">getGstReconciliation</text>
+    <text x="926" y="487" fill="#334155" font-size="11">(ledger vs invoice)</text>
+
+    <rect x="916" y="510" width="198" height="96" rx="6" fill="#ecfdf5" stroke="#10b981" stroke-width="1.6"/>
+    <text x="926" y="530" fill="#065f46" font-size="12.5" font-weight="700">lib/store.js</text>
+    <text x="926" y="547" fill="#1d4ed8" font-size="11" font-weight="600">read() / write(db)</text>
+    <text x="926" y="562" fill="#334155" font-size="11">Atomic tmp.json rename</text>
+    <text x="926" y="577" fill="#1d4ed8" font-size="11" font-weight="600">appendAudit(db, action,</text>
+    <text x="926" y="592" fill="#1d4ed8" font-size="11" font-weight="600">details) [cap 100]</text>
+  </g>
+
+  <!-- Column 4: Config & JSON Database -->
+  <g filter="url(#shadow)">
+    <rect x="1170" y="96" width="240" height="530" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+    <rect x="1170" y="96" width="240" height="40" rx="10" fill="#7c2d12"/>
+    <rect x="1170" y="120" width="240" height="16" fill="#7c2d12"/>
+    <text x="1186" y="122" fill="#ffffff" font-size="15" font-weight="700">Config &amp; Persistence</text>
+
+    <rect x="1186" y="150" width="208" height="168" rx="6" fill="#fff7ed" stroke="#fdba74"/>
+    <text x="1198" y="172" fill="#9a3412" font-size="13" font-weight="700">config.js</text>
+    <text x="1198" y="191" fill="#334155" font-size="11">• port (3000), adminKey</text>
+    <text x="1198" y="208" fill="#334155" font-size="11">• shop (name, GSTIN, addr)</text>
+    <text x="1198" y="225" fill="#334155" font-size="11">• tax.defaultRate (0.18)</text>
+    <text x="1198" y="242" fill="#334155" font-size="11">• tax.hsnSlabs (5%, 12%, 18%)</text>
+    <text x="1198" y="259" fill="#334155" font-size="11">• inventory (defaultReorder,</text>
+    <text x="1208" y="274" fill="#334155" font-size="11">allowBackorder: false)</text>
+    <text x="1198" y="292" fill="#334155" font-size="11">• coupons (SAVE10, FLAT50,</text>
+    <text x="1208" y="307" fill="#334155" font-size="11">WELCOME, WHOLESALE15)</text>
+
+    <rect x="1186" y="336" width="208" height="270" rx="6" fill="#fef2f2" stroke="#fca5a5" stroke-width="1.6"/>
+    <text x="1198" y="358" fill="#991b1b" font-size="13" font-weight="700">data/db.json</text>
+    <text x="1198" y="378" fill="#334155" font-size="11">• nextOrderId (1009)</text>
+    <text x="1198" y="395" fill="#334155" font-size="11">• nextSettlementId (505)</text>
+    <text x="1198" y="416" fill="#334155" font-size="11" font-weight="600">• products[]</text>
+    <text x="1208" y="431" fill="#475569" font-size="10.5">id, sku, hsn, price, stock, reserved</text>
+    <text x="1198" y="452" fill="#334155" font-size="11" font-weight="600">• customers[]</text>
+    <text x="1208" y="467" fill="#475569" font-size="10.5">creditLimit, billed, settled, balance</text>
+    <text x="1198" y="488" fill="#334155" font-size="11" font-weight="600">• orders[]</text>
+    <text x="1208" y="503" fill="#475569" font-size="10.5">items[], coupon, subtotal, disc, tax, total</text>
+    <text x="1198" y="524" fill="#334155" font-size="11" font-weight="600">• settlements[]</text>
+    <text x="1208" y="539" fill="#475569" font-size="10.5">customerId, amount, mode, date</text>
+    <text x="1198" y="560" fill="#334155" font-size="11" font-weight="600">• auditLog[]</text>
+    <text x="1208" y="575" fill="#475569" font-size="10.5">ts, action, details (latest 100)</text>
+  </g>
+
+  <!-- Primary Arrows between Columns -->
+  <!-- UI -> Routes -->
+  <path d="M 274 306 L 346 580" fill="none" stroke="#2563eb" stroke-width="2" marker-end="url(#arrow-blue)"/>
+  <path d="M 274 316 L 346 384" fill="none" stroke="#2563eb" stroke-width="2.5" marker-end="url(#arrow-blue)"/>
+  <path d="M 274 330 L 346 474" fill="none" stroke="#334155" stroke-width="1.4" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+  <path d="M 274 280 L 346 270" fill="none" stroke="#334155" stroke-width="1.4" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+  <path d="M 274 360 L 346 550" fill="none" stroke="#334155" stroke-width="1.4" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+
+  <!-- Routes -> lib/ -->
+  <path d="M 634 385 L 706 189" fill="none" stroke="#2563eb" stroke-width="2.2" marker-end="url(#arrow-blue)"/>
+  <path d="M 634 388 L 706 279" fill="none" stroke="#2563eb" stroke-width="2.2" marker-end="url(#arrow-blue)"/>
+  <path d="M 634 391 L 706 369" fill="none" stroke="#2563eb" stroke-width="2.2" marker-end="url(#arrow-blue)"/>
+  <path d="M 634 394 L 706 558" fill="none" stroke="#2563eb" stroke-width="2.2" marker-end="url(#arrow-blue)"/>
+  <path d="M 634 382 L 916 190" fill="none" stroke="#2563eb" stroke-width="2.2" marker-end="url(#arrow-blue)"/>
+  <path d="M 634 576 L 706 376" fill="none" stroke="#334155" stroke-width="1.4" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+  <path d="M 634 550 L 916 458" fill="none" stroke="#334155" stroke-width="1.4" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+  <path d="M 634 218 L 916 368" fill="none" stroke="#334155" stroke-width="1.4" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+
+  <!-- lib/store -> data/db.json -->
+  <path d="M 1114 558 L 1186 480" fill="none" stroke="#059669" stroke-width="2.5" marker-end="url(#arrow-green)"/>
+  <path d="M 1186 500 L 1114 572" fill="none" stroke="#2563eb" stroke-width="2" marker-end="url(#arrow-blue)"/>
+
+  <!-- lib/ -> config.js -->
+  <path d="M 904 452 L 1186 240" fill="none" stroke="#334155" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+  <path d="M 904 275 L 1186 290" fill="none" stroke="#334155" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+
+  <!-- Bottom Swimlane: End-to-End Order Placement Sequence -->
+  <g filter="url(#shadow)">
+    <rect x="30" y="654" width="1380" height="278" rx="10" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+    <rect x="30" y="654" width="1380" height="38" rx="10" fill="#1e3a8a"/>
+    <rect x="30" y="676" width="1380" height="16" fill="#1e3a8a"/>
+    <text x="48" y="679" fill="#ffffff" font-size="15" font-weight="700">End-to-End Order Placement Flow (POST /api/orders)</text>
+
+    <!-- Step 1 -->
+    <rect x="48" y="714" width="152" height="118" rx="8" fill="#eff6ff" stroke="#3b82f6"/>
+    <text x="60" y="736" fill="#1d4ed8" font-size="12" font-weight="700">1. Live Cart Preview</text>
+    <text x="60" y="756" fill="#1e293b" font-size="11">app.js sends items &amp;</text>
+    <text x="60" y="771" fill="#1e293b" font-size="11">coupon to</text>
+    <text x="60" y="786" fill="#0f172a" font-size="10.5" font-weight="600">POST /api/pricing/preview</text>
+    <text x="60" y="803" fill="#475569" font-size="10.5">routes/reports.js →</text>
+    <text x="60" y="818" fill="#475569" font-size="10.5">pricing.computeTotals</text>
+
+    <!-- Step 2 -->
+    <rect x="216" y="714" width="152" height="118" rx="8" fill="#eff6ff" stroke="#3b82f6"/>
+    <text x="228" y="736" fill="#1d4ed8" font-size="12" font-weight="700">2. Submit &amp; Read DB</text>
+    <text x="228" y="756" fill="#1e293b" font-size="11">Click #place →</text>
+    <text x="228" y="771" fill="#0f172a" font-size="10.5" font-weight="600">POST /api/orders</text>
+    <text x="228" y="788" fill="#1e293b" font-size="11">routes/orders.js calls</text>
+    <text x="228" y="803" fill="#0f172a" font-size="10.5" font-weight="600">store.read()</text>
+    <text x="228" y="818" fill="#475569" font-size="10.5">from data/db.json</text>
+
+    <!-- Step 3 -->
+    <rect x="384" y="714" width="152" height="118" rx="8" fill="#f0fdfa" stroke="#0d9488"/>
+    <text x="396" y="736" fill="#0f766e" font-size="12" font-weight="700">3. Resolve &amp; Stock</text>
+    <text x="396" y="756" fill="#1e293b" font-size="11">Lookup items via</text>
+    <text x="396" y="771" fill="#0f172a" font-size="10.5" font-weight="600">inventory.find()</text>
+    <text x="396" y="788" fill="#1e293b" font-size="11">Aggregate qty &amp; verify</text>
+    <text x="396" y="803" fill="#0f172a" font-size="10.5" font-weight="600">inventory.check()</text>
+    <text x="396" y="818" fill="#b91c1c" font-size="10.5">409 if qty &gt; sellable</text>
+
+    <!-- Step 4 -->
+    <rect x="552" y="714" width="152" height="118" rx="8" fill="#f0fdfa" stroke="#0d9488"/>
+    <text x="564" y="736" fill="#0f766e" font-size="12" font-weight="700">4. Coupon &amp; Totals</text>
+    <text x="564" y="756" fill="#0f172a" font-size="10.5" font-weight="600">coupons.validate()</text>
+    <text x="564" y="773" fill="#0f172a" font-size="10.5" font-weight="600">pricing.computeTotals()</text>
+    <text x="564" y="790" fill="#475569" font-size="10.5">Apportion discount +</text>
+    <text x="564" y="805" fill="#475569" font-size="10.5">tax.getRateForItem(hsn)</text>
+    <text x="564" y="820" fill="#475569" font-size="10.5">(5%, 12%, 18% slabs)</text>
+
+    <!-- Step 5 -->
+    <rect x="720" y="714" width="152" height="118" rx="8" fill="#fefce8" stroke="#ca8a04"/>
+    <text x="732" y="736" fill="#854d0e" font-size="12" font-weight="700">5. Customer / Khata</text>
+    <text x="732" y="756" fill="#1e293b" font-size="11">Resolve customerId via</text>
+    <text x="732" y="771" fill="#0f172a" font-size="10.5" font-weight="600">ledger.findCustomer()</text>
+    <text x="732" y="788" fill="#1e293b" font-size="11">If khata: charge &amp; check</text>
+    <text x="732" y="803" fill="#0f172a" font-size="10.5" font-weight="600">chargeOrderToKhata()</text>
+    <text x="732" y="818" fill="#b91c1c" font-size="10.5">409 if &gt; creditLimit</text>
+
+    <!-- Step 6 -->
+    <rect x="888" y="714" width="152" height="118" rx="8" fill="#f0fdfa" stroke="#0d9488"/>
+    <text x="900" y="736" fill="#0f766e" font-size="12" font-weight="700">6. Deduct &amp; Record</text>
+    <text x="900" y="756" fill="#0f172a" font-size="10.5" font-weight="600">inventory.reserve()</text>
+    <text x="900" y="771" fill="#475569" font-size="10.5">Subtracts from p.stock</text>
+    <text x="900" y="788" fill="#0f172a" font-size="10.5" font-weight="600">orders.add(db, ...)</text>
+    <text x="900" y="803" fill="#475569" font-size="10.5">Assigns nextOrderId++</text>
+    <text x="900" y="818" fill="#475569" font-size="10.5">&amp; dates.today()</text>
+
+    <!-- Step 7 -->
+    <rect x="1056" y="714" width="152" height="118" rx="8" fill="#ecfdf5" stroke="#059669"/>
+    <text x="1068" y="736" fill="#065f46" font-size="12" font-weight="700">7. Audit &amp; Persist</text>
+    <text x="1068" y="756" fill="#0f172a" font-size="10.5" font-weight="600">store.appendAudit()</text>
+    <text x="1068" y="771" fill="#475569" font-size="10.5">Logs ORDER_CREATED</text>
+    <text x="1068" y="788" fill="#0f172a" font-size="10.5" font-weight="600">store.write(db)</text>
+    <text x="1068" y="803" fill="#475569" font-size="10.5">Atomic write to</text>
+    <text x="1068" y="818" fill="#475569" font-size="10.5">data/db.json</text>
+
+    <!-- Step 8 -->
+    <rect x="1224" y="714" width="168" height="118" rx="8" fill="#eff6ff" stroke="#2563eb"/>
+    <text x="1236" y="736" fill="#1d4ed8" font-size="12" font-weight="700">8. Response &amp; Sync</text>
+    <text x="1236" y="756" fill="#065f46" font-size="10.5" font-weight="700">HTTP 201 Created (order)</text>
+    <text x="1236" y="773" fill="#1e293b" font-size="11">app.js clears cart, shows</text>
+    <text x="1236" y="788" fill="#1e293b" font-size="11">/orders/:id/invoice link,</text>
+    <text x="1236" y="803" fill="#1e293b" font-size="11">&amp; reloads products, KPIs,</text>
+    <text x="1236" y="818" fill="#1e293b" font-size="11">Khata &amp; GST audit</text>
+
+    <!-- Flow Connectors -->
+    <line x1="200" y1="773" x2="216" y2="773" stroke="#2563eb" stroke-width="2" marker-end="url(#arrow-blue)"/>
+    <line x1="368" y1="773" x2="384" y2="773" stroke="#2563eb" stroke-width="2" marker-end="url(#arrow-blue)"/>
+    <line x1="536" y1="773" x2="552" y2="773" stroke="#2563eb" stroke-width="2" marker-end="url(#arrow-blue)"/>
+    <line x1="704" y1="773" x2="720" y2="773" stroke="#2563eb" stroke-width="2" marker-end="url(#arrow-blue)"/>
+    <line x1="872" y1="773" x2="888" y2="773" stroke="#2563eb" stroke-width="2" marker-end="url(#arrow-blue)"/>
+    <line x1="1040" y1="773" x2="1056" y2="773" stroke="#2563eb" stroke-width="2" marker-end="url(#arrow-blue)"/>
+    <line x1="1208" y1="773" x2="1224" y2="773" stroke="#2563eb" stroke-width="2" marker-end="url(#arrow-blue)"/>
+
+    <!-- Downstream Note Bar -->
+    <rect x="48" y="850" width="1344" height="62" rx="6" fill="#f8fafc" stroke="#cbd5e1"/>
+    <text x="64" y="874" fill="#0f172a" font-size="12" font-weight="700">Downstream Flows:</text>
+    <text x="195" y="874" fill="#334155" font-size="11.5">• Invoice: GET /orders/:id/invoice → lib/invoice.render() (uses lib/pricing.computeTotals)</text>
+    <text x="780" y="874" fill="#334155" font-size="11.5">• Audit: GET /api/reports/gst-reconciliation → lib/reports.js</text>
+    <text x="195" y="896" fill="#334155" font-size="11.5">• Cancel: POST /api/orders/:id/cancel → lib/orders.cancel() → inventory.release() + ledger.reverseOrderDebit()</text>
+    <text x="890" y="896" fill="#334155" font-size="11.5">• Settle: POST /api/customers/:id/settle → ledger.recordSettlement()</text>
+  </g>
+</svg>
