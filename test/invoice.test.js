@@ -74,3 +74,14 @@ test('invoice line taxable amounts and GST match checkout line breakdown', funct
     return { taxable: line.taxable, lineTax: line.tax, gstPercent: line.gstPercent };
   }));
 });
+
+test('coupon invoice line totals reconcile to post-discount taxable value plus GST', function () {
+  var order = db.orders.filter(function (item) { return item.id === 1002; })[0];
+  var result = invoice.computeInvoiceFigures(order);
+  result.rows.forEach(function (row) {
+    assert.equal(row.line, row.taxable + row.lineTax);
+  });
+  var html = invoice.render(order);
+  assert.match(html, /<th class="r">Line Total<\/th>/);
+  assert.doesNotMatch(html, /Line Gross/);
+});
