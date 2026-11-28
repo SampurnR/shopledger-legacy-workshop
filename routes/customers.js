@@ -16,13 +16,12 @@ router.post('/customers/:id/settle', function (req, res) {
   var db = store.read();
   var body = req.body || {};
 
-  // Pass amount directly from request payload
   var result = ledger.recordSettlement(
     db,
     req.params.id,
     body.amount,
-    body.mode || 'upi',
-    body.note || ''
+    body.mode,
+    body.note
   );
 
   if (!result.ok) {
@@ -32,7 +31,7 @@ router.post('/customers/:id/settle', function (req, res) {
   store.appendAudit(
     db,
     'KHATA_SETTLEMENT',
-    result.customer.name + ' settled ₹' + body.amount + ' via ' + (body.mode || 'upi').toUpperCase()
+    result.customer.name + ' settled ₹' + result.settlement.amount + ' via ' + result.settlement.mode.toUpperCase()
   );
   store.write(db);
 
