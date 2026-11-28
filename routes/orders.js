@@ -29,29 +29,12 @@ router.get('/orders/:id', function (req, res) {
 router.post('/orders', function (req, res) {
   var db = store.read();
   var body = req.body || {};
-  var items = [];
+  var resolved = orders.resolveItems(db.products, body.items == null ? [] : body.items);
+  if (!resolved.ok) return res.status(400).json({ error: resolved.error });
+  var items = resolved.items;
 
-  if (!body.items || !body.items.length) {
+  if (!items.length) {
     return res.status(400).json({ error: 'Pick at least one item to place an order' });
-  }
-
-  for (var i = 0; i < body.items.length; i++) {
-    var p = inventory.find(db.products, body.items[i].id);
-    if (!p) {
-      return res.status(400).json({ error: 'Unknown product ID ' + body.items[i].id });
-    }
-    var q = parseInt(body.items[i].qty, 10);
-    if (!q || q < 1) q = 1;
-
-    // Note: hsn is stored on line items; tax slab is resolved via lib/tax.js
-    items.push({
-      id: p.id,
-      sku: p.sku,
-      name: p.name,
-      hsn: p.hsn,
-      price: p.price,
-      qty: q
-    });
   }
 
   var stock = inventory.check(db.products, items);
@@ -59,6 +42,10 @@ router.post('/orders', function (req, res) {
     return res.status(409).json({ error: stock.msg });
   }
 
+  if ((body.customer != null && typeof body.customer !== 'string') ||
+      (body.coupon != null && typeof body.coupon !== 'string')) {
+    return res.status(400).json({ error: 'Customer name and coupon must be text' });
+  }
   var sub = pricing.subtotal(items);
   var rawCoupon = coupons.normalizeCode(body.coupon);
   if (rawCoupon) {
@@ -69,15 +56,27 @@ router.post('/orders', function (req, res) {
   }
 
   var totals = pricing.computeTotals(items, rawCoupon);
-  var paymentMode = (body.paymentMode || 'cash').toLowerCase();
-  var customerName = (body.customer || '').trim() || 'Walk-in';
-  var customerId = body.customerId ? Number(body.customerId) : null;
+  var paymentMode = body.paymentMode == null || body.paymentMode === '' ? 'cash' : body.paymentMode;
+  if (typeof paymentMode === 'string') paymentMode = paymentMode.toLowerCase();
+  if (paymentMode !== 'cash' && paymentMode !== 'upi' && paymentMode !== 'khata') {
+    return res.status(400).json({ error: 'Select cash, UPI, or Khata as the payment mode' });
+  }
+  var status = body.status == null || body.status === '' ? 'completed' : body.status;
+  if (status !== 'completed' && status !== 'pending') {
+    return res.status(400).json({ error: 'New orders must be completed or pending' });
+  }
 
-  if (customerId) {
-    var custObj = ledger.findCustomer(db, customerId);
-    if (custObj) {
-      customerName = custObj.name;
+  var customerName = (body.customer || '').trim() || 'Walk-in';
+  var customerId = null;
+  var requestedId = body.customerId;
+  if (requestedId != null && requestedId !== '') {
+    customerId = typeof requestedId === 'number' || typeof requestedId === 'string' ? Number(requestedId) : NaN;
+    if (!Number.isSafeInteger(customerId) || customerId < 1) {
+      return res.status(400).json({ error: 'Customer ID must be a positive whole number' });
     }
+    var customer = ledger.findCustomer(db, customerId);
+    if (!customer) return res.status(paymentMode === 'khata' ? 409 : 400).json({ error: 'Customer account not found' });
+    customerName = customer.name;
   }
 
   if (paymentMode === 'khata') {
@@ -96,7 +95,7 @@ router.post('/orders', function (req, res) {
     customer: customerName,
     customerId: customerId,
     paymentMode: paymentMode,
-    status: body.status || 'completed',
+    status: status,
     items: items,
     coupon: rawCoupon,
     subtotal: totals.subtotal,
@@ -113,8 +112,11 @@ router.post('/orders', function (req, res) {
 
 router.post('/orders/:id/cancel', function (req, res) {
   var db = store.read();
-  var reason = (req.body && req.body.reason) ? req.body.reason : 'Cancelled from order desk';
-  var result = orders.cancel(db, req.params.id, reason);
+  var reason = req.body && req.body.reason;
+  if (reason != null && typeof reason !== 'string') {
+    return res.status(400).json({ error: 'Cancellation reason must be text' });
+  }
+  var result = orders.cancel(db, req.params.id, reason || 'Cancelled from order desk');
 
   if (!result.ok) {
     return res.status(400).json({ error: result.error });
